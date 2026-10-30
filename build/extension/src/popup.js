@@ -238,6 +238,10 @@ async function initialize() {
     settings.uiLanguage = defaults.uiLanguage;
     chrome.storage.sync.set({ uiLanguage: settings.uiLanguage }).catch(() => {});
   }
+  if (!["light", "dark"].includes(settings.theme)) {
+    settings.theme = window.matchMedia?.("(prefers-color-scheme: dark)").matches === true ? "dark" : "light";
+    chrome.storage.sync.set({ theme: settings.theme }).catch(() => {});
+  }
   const tab = tabs?.[0];
   activeTabId = Number.isInteger(tab?.id) ? tab.id : null;
   try {

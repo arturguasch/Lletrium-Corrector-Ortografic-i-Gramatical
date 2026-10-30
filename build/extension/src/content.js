@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 (() => {
   if (window.__CL_CONTENT_ACTIVE) return;
   window.__CL_CONTENT_ACTIVE = true;
@@ -360,6 +357,12 @@
     } catch (_) {}
     setContentUiLanguage(STATE.settings?.uiLanguage || "ca");
     setContentTheme(STATE.settings?.theme || "system");
+    const systemThemeMedia = window.matchMedia?.("(prefers-color-scheme: dark)");
+    const syncSystemTheme = () => {
+      if (STATE.settings?.theme === "system") setContentTheme("system");
+    };
+    if (systemThemeMedia?.addEventListener) systemThemeMedia.addEventListener("change", syncSystemTheme);
+    else systemThemeMedia?.addListener?.(syncSystemTheme);
     STATE.personalDictionary = await getPersonalDictionary();
     const localDiagnosticsSettings = await chrome.storage.local.get({ engineErrorTestMode: false }).catch(() => ({ engineErrorTestMode: false }));
     STATE.engineErrorTestMode = localDiagnosticsSettings.engineErrorTestMode === true;
@@ -1343,9 +1346,11 @@
   }
 
   function setContentTheme(theme) {
-    STATE.theme = ["light", "dark"].includes(theme) ? theme : "system";
-    if (STATE.theme === "system") delete document.documentElement.dataset.correctorLocalTheme;
-    else document.documentElement.dataset.correctorLocalTheme = STATE.theme;
+    const preference = ["light", "dark"].includes(theme) ? theme : "system";
+    STATE.theme = preference === "system"
+      ? (window.matchMedia?.("(prefers-color-scheme: dark)").matches === true ? "dark" : "light")
+      : preference;
+    document.documentElement.dataset.correctorLocalTheme = STATE.theme;
   }
 
   function handleLanguageProfileChange(language) {
