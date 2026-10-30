@@ -1,7 +1,4 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-/* Spanish SRX 2.0 rules from LanguageTool segment.srx (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish SRX 2.0 rules from LanguageTool segment.srx (LGPL-2.1). */
 (() => {
   "use strict";
 

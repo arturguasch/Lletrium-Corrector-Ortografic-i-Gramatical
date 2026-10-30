@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* LanguageTool CompoundRule and SimpleReplaceBalearicRule table adapters.
  * These suggestions convert source forms to central Catalan. */
 (() => {

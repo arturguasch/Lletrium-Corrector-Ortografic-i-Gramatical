@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* LanguageTool EnglishTagger lookup order and casing behavior, isolated to en-US. */
 (() => {
   "use strict";

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Spanish Morfologik 2.2 suggestion source used by LanguageTool FindSuggestionsFilter.
  * The FSA/HMatrix search follows the upstream Oflazer implementation in
  * analysis/reference-oracle/src/Speller.java. This profile loads only its own
@@ -17,7 +14,7 @@
     if (!loadPromise) loadPromise = (async () => {
       if (!baseUrl) throw new Error("Falta la URL del grafo Morfologik español.");
       const [manifestResponse, metadataResponse] = await Promise.all([
-        fetcher(new URL("manifest.json", baseUrl)),
+        fetcher(new URL("resource-index.json", baseUrl)),
         fetcher(new URL("es-filter-speller-metadata.json", baseUrl))
       ]);
       if (![manifestResponse, metadataResponse].every(response => response.ok)) throw new Error("No se pudo cargar el grafo Morfologik es-ES.");

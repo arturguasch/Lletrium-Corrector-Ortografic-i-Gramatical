@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Independent Spanish es-ES POS index adapter; it never reads Catalan resources. */
 (() => {
   "use strict";
@@ -284,7 +281,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/es-ES/");
       if (!base) throw new Error("Se debe indicar baseUrl para cargar los recursos españoles fuera de la extensión.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`No se pudo cargar el manifiesto POS español (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "es-ES LanguageTool 6.9-SNAPSHOT / spanish-pos-dict 2.5" || manifest.format !== "CACFSA1") throw new Error("El manifiesto no corresponde al perfil español independiente.");

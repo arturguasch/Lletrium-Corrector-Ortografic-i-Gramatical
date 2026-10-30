@@ -1,8 +1,5 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local adaptations of LanguageTool Catalan filters and VerbSynthesizer.
- * upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3. Upstream: Jaume Ortolà, Daniel Naber and contributors.
+ * LGPL-2.1-or-later. Upstream: Jaume Ortolà, Daniel Naber and contributors.
  * This module never performs network requests. See licenses/languagetool-runtime/NOTICE.md.
  */
 (() => {

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Catalan adapter for the shared LanguageTool .sor interpreter. */
 (() => {
   "use strict";
@@ -20,7 +17,7 @@
     if (!promise) promise = (async () => {
       if (!globalThis.CorrectorSorosRuntime?.SorosProgram) throw new Error("The shared local .sor runtime is unavailable.");
       const base = chrome.runtime.getURL("build/resources/synthesis/");
-      const manifest = await (await fetch(base + "manifest.json")).json();
+      const manifest = await (await fetch(base + "resource-index.json")).json();
       const [caSource, romanSource] = await Promise.all([
         readSoros(base, manifest, "ca.sor", "caSoros"), readSoros(base, manifest, "Roman.sor", "romanSoros")
       ]);

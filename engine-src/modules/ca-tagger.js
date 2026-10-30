@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Lexical tagger stage: preserve every central-profile dictionary reading. */
 (() => {
   "use strict";

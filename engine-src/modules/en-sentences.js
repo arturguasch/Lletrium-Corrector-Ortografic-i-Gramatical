@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* English SRX segmentation exported from LanguageTool's segment.srx. */
 (() => {
   "use strict";

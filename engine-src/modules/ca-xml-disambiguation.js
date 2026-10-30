@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Safe subset of LanguageTool's ordered Catalan XML disambiguation rules. */
 (() => {
   "use strict";

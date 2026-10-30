@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* SRX 2.0 sentence segmentation for ca-ES_two from the locked LanguageTool source. */
 (() => {
   "use strict";

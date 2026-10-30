@@ -1,7 +1,4 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-/* SpanishRepeatedWordsRule behavior ported from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* SpanishRepeatedWordsRule behavior ported from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 

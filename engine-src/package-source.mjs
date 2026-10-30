@@ -8,13 +8,14 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = resolve(root, 'build/releases');
 const destination = resolve(outputDir, 'Corrector-Catala-1.0.0-source.zip');
 const sourceEntries = [
+  'README.md',
+  'index.html',
   'build/extension/manifest.json',
   'build/extension/_locales',
   'build/extension/README.md',
   'build/extension/package.json',
   'build/extension/config',
   'build/extension/PRIVACY.md',
-  'build/extension/LEGAL-RELEASE-CHECKLIST.md',
   'build/extension/SOURCE-CONTENTS.md',
   'build/extension/licenses',
   'build/extension/src',

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 // nDet[6] removes the Balearic determiner reading of standalone "sa". It is
 // required to keep central-Catalan analyses from interpreting that form as a
 // central article; retaining the rule does not enable Balearic suggestions.

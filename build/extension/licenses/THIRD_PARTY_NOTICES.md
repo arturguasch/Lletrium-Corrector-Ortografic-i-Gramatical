@@ -1,20 +1,20 @@
 # Components i dades de tercers — versió 1.0.0
 
-Aquest inventari correspon als fitxers inclosos a l'extensió. Les llicències completes i els avisos d'origen estan a les subcarpetes de `licenses/`. El paquet `Corrector-Catala-1.0.0-source-GPL-3.0-or-later.zip` acompanya la mateixa versió amb el codi runtime, els recursos exactes, els scripts de construcció/paquetització i les fonts upstream catalanes pertinents; s'ha d'oferir al mateix lloc de descàrrega que l'extensió.
+Aquest inventari correspon als fitxers inclosos a l'extensió. Les llicències completes i els avisos d'origen estan a les subcarpetes de `licenses/`. El paquet `Corrector-Catala-1.0.0-source.zip` acompanya la mateixa versió amb el codi runtime, els recursos exactes, els scripts de construcció/paquetització i les fonts upstream catalanes pertinents; s'ha d'oferir al mateix lloc de descàrrega que l'extensió.
 
-Els camins `references/`, `engine-src/` i `analysis/` d'aquest inventari i dels avisos detallats corresponen a l'arrel del ZIP de fonts complementari. Els camins `licenses/` i `build/resources/` corresponen al ZIP instal·lable. L'abast de la GPL d'aquesta variant és a `../../../LICENSING.md`; el text complet s'inclou a `licenses/lletrium/GPL-3.0-or-later.txt`.
+Els camins `references/`, `engine-src/` i `analysis/` d'aquest inventari i dels avisos detallats corresponen a l'arrel del ZIP de fonts complementari. Els camins `licenses/` i `build/resources/` corresponen al ZIP instal·lable.
 
 El ZIP de fonts no conté el snapshot multilingüe complet de LanguageTool. Inclou les fonts pertinents, els recursos exportats i els generadors necessaris per a les llengües que incorpora l'extensió.
 
 ## LanguageTool
 
-- **Regles i recursos catalans:** `src/lt-pattern-runtime.js`, `src/lt-catalan-filters.js`, parts identificades de `src/language-engine.js` i `build/resources/ca-filter-data.json`, `ca-table-rules.json`, `ca-pattern-rule-candidates.json`, `ca-dialect-pattern-rules.json`, `ca-dialect-profile-overrides.json` i `ca-multitoken-candidates.json`. Són adaptacions o dades derivades de LanguageTool i de recursos catalans de Softcatalà. En aquesta variant, les adaptacions locals de LanguageTool cobertes per LGPL-2.1 es distribueixen sota GPL-3.0-or-later fent ús de l'opció de GPL prevista a LGPL-2.1 §3, quan és aplicable. Les còpies upstream i les dades conserven els seus termes; vegeu `../../../LICENSING.md`.
+- **Regles i recursos catalans:** `src/lt-pattern-runtime.js`, `src/lt-catalan-filters.js`, parts identificades de `src/language-engine.js` i `build/resources/ca-filter-data.json`, `ca-table-rules.json`, `ca-pattern-rule-candidates.json`, `ca-dialect-pattern-rules.json`, `ca-dialect-profile-overrides.json` i `ca-multitoken-candidates.json`. Són adaptacions o dades derivades de LanguageTool i de recursos catalans de Softcatalà. Aplica LGPL-2.1-or-later a les adaptacions cobertes; els avisos originals i la llicència són a `licenses/languagetool-runtime/`.
 - **Procedència fixada:** `references/upstream.lock.json` del projecte identifica els arxius de referència incorporats i els seus SHA-256. Els ZIP font utilitzats no identifiquen un commit immutable; per això els hashes, i no una etiqueta de branca actual, fixen les còpies auditades.
 - **Atribució:** Jaume Ortolà i Font, Daniel Naber, László Németh i contribuïdors de LanguageTool, segons el component. Consulteu `licenses/languagetool-runtime/NOTICE.md`.
-- **Ports de codi de LanguageTool:** els mòduls locals de desambiguació i cerca ortogràfica multitoken són adaptacions de classes de LanguageTool. Aquesta variant els distribueix sota GPL-3.0-or-later quan la conversió està permesa per LGPL-2.1 §3; manté l'atribució, el text LGPL i els avisos upstream. Les fonts originals de LanguageTool continuen sota la llicència que indiquen els seus fitxers.
+- **Ports de codi de LanguageTool:** els mòduls locals de desambiguació i cerca ortogràfica multitoken són adaptacions de classes de LanguageTool; s'hi aplica l'avís LGPL indicat al repositori de referència i a `licenses/languagetool-runtime/`.
 - **Coherència valenciana:** `CA_WORD_COHERENCY_VALENCIA` segueix el comportament de `WordCoherencyValencianRule` i `AbstractWordCoherencyRule` de LanguageTool. Les parelles lèxiques provenen de `coherency-valencia.txt`; l'implementació i les dades s'identifiquen com a derivades a `licenses/languagetool-runtime/NOTICE.md`.
 - **Perfil castellà `es-ES`:** `build/resources/es-ES/es-ES-pos-fsa.bin.gz` i `es-ES-synthesis-fsa.bin.gz` deriven de `org.softcatala:spanish-pos-dict:2.5` (LGPL-2.1); `es-disambiguation-rules.json` deriva de les regles castellanes de LanguageTool 6.9-SNAPSHOT (LGPL-2.1); el mapa POS anglès local que requereix `IsEnglishWordFilter` deriva de `org.languagetool:english-pos-dict:0.6` (LGPL-2.1). Es conserva `build/resources/es-ES/LICENSE-LGPL-2.1.txt`; el paquet de fonts ha d'oferir els scripts, dades exactes, avisos i fonts necessaris per reconstruir aquestes derivacions.
-- **Perfil anglès americà `en-US`:** El codi local adaptat de LanguageTool sota LGPL-2.1 es distribueix sota GPL-3.0-or-later en aquesta variant quan ho permet LGPL-2.1 secció 3. Els snapshots originals a `references/languagetool-en-US/` mantenen LGPL; les dades empaquetades i els models mantenen les llicències dels seus manifests i avisos (incloent-hi Moby/WordNet i Apache-2.0). El POM del codi no substitueix les condicions pròpies de les dades.
+- **Perfil anglès americà `en-US`:** les regles adaptades i les dades de `build/resources/en-US/` provenen del mòdul anglès de LanguageTool 6.9-SNAPSHOT i de `org.languagetool:english-pos-dict:0.6`. El POM del mòdul anglès declara LGPL-2.1 per al codi i avisa que alguns recursos tenen llicències pròpies. Les fonts del mòdul, el POM i l'artefacte/dades originals del diccionari es lliuren al ZIP de fonts sota `references/languagetool-en-US/` i `analysis/reference-oracle/artifacts/english-pos-dict-0.6/`. Preserveu els avisos del recurs de POS a `licenses/languagetool-runtime/english-pos-readme.txt` (Moby/WordNet) i els metadades `.info`; no s'ha d'interpretar la declaració LGPL del POM com si substituís les condicions de les fonts de dades.
 
 ## Apache OpenNLP
 
@@ -22,7 +22,7 @@ Els models de tokenització, etiquetatge POS i chunking provenen dels artefactes
 
 ## Morfologik
 
-`engine-src/modules/ca-morfologik-speller.js` és una adaptació local de l'algorisme `Speller`/`HMatrix` de Morfologik 2.2.0. El codi font de referència identifica l'avís BSD de tres clàusules de Dawid Weiss i Marcin Milkowski. En aquesta variant, l'adaptació local es distribueix sota GPL-3.0-or-later; es conserven el copyright, les condicions i la renúncia de garanties BSD a `licenses/morfologik/COPYING.txt`.
+`engine-src/modules/ca-morfologik-speller.js` és una adaptació local de l'algorisme `Speller`/`HMatrix` de Morfologik 2.2.0. El codi font de referència identifica l'avís BSD de tres clàusules de Dawid Weiss i Marcin Milkowski; el binari distribueix la implementació JavaScript adaptada. Aquesta distribució conserva el copyright, les condicions i la renúncia de garanties a `licenses/morfologik/COPYING.txt`.
 
 ## Diccionaris catalans de Softcatalà
 
@@ -34,7 +34,7 @@ Els models de tokenització, etiquetatge POS i chunking provenen dels artefactes
 
 ## Soros
 
-La implementació local de Soros i les regles numèriques adaptades s'atribueixen a László Németh. L'origen permet LGPL/BSD dual; aquesta variant distribueix l'adaptació local sota GPL-3.0-or-later a través de l'opció GPL de LGPL-2.1, preservant l'atribució i els avisos a `src/language-engine.js` i `licenses/languagetool-runtime/NOTICE.md`.
+La implementació local de Soros i les regles numèriques adaptades s'atribueixen a László Németh. L'origen permet LGPL/BSD dual; aquesta adaptació escull l'opció LGPL i conserva l'avís a `src/language-engine.js` i `licenses/languagetool-runtime/NOTICE.md`.
 
 ## Fitxers de diccionari Hunspell de versions anteriors
 
@@ -46,5 +46,5 @@ Les còpies antigues del producte van contenir `catalan.aff` i `catalan.dic` pro
 
 ## Procedència dels components originals del producte
 
-El desenvolupador declara que el codi original de Lletrium és treball creat durant aquest projecte amb assistència de ChatGPT. Entre OpenAI i l'usuari, els termes d'OpenAI assignen a l'usuari els drets sobre les sortides en la mesura permesa per la llei aplicable; això no cobreix ni canvia els drets de tercers sobre materials d'entrada o incorporats. Aquesta variant llicencia el codi propi sota GPL-3.0-or-later i aplica, quan és legalment disponible, l'opció GPL de LGPL-2.1 a adaptacions locals identificades. Els components originals de tercers mantenen els seus avisos i termes; l'abast exacte consta a `../../../LICENSING.md` i `../../../THIRD_PARTY_NOTICES.md`.
+El desenvolupador declara que la resta del codi del producte és treball original creat durant aquest projecte amb assistència de ChatGPT. Entre OpenAI i l'usuari, els termes d'OpenAI assignen a l'usuari els drets sobre les sortides, en la mesura que ho permeti la llei aplicable; això no cobreix ni canvia els drets sobre codi, dades o altres materials de tercers que s'hagin proporcionat com a entrada o s'hagin incorporat al producte. Aquest llançament no imposa una llicència global al codi original. Les parts identificades de LanguageTool, Softcatalà/catalan-dict-tools i Morfologik mantenen els avisos i termes propis indicats en aquest inventari.
 

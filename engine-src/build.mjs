@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import { copyFile, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -197,7 +194,8 @@ const spanishSynthesisManifest = JSON.parse(await readFile(resolve(spanishResour
 if (spanishSynthesisManifest.schema !== 1 || spanishSynthesisManifest.format !== "CACFSA1" || spanishSynthesisManifest.profile !== spanishPosManifest.profile) throw new Error("Spanish synthesis FSA manifest is not the pinned es-ES profile.");
 const spanishSynthesisGraph = await readFile(resolve(spanishResourceSource, spanishSynthesisManifest.dataFile));
 if (createHash("sha256").update(spanishSynthesisGraph).digest("hex") !== spanishSynthesisManifest.compressedSha256) throw new Error("Spanish synthesis FSA gzip hash mismatch.");
-for (const name of ["manifest.json", spanishPosManifest.dataFile, "synthesis-manifest.json", spanishSynthesisManifest.dataFile, "es-ES-tags.txt", "es-srx.json", "es-multiword.json", "es-multitoken-speller.json", "es-disambiguation-rules.json", "es-spelling-data.json", "es-filter-speller-metadata.json", "es-manual-tags.json", "es-simple-replace.json", "es-wrong-word-context.json", "es-compounds.json", "es-synonyms.json", "es-confusion-pairs.json", "es-repeated-pattern-rules.json", "LICENSE-LGPL-2.1.txt"]) await copyFile(resolve(spanishResourceSource, name), resolve(spanishResourceOutput, name));
+for (const name of [spanishPosManifest.dataFile, "synthesis-manifest.json", spanishSynthesisManifest.dataFile, "es-ES-tags.txt", "es-srx.json", "es-multiword.json", "es-multitoken-speller.json", "es-disambiguation-rules.json", "es-spelling-data.json", "es-filter-speller-metadata.json", "es-manual-tags.json", "es-simple-replace.json", "es-wrong-word-context.json", "es-compounds.json", "es-synonyms.json", "es-confusion-pairs.json", "es-repeated-pattern-rules.json", "LICENSE-LGPL-2.1.txt"]) await copyFile(resolve(spanishResourceSource, name), resolve(spanishResourceOutput, name));
+await copyFile(resolve(spanishResourceSource, "manifest.json"), resolve(spanishResourceOutput, "resource-index.json"));
 const spanishRepeatedPatterns = JSON.parse(await readFile(resolve(spanishResourceSource, "es-repeated-pattern-rules.json"), "utf8"));
 if (spanishRepeatedPatterns?.schemaVersion !== 1 || spanishRepeatedPatterns.profile !== "es-ES"
     || spanishRepeatedPatterns.source !== "LanguageTool 6.9-SNAPSHOT RepeatedPatternRuleTransformer"
@@ -236,7 +234,7 @@ if (createHash("sha256").update(englishManualTagsBytes).digest("hex") !== englis
     || englishManualTags.sourceHashes?.["removed.txt"] !== "d34555d63c6a7c97cce1e48feef71e960acd2cf003d2863460c78a3d9da75b0c") {
   throw new Error("The en-US manual POS tag overlay does not match the pinned LanguageTool source.");
 }
-for (const name of ["manifest.json", englishManifest.pos.dataFile, englishManifest.posIndex.file,
+for (const name of [englishManifest.pos.dataFile, englishManifest.posIndex.file,
   englishManifest.synthesis.dataFile, englishManifest.synthesisIndex.file, englishManifest.spelling.dataFile,
   "en-US-english_tags.txt", "en-US-en.sor", "en-US-det_a.txt", "en-US-det_an.txt", "en-srx.json",
   "en-specific-case.json",
@@ -250,6 +248,7 @@ for (const name of ["manifest.json", englishManifest.pos.dataFile, englishManife
   englishManifest.openNlp.posTagDictionary.file, englishManifest.manualTags.file, "en-disambiguation-rules.json", "en-multiwords.json"]) {
   await copyFile(resolve(englishResourceSource, name), resolve(englishResourceOutput, name));
 }
+await copyFile(resolve(englishResourceSource, "manifest.json"), resolve(englishResourceOutput, "resource-index.json"));
 await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rule-candidates.json"), resolve(englishResourceOutput, "en-pattern-rule-candidates.json"));
 await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-repeated-pattern-rules.json"), resolve(englishResourceOutput, "en-repeated-pattern-rules.json"));
 await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-regex-rules.json"), resolve(englishResourceOutput, "en-regex-rules.json"));
@@ -326,7 +325,8 @@ await writeFile(resolve(root, "build/resources/ca-speller-metadata.json"), JSON.
 await writeFile(resolve(root, "build/resources/ca-speller-multitoken-metadata.json"), JSON.stringify(multitokenSpellerMetadata));
 await writeFile(resolve(root, "build/resources/ca-speller-multitoken-graph.bin.gz"), gzipSync(multitokenSpellerGraph));
 await mkdir(resolve(root, "build/resources/synthesis"), { recursive: true });
-for (const name of ["manifest.json", "ca-synthesis.bin.gz", "ca.sor", "Roman.sor"]) await copyFile(resolve(root, "engine-src/resources/synthesis", name), resolve(root, "build/resources/synthesis", name));
+for (const name of ["ca-synthesis.bin.gz", "ca.sor", "Roman.sor"]) await copyFile(resolve(root, "engine-src/resources/synthesis", name), resolve(root, "build/resources/synthesis", name));
+await copyFile(resolve(root, "engine-src/resources/synthesis/manifest.json"), resolve(root, "build/resources/synthesis/resource-index.json"));
 const tableSources = {
   compounds: "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/compounds.txt",
   checkCase: "references/languagetool-ca-central/src/main/resources/org/languagetool/rules/ca/check_case.txt",
@@ -357,7 +357,7 @@ await writeFile(resolve(root, "build/resources/ca-table-rules.json"), JSON.strin
 const checkCaseEntries = new Set(tableResources.checkCase.text.split(/\r?\n/u)
   .map(raw => raw.trim().split("#", 1)[0].trim().split("=", 1)[0].trim())
   .filter(Boolean).map(value => value.replace(/\s+/gu, " ").replace(/[’‘]/gu, "'").toLocaleLowerCase("ca")));
-await copyFile(resolve(resourceSource, "manifest.json"), resolve(resourceOutput, "manifest.json"));
+await copyFile(resolve(resourceSource, "manifest.json"), resolve(resourceOutput, "resource-index.json"));
 await copyFile(resolve(resourceSource, "ca-central.bin.gz"), resolve(resourceOutput, "ca-central.bin.gz"));
 await copyFile(srxSource, resolve(root, "build/resources/ca-srx.json"));
 const [globalChunkerText, catalanChunkerText] = await Promise.all([
@@ -741,12 +741,17 @@ const manifest = {
     sourceSha256: multiwordReplaceHash,
     entries: multiwordEntries.length
   },
-  resourceManifests: ["build/resources/en-US/manifest.json", "build/resources/en-US/en-srx.json", "build/resources/en-US/en-disambiguation-rules.json", "build/resources/en-US/en-multiwords.json", "build/resources/en-US/en-word-coherency.json", "build/resources/en-US/en-synonyms.json", "build/resources/en-US/en-compounds.json", "build/resources/en-US/en-wrong-word-context.json", "build/resources/en-US/en-contractions.json", "build/resources/en-US/en-pattern-rule-candidates.json", "build/resources/en-US/en-repeated-pattern-rules.json", "build/resources/central/manifest.json", "build/resources/es-ES/manifest.json", "build/resources/es-ES/synthesis-manifest.json", "build/resources/es-ES/es-srx.json", "build/resources/es-ES/es-multiword.json", "build/resources/es-ES/es-multitoken-speller.json", "build/resources/es-ES/es-disambiguation-rules.json", "build/resources/es-ES/es-spelling-data.json", "build/resources/es-ES/es-manual-tags.json", "build/resources/es-ES/es-simple-replace.json", "build/resources/es-ES/es-wrong-word-context.json", "build/resources/es-ES/es-compounds.json", "build/resources/es-ES/es-synonyms.json", "build/resources/es-ES/es-confusion-pairs.json", "build/resources/es-ES/es-repeated-pattern-rules.json", "build/resources/ca-srx.json", "build/resources/ca-tagger-data.json", "build/resources/ca-chunker-data.json", "build/resources/ca-disambiguation-rules.json", "build/resources/ca-pattern-rule-candidates.json", "build/resources/ca-dialect-pattern-rules.json", "build/resources/ca-dialect-profile-overrides.json", "build/resources/ca-simple-replace-multiwords.json", "build/resources/ca-spelling-multitoken-words.txt.gz", "build/resources/ca-spelling-words.txt.gz", "build/resources/ca-spelling-overlays.txt.gz", "build/resources/synthesis/manifest.json", "build/resources/synthesis/ca-synthesis.bin.gz", "build/resources/ca-speller-metadata.json", "build/resources/ca-speller-multitoken-metadata.json", "build/resources/ca-speller-multitoken-graph.bin.gz", "build/resources/ca-speller-graph.bin.gz", "build/resources/ca-spelling-overlay-graph.bin.gz", "build/resources/ca-filter-data.json", "build/resources/ca-table-rules.json"]
+  resourceManifests: ["build/resources/en-US/resource-index.json", "build/resources/en-US/en-srx.json", "build/resources/en-US/en-disambiguation-rules.json", "build/resources/en-US/en-multiwords.json", "build/resources/en-US/en-word-coherency.json", "build/resources/en-US/en-synonyms.json", "build/resources/en-US/en-compounds.json", "build/resources/en-US/en-wrong-word-context.json", "build/resources/en-US/en-contractions.json", "build/resources/en-US/en-pattern-rule-candidates.json", "build/resources/en-US/en-repeated-pattern-rules.json", "build/resources/central/resource-index.json", "build/resources/es-ES/resource-index.json", "build/resources/es-ES/synthesis-manifest.json", "build/resources/es-ES/es-srx.json", "build/resources/es-ES/es-multiword.json", "build/resources/es-ES/es-multitoken-speller.json", "build/resources/es-ES/es-disambiguation-rules.json", "build/resources/es-ES/es-spelling-data.json", "build/resources/es-ES/es-manual-tags.json", "build/resources/es-ES/es-simple-replace.json", "build/resources/es-ES/es-wrong-word-context.json", "build/resources/es-ES/es-compounds.json", "build/resources/es-ES/es-synonyms.json", "build/resources/es-ES/es-confusion-pairs.json", "build/resources/es-ES/es-repeated-pattern-rules.json", "build/resources/ca-srx.json", "build/resources/ca-tagger-data.json", "build/resources/ca-chunker-data.json", "build/resources/ca-disambiguation-rules.json", "build/resources/ca-pattern-rule-candidates.json", "build/resources/ca-dialect-pattern-rules.json", "build/resources/ca-dialect-profile-overrides.json", "build/resources/ca-simple-replace-multiwords.json", "build/resources/ca-spelling-multitoken-words.txt.gz", "build/resources/ca-spelling-words.txt.gz", "build/resources/ca-spelling-overlays.txt.gz", "build/resources/synthesis/resource-index.json", "build/resources/synthesis/ca-synthesis.bin.gz", "build/resources/ca-speller-metadata.json", "build/resources/ca-speller-multitoken-metadata.json", "build/resources/ca-speller-multitoken-graph.bin.gz", "build/resources/ca-speller-graph.bin.gz", "build/resources/ca-spelling-overlay-graph.bin.gz", "build/resources/ca-filter-data.json", "build/resources/ca-table-rules.json"]
 };
 manifest.resourceManifests.push("build/resources/en-US/en-regex-rules.json");
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 await mkdir(resolve(stagedExtension, "src"), { recursive: true });
 await mkdir(resolve(stagedExtension, "build"), { recursive: true });
+for (const resourceRoot of [resolve(root, "build/resources"), resolve(stagedExtension, "build/resources")]) {
+  for (const path of ["central/manifest.json", "en-US/manifest.json", "es-ES/manifest.json", "synthesis/manifest.json"]) {
+    await rm(resolve(resourceRoot, path), { force: true });
+  }
+}
 await copyFile(output, resolve(stagedExtension, "src/language-engine.js"));
 await copyFile(manifestPath, resolve(stagedExtension, "build/engine-build.json"));
 await cp(resolve(root, "build/resources"), resolve(stagedExtension, "build/resources"), { recursive: true, force: true });

@@ -1,7 +1,4 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-/* Spanish SimpleReplaceRule table and runtime, derived from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish SimpleReplaceRule table and runtime, derived from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { readFile, writeFile, mkdir } from "node:fs/promises";

@@ -1,10 +1,7 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import { mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { performance } from "node:perf_hooks";
-import { loadLocalEngine } from "../../build/extension/tests/local-engine-harness.mjs";
+import { loadLocalEngine } from "../../build/phase5-extension/tests/local-engine-harness.mjs";
 
 const root = resolve(".");
 const outputPath = "analysis/reference-oracle/outputs/en-US-phase5-performance.json";
@@ -76,9 +73,9 @@ for (const scenario of scenarios) {
 }
 globalThis.gc?.();
 const memoryAfterChecks = process.memoryUsage();
-const resourceTreeBytes = await sumTree(resolve(root, "build/extension/build/resources/en-US"));
+const resourceTreeBytes = await sumTree(resolve(root, "build/phase5-extension/build/resources/en-US"));
 const installerZipBytes = (await stat(resolve(root, "build/releases/Corrector-Catala-1.0.0.zip"))).size;
-const buildMetadata = JSON.parse(await readFile(resolve(root, "build/extension/build/engine-build.json"), "utf8"));
+const buildMetadata = JSON.parse(await readFile(resolve(root, "build/phase5-extension/build/engine-build.json"), "utf8"));
 const result = {
   schemaVersion: 1,
   profile: "en-US",

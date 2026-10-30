@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local en-US Morfologik spelling using the pinned LanguageTool dictionary FSA. */
 (() => {
   "use strict";
@@ -222,7 +219,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load the en-US manifest (${response.status}).`);
       const manifest = await response.json(), data = { ...manifest.spelling, profile: manifest.spelling.profile || manifest.spellingProfile || "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6" };
       if (manifest.profile !== "en-US" || data?.locale !== "en_US") throw new Error("The spelling profile is not en-US.");
@@ -232,7 +229,7 @@
     static async loadFilterSpeller({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load the English filter manifest (${response.status}).`);
       const manifest = await response.json(), source = manifest.pos;
       if (manifest.profile !== "en-US" || source?.profile !== "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6"

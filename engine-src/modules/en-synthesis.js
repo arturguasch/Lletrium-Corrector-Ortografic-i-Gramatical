@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Independent EnglishSynthesizer adapter over LanguageTool's pinned synthesis dictionary. */
 (() => {
   "use strict";
@@ -86,7 +83,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const mr = await fetcher(new URL("manifest.json", base));
+      const mr = await fetcher(new URL("resource-index.json", base));
       if (!mr.ok) throw new Error(`Could not load the en-US manifest (${mr.status}).`);
       const manifest = await mr.json();
       if (manifest?.profile !== "en-US") throw new Error("Synthesis resources are not en-US.");

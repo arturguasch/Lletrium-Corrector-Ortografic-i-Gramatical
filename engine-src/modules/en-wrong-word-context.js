@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local, text-only en-US port of LanguageTool's WrongWordInContextRule. */
 (() => {
   "use strict";

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* General local adapters for LanguageTool filters, before overlap arbitration. */
 (() => {
   "use strict";

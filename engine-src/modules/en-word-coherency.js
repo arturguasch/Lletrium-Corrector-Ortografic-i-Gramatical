@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Offline document-level port of LanguageTool's English WordCoherencyRule. */
 (() => {
   "use strict";

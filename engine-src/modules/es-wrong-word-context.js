@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Spanish context-confusion rules ported from LanguageTool's LGPL data/class. */
 (() => {
   "use strict";

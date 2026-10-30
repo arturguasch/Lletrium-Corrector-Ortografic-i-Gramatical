@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import { access, mkdir, readFile, stat } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { dirname, join, relative, resolve, sep } from 'node:path';
@@ -75,6 +72,16 @@ try {
     }
     foreach ($file in $files) {
       $entryName = $file.FullName.Substring($source.Length + 1).Replace('\', '/')
+      if ($entryName -eq 'manifest.json') {
+        $manifestObject = Get-Content -LiteralPath $file.FullName -Raw | ConvertFrom-Json
+        $manifestObject.PSObject.Properties.Remove('key') | Out-Null
+        $manifestTemp = Join-Path $env:TEMP ([guid]::NewGuid().ToString() + '.json')
+        try {
+          [System.IO.File]::WriteAllText($manifestTemp, ($manifestObject | ConvertTo-Json -Depth 100), [System.Text.UTF8Encoding]::new($false))
+          [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $manifestTemp, $entryName, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
+        } finally { Remove-Item -LiteralPath $manifestTemp -Force -ErrorAction SilentlyContinue }
+        continue
+      }
       [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $file.FullName, $entryName, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
     }
   }
@@ -83,11 +90,13 @@ $archive = [System.IO.Compression.ZipFile]::OpenRead($destination)
 try {
   $names = @($archive.Entries | ForEach-Object { $_.FullName.Replace('\', '/') })
   if ($names -notcontains 'manifest.json') { throw 'ZIP has no root manifest.json' }
+  $nestedManifests = @($names | Where-Object { $_ -match '(^|/)manifest\.json$' -and $_ -ne 'manifest.json' })
+  if ($nestedManifests.Count -gt 0) { throw "Chrome Web Store rejects extra manifest.json files: $($nestedManifests -join ', ')" }
   if ($names | Where-Object { $_.StartsWith('src/dictionaries/', [System.StringComparison]::OrdinalIgnoreCase) }) { throw 'Unused legacy Catalan dictionaries found in release ZIP' }
-  foreach ($required in @('src/background.js', 'src/popup.html', 'src/popup.js', 'src/ui-localization.js', 'src/en-explanation-translations.js', 'src/en-explanation-translations-extra.js', 'src/es-explanation-translations.js', '_locales/ca/messages.json', '_locales/es/messages.json', '_locales/en/messages.json', 'build/resources/ca-filter-data.json', 'build/resources/central/ca-central.bin.gz', 'build/engine-build.json')) {
+  foreach ($required in @('src/background.js', 'src/popup.html', 'src/popup.js', 'src/ui-localization.js', 'src/en-explanation-translations.js', 'src/en-explanation-translations-extra.js', 'src/es-explanation-translations.js', '_locales/ca/messages.json', '_locales/es/messages.json', '_locales/en/messages.json', 'build/resources/ca-filter-data.json', 'build/resources/central/ca-central.bin.gz', 'build/resources/central/resource-index.json', 'build/resources/en-US/resource-index.json', 'build/resources/es-ES/resource-index.json', 'build/resources/synthesis/resource-index.json', 'build/engine-build.json')) {
     if ($names -notcontains $required) { throw "Required runtime entry missing from release ZIP: $required" }
   }
-  foreach ($required in @('PRIVACY.md', 'licenses/THIRD_PARTY_NOTICES.md', 'licenses/lletrium/GPL-3.0-or-later.txt', 'licenses/morfologik/COPYING.txt', 'licenses/languagetool-runtime/COPYING.txt', 'licenses/languagetool-runtime/english-pos-readme.txt', 'licenses/opennlp/Apache-2.0.txt', 'licenses/opennlp/NOTICE.txt')) {
+  foreach ($required in @('PRIVACY.md', 'licenses/THIRD_PARTY_NOTICES.md', 'licenses/morfologik/COPYING.txt', 'licenses/languagetool-runtime/COPYING.txt', 'licenses/languagetool-runtime/english-pos-readme.txt', 'licenses/opennlp/Apache-2.0.txt', 'licenses/opennlp/NOTICE.txt')) {
     if ($names -notcontains $required) { throw "Required legal notice missing from release ZIP: $required" }
   }
   $stream = $archive.GetEntry('manifest.json').Open()
@@ -95,6 +104,7 @@ try {
     $reader = [System.IO.StreamReader]::new($stream)
     try { $manifest = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
   } finally { $stream.Dispose() }
+  if ($manifest.PSObject.Properties.Name -contains 'key') { throw 'Chrome Web Store upload package must not contain manifest key.' }
   if ($manifest.version -ne '${version}') { throw "ZIP manifest version is $($manifest.version), expected ${version}" }
   if ($manifest.web_accessible_resources.resources | Where-Object { $_ -like 'src/dictionaries/*' }) { throw 'Manifest still exposes excluded legacy Catalan dictionaries' }
   $forbidden = @('tests/', 'reports/', 'scripts/', 'AGENTS.md', 'WORKSPACE.md', 'package.json')

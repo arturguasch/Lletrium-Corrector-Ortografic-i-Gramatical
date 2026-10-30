@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Token analysis with immutable lexical readings and an ordered context view. */
 (() => {
   "use strict";

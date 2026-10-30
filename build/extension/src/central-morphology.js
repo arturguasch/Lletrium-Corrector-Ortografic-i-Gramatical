@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Compact lookup of packaged Softcatalà POS data. No network service or Node dependency. */
 (() => {
   'use strict';
@@ -55,7 +52,7 @@
     static async load({baseUrl,fetcher=globalThis.fetch}={}) {
       const base=baseUrl||globalThis.chrome?.runtime?.getURL('src/dictionaries/central/');
       if(!base)throw new Error('Provide baseUrl outside extension');
-      const meta=await fetcher(new URL('manifest.json',base));if(!meta.ok)throw new Error('POS manifest load failed');const manifest=await meta.json();
+      const meta=await fetcher(new URL('resource-index.json',base));if(!meta.ok)throw new Error('POS manifest load failed');const manifest=await meta.json();
       const data=await fetcher(new URL(manifest.dataFile,base));if(!data.ok)throw new Error('POS data load failed');
       if(typeof DecompressionStream!=='function')throw new Error('Gzip decompression unavailable');
       const bytes=new Uint8Array(manifest.rawBytes);

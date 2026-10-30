@@ -1,8 +1,5 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* LanguageTool-compatible pattern subset. See licenses/languagetool-runtime/NOTICE.md.
- * Filter adaptations: upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3, upstream Daniel Naber / Jaume Ortolà.
+ * Filter adaptations: LGPL-2.1-or-later, upstream Daniel Naber / Jaume Ortolà.
  */
 (() => {
   'use strict';

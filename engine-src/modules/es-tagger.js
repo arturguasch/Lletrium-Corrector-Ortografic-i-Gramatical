@@ -1,7 +1,4 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-/* Spanish lexical tagging, ported from LanguageTool's SpanishTagger (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish lexical tagging, ported from LanguageTool's SpanishTagger (LGPL-2.1). */
 (() => {
   "use strict";
 

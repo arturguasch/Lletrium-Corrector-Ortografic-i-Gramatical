@@ -1,10 +1,7 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
-import { loadLocalEngine } from "../../build/extension/tests/local-engine-harness.mjs";
+import { loadLocalEngine } from "../../build/phase5-extension/tests/local-engine-harness.mjs";
 
 const corpusPath = "analysis/reference-oracle/corpus/en-US-phase5-independent-prose.txt";
 const corpus = await readFile(corpusPath, "utf8");

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Source: engine-src/modules/en-morphology.js */
 /* Independent en-US lookup over LanguageTool's pinned EnglishTagger dictionary. */
 (() => {
@@ -55,7 +52,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`Could not load the en-US resource manifest (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "en-US" || manifest.source !== "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6") throw new Error("The resources are not the pinned independent en-US profile.");
@@ -217,7 +214,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const mr = await fetcher(new URL("manifest.json", base));
+      const mr = await fetcher(new URL("resource-index.json", base));
       if (!mr.ok) throw new Error(`Could not load the en-US manifest (${mr.status}).`);
       const manifest = await mr.json();
       if (manifest?.profile !== "en-US") throw new Error("Synthesis resources are not en-US.");
@@ -681,7 +678,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load en-US manifest (${response.status}).`);
       const manifest = await response.json();
       if (manifest.profile !== "en-US" || manifest.openNlp?.format !== "ONLPX1") throw new Error("OpenNLP model manifest does not belong to en-US.");
@@ -2127,7 +2124,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load the en-US manifest (${response.status}).`);
       const manifest = await response.json(), data = { ...manifest.spelling, profile: manifest.spelling.profile || manifest.spellingProfile || "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6" };
       if (manifest.profile !== "en-US" || data?.locale !== "en_US") throw new Error("The spelling profile is not en-US.");
@@ -2137,7 +2134,7 @@
     static async loadFilterSpeller({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load the English filter manifest (${response.status}).`);
       const manifest = await response.json(), source = manifest.pos;
       if (manifest.profile !== "en-US" || source?.profile !== "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6"
@@ -6766,7 +6763,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/central/");
       if (!base) throw new Error("Cal indicar baseUrl per carregar els recursos fora de l'extensió.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`No s'ha pogut carregar el manifest POS (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       const dataResponse = await fetcher(new URL(manifest.dataFile, base));
@@ -7085,7 +7082,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/es-ES/");
       if (!base) throw new Error("Se debe indicar baseUrl para cargar los recursos españoles fuera de la extensión.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`No se pudo cargar el manifiesto POS español (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "es-ES LanguageTool 6.9-SNAPSHOT / spanish-pos-dict 2.5" || manifest.format !== "CACFSA1") throw new Error("El manifiesto no corresponde al perfil español independiente.");
@@ -7118,7 +7115,7 @@
 })();
 
 /* Source: engine-src/modules/es-tagger.js */
-/* Spanish lexical tagging, ported from LanguageTool's SpanishTagger (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish lexical tagging, ported from LanguageTool's SpanishTagger (LGPL-2.1). */
 (() => {
   "use strict";
 
@@ -7611,7 +7608,7 @@
     if (!loadPromise) loadPromise = (async () => {
       if (!baseUrl) throw new Error("Falta la URL del grafo Morfologik español.");
       const [manifestResponse, metadataResponse] = await Promise.all([
-        fetcher(new URL("manifest.json", baseUrl)),
+        fetcher(new URL("resource-index.json", baseUrl)),
         fetcher(new URL("es-filter-speller-metadata.json", baseUrl))
       ]);
       if (![manifestResponse, metadataResponse].every(response => response.ok)) throw new Error("No se pudo cargar el grafo Morfologik es-ES.");
@@ -8868,7 +8865,7 @@
 })();
 
 /* Source: engine-src/modules/es-text.js */
-/* SpanishWordTokenizer behavior from LanguageTool (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3), with UTF-16 ranges. */
+/* SpanishWordTokenizer behavior from LanguageTool (LGPL-2.1), with UTF-16 ranges. */
 (() => {
   "use strict";
 
@@ -9077,7 +9074,7 @@
 })();
 
 /* Source: engine-src/modules/es-sentences.js */
-/* Spanish SRX 2.0 rules from LanguageTool segment.srx (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish SRX 2.0 rules from LanguageTool segment.srx (LGPL-2.1). */
 (() => {
   "use strict";
 
@@ -9605,7 +9602,7 @@
 })();
 
 /* Source: engine-src/modules/es-simple-replace.js */
-/* Spanish SimpleReplaceRule table and runtime, derived from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish SimpleReplaceRule table and runtime, derived from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -9899,7 +9896,7 @@
 })();
 
 /* Source: engine-src/modules/es-compounds.js */
-/* Spanish CompoundRule table and runtime, derived from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* Spanish CompoundRule table and runtime, derived from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -10033,7 +10030,7 @@
 })();
 
 /* Source: engine-src/modules/es-word-repeat.js */
-/* SpanishWordRepeatRule behavior ported from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* SpanishWordRepeatRule behavior ported from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -10081,7 +10078,7 @@
 })();
 
 /* Source: engine-src/modules/es-word-repeat-beginning.js */
-/* SpanishWordRepeatBeginningRule behavior ported from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* SpanishWordRepeatBeginningRule behavior ported from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -10185,7 +10182,7 @@
 })();
 
 /* Source: engine-src/modules/es-question-mark-rule.js */
-/* QuestionMarkRule behavior ported from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* QuestionMarkRule behavior ported from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -10422,7 +10419,7 @@
 })();
 
 /* Source: engine-src/modules/es-repeated-words.js */
-/* SpanishRepeatedWordsRule behavior ported from LanguageTool (upstream LGPL-2.1-or-later; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3). */
+/* SpanishRepeatedWordsRule behavior ported from LanguageTool (LGPL-2.1-or-later). */
 (() => {
   "use strict";
 
@@ -12989,7 +12986,7 @@
     if (!promise) promise = (async () => {
       if (!globalThis.CorrectorSorosRuntime?.SorosProgram) throw new Error("The shared local .sor runtime is unavailable.");
       const base = chrome.runtime.getURL("build/resources/synthesis/");
-      const manifest = await (await fetch(base + "manifest.json")).json();
+      const manifest = await (await fetch(base + "resource-index.json")).json();
       const [caSource, romanSource] = await Promise.all([
         readSoros(base, manifest, "ca.sor", "caSoros"), readSoros(base, manifest, "Roman.sor", "romanSoros")
       ]);
@@ -13020,7 +13017,7 @@
   async function load() {
     if(!promise) promise=(async()=>{
       const base=chrome.runtime.getURL("build/resources/synthesis/");
-      const manifest=await (await fetch(base+"manifest.json")).json();
+      const manifest=await (await fetch(base+"resource-index.json")).json();
       const response=await fetch(base+"ca-synthesis.bin.gz");
       const raw=await new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
       const digest=await crypto.subtle.digest("SHA-256",raw);

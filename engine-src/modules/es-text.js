@@ -1,7 +1,4 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-/* SpanishWordTokenizer behavior from LanguageTool (upstream LGPL-2.1; local adaptation GPL-3.0-or-later under LGPL-2.1 section 3), with UTF-16 ranges. */
+/* SpanishWordTokenizer behavior from LanguageTool (LGPL-2.1), with UTF-16 ranges. */
 (() => {
   "use strict";
 

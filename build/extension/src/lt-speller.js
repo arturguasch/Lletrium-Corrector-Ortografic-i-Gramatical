@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local central spelling candidates. Oflazer-style trie traversal with the
  * original Softcatala equivalences/replacements and Morfologik frequency scale.
  * See licenses/languagetool-runtime/NOTICE.md and lt-speller-manifest.json. */

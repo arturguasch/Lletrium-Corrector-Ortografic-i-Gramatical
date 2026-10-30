@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Exact Softcatala 3.3 synthesis lookup with LanguageTool Catalan-variant fallbacks. */
 (() => {
   "use strict";
@@ -10,7 +7,7 @@
   async function load() {
     if(!promise) promise=(async()=>{
       const base=chrome.runtime.getURL("build/resources/synthesis/");
-      const manifest=await (await fetch(base+"manifest.json")).json();
+      const manifest=await (await fetch(base+"resource-index.json")).json();
       const response=await fetch(base+"ca-synthesis.bin.gz");
       const raw=await new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
       const digest=await crypto.subtle.digest("SHA-256",raw);

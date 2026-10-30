@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local ports of LanguageTool's punctuation/whitespace core rules for en-US. */
 (() => {
   "use strict";

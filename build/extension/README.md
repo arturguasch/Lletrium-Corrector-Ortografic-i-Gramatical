@@ -1,6 +1,6 @@
-# Lletrium! Corrector ortogràfic i gramatical 1.0.0
+# Corrector local 1.0.0
 
-Extensió de Chrome per revisar text en català, castellà i anglès localment, amb perfils de correcció independents i recursos de LanguageTool, Softcatalà i altres tercers acreditats. Inclou adaptacions per a editors web i aplicacions de Google Docs.
+Extensió de Chrome per revisar text en català i castellà localment, amb perfils de correcció independents i recursos basats en LanguageTool i Softcatalà. Inclou adaptacions per a editors web i Google Docs.
 
 ## Instal·lació
 
@@ -25,4 +25,4 @@ La revisió lingüística s'executa localment al navegador. L'extensió no envia
 
 ## Llicències
 
-El codi original de Lletrium i les adaptacions locals identificades es distribueixen sota GNU GPL-3.0-or-later en aquest paquet de fonts. Les fonts i dades originals de tercers mantenen les seves llicències i avisos; no queden relicenciades per la GPL de Lletrium. Consulta [`LICENSING.md`](../../LICENSING.md), [`THIRD_PARTY_NOTICES.md`](../../THIRD_PARTY_NOTICES.md) i les llicències completes de `licenses/`. Per a l’abast aplicat a l’extensió, consulta també `../../LICENSE`.
+Consulta `licenses/THIRD_PARTY_NOTICES.md` i les llicències completes de `licenses/` per a la procedència dels components i recursos inclosos. El paquet no assigna una llicència global als components originals del producte.

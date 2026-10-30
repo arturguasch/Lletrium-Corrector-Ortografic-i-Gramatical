@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Exact Softcatalà 3.3 spelling FSA plus LanguageTool acceptance overlays; diagnostic only. */
 (() => {
   "use strict";

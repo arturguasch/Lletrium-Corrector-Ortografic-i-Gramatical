@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local Spanish/global multiword chunking from LanguageTool's two chunker resources. */
 (() => {
   "use strict";

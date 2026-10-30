@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Browser reader/inference primitives for the exact local OpenNLP 1.9.5 models. */
 (() => {
   "use strict";
@@ -321,7 +318,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const response = await fetcher(new URL("manifest.json", base));
+      const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load en-US manifest (${response.status}).`);
       const manifest = await response.json();
       if (manifest.profile !== "en-US" || manifest.openNlp?.format !== "ONLPX1") throw new Error("OpenNLP model manifest does not belong to en-US.");

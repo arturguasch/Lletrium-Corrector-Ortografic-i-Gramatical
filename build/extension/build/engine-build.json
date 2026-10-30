@@ -69,7 +69,7 @@
     "engine-src/language-engine.js"
   ],
   "output": "build/language-engine.js",
-  "bytes": 1150848,
+  "bytes": 1150908,
   "runtime": "classic-script; browser globals only",
   "linguisticPipelineImplemented": true,
   "publicCheckApiImplemented": true,
@@ -769,7 +769,7 @@
     "entries": 985
   },
   "resourceManifests": [
-    "build/resources/en-US/manifest.json",
+    "build/resources/en-US/resource-index.json",
     "build/resources/en-US/en-srx.json",
     "build/resources/en-US/en-disambiguation-rules.json",
     "build/resources/en-US/en-multiwords.json",
@@ -780,8 +780,8 @@
     "build/resources/en-US/en-contractions.json",
     "build/resources/en-US/en-pattern-rule-candidates.json",
     "build/resources/en-US/en-repeated-pattern-rules.json",
-    "build/resources/central/manifest.json",
-    "build/resources/es-ES/manifest.json",
+    "build/resources/central/resource-index.json",
+    "build/resources/es-ES/resource-index.json",
     "build/resources/es-ES/synthesis-manifest.json",
     "build/resources/es-ES/es-srx.json",
     "build/resources/es-ES/es-multiword.json",
@@ -806,7 +806,7 @@
     "build/resources/ca-spelling-multitoken-words.txt.gz",
     "build/resources/ca-spelling-words.txt.gz",
     "build/resources/ca-spelling-overlays.txt.gz",
-    "build/resources/synthesis/manifest.json",
+    "build/resources/synthesis/resource-index.json",
     "build/resources/synthesis/ca-synthesis.bin.gz",
     "build/resources/ca-speller-metadata.json",
     "build/resources/ca-speller-multitoken-metadata.json",

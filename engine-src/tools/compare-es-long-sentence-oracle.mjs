@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { dirname } from "node:path";

@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Conservative literal-only runtime for the audited LanguageTool PatternRule subset. */
 (() => {
   "use strict";

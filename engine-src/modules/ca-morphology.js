@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Read-only POS index adapter. Data format CACPOS1; source and filters in resource manifest. */
 (() => {
   "use strict";
@@ -89,7 +86,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/central/");
       if (!base) throw new Error("Cal indicar baseUrl per carregar els recursos fora de l'extensió.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`No s'ha pogut carregar el manifest POS (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       const dataResponse = await fetcher(new URL(manifest.dataFile, base));

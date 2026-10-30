@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve, dirname, relative } from "node:path";

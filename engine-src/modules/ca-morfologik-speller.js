@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local port of Morfologik 2.2.0 Speller/HMatrix, using the original FSA arc order.
  * Upstream sources are preserved in analysis/reference-oracle/src/Speller.java.
  * This API is for FindSuggestionsFilter; public spelling remains gated. */

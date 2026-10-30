@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Independent en-US lookup over LanguageTool's pinned EnglishTagger dictionary. */
 (() => {
   "use strict";
@@ -54,7 +51,7 @@
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
       const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/en-US/");
       if (!base) throw new Error("An en-US resource base URL is required outside the extension.");
-      const manifestResponse = await fetcher(new URL("manifest.json", base));
+      const manifestResponse = await fetcher(new URL("resource-index.json", base));
       if (!manifestResponse.ok) throw new Error(`Could not load the en-US resource manifest (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "en-US" || manifest.source !== "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6") throw new Error("The resources are not the pinned independent en-US profile.");

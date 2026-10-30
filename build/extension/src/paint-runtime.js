@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 /* Local implementation of the painting contracts observed in LanguageTool
  * Browser 11.4: sibling host, clipped viewport, content coordinate boxes,
  * independently scrolling layer, retained canvas tiles, and shared hit boxes.
