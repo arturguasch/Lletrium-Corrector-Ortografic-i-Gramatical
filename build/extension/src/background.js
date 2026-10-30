@@ -1,6 +1,3 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 
 const BG_GDOCS_ENGINE = {
   loading: null,
@@ -908,8 +905,17 @@ const DEFAULT_SETTINGS = {
   disabledEditorGroups: []
 };
 
+function detectInitialUiLanguage() {
+  let locale = "";
+  try { locale = String(chrome.i18n?.getUILanguage?.() || ""); } catch (_) {}
+  const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
+  return ["ca", "es", "en"].includes(primary) ? primary : "en";
+}
+
 chrome.runtime.onInstalled.addListener(async () => {
-  const current = await chrome.storage.sync.get(DEFAULT_SETTINGS);
+  const stored = await chrome.storage.sync.get(null);
+  const current = { ...DEFAULT_SETTINGS, ...stored };
+  if (!["ca", "es", "en"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
   await chrome.storage.sync.remove(["debounceMs", "maxTextLength"]);
   if (current.language === "ca") current.language = "ca-ES";
   if (current.language === "es") current.language = "es-ES";

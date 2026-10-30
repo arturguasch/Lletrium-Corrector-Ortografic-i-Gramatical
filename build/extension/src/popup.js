@@ -1,8 +1,11 @@
-/* SPDX-FileCopyrightText: 2026 Artur Guasch
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
 const manifest = chrome.runtime.getManifest();
-const defaults = { enabled: true, language: "ca-ES", uiLanguage: "ca", theme: "system", showReviewButton: true, excludedSites: [], disabledEditorGroups: [] };
+function detectInitialUiLanguage() {
+  let locale = "";
+  try { locale = String(chrome.i18n?.getUILanguage?.() || navigator.language || ""); } catch (_) {}
+  const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
+  return ["ca", "es", "en"].includes(primary) ? primary : "en";
+}
+const defaults = { enabled: true, language: "ca-ES", uiLanguage: detectInitialUiLanguage(), theme: "system", showReviewButton: true, excludedSites: [], disabledEditorGroups: [] };
 const privateDiagnosticKeys = new Set([
   "text", "textcontent", "rawtext", "sample", "checkedtexttail", "first300wordschecked", "textsample", "textsamples",
   "line", "value", "selection", "selectiontext", "selectionbefore", "selectionafter", "oldfragment", "newfragment",
@@ -225,11 +228,16 @@ function setEngineFailureHelp(visible) {
 document.addEventListener("DOMContentLoaded", initialize);
 
 async function initialize() {
-  const [settings, personal, tabs] = await Promise.all([
-    chrome.storage.sync.get(defaults),
+  const [storedSettings, personal, tabs] = await Promise.all([
+    chrome.storage.sync.get(null),
     chrome.storage.local.get({ personalDictionary: {}, engineErrorTestMode: false, advancedUnlocked: false }),
     chrome.tabs.query({ active: true, currentWindow: true }).catch(() => [])
   ]);
+  const settings = { ...defaults, ...storedSettings };
+  if (!["ca", "es", "en"].includes(settings.uiLanguage)) {
+    settings.uiLanguage = defaults.uiLanguage;
+    chrome.storage.sync.set({ uiLanguage: settings.uiLanguage }).catch(() => {});
+  }
   const tab = tabs?.[0];
   activeTabId = Number.isInteger(tab?.id) ? tab.id : null;
   try {

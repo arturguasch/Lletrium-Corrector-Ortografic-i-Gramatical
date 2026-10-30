@@ -1,6 +1,6 @@
 {
   "extName": { "message": "Lletrium! Spelling and Grammar Checker" },
   "shortName": { "message": "Lletrium!" },
-  "extDescription": { "message": "A local grammar checker for Catalan and Spanish." },
+  "extDescription": { "message": "Local spelling and grammar checker for Catalan, Spanish, and American English." },
   "actionTitle": { "message": "Lletrium!" }
 }

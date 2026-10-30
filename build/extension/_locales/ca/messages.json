@@ -1,6 +1,6 @@
 {
   "extName": { "message": "Lletrium! Corrector ortogràfic i gramatical" },
   "shortName": { "message": "Lletrium!" },
-  "extDescription": { "message": "Corrector gramatical de català i castellà que funciona localment al dispositiu." },
+  "extDescription": { "message": "Corrector ortogràfic i gramatical local per a català, espanyol i anglès americà." },
   "actionTitle": { "message": "Lletrium!" }
 }
