@@ -1,0 +1,2702 @@
+{
+  "schema": 1,
+  "language": "ca",
+  "source": "LanguageTool rules/ca/grammar.xml",
+  "wave": "7C-articles",
+  "categories": [
+    "DETERMINANTS",
+    "APOSTROPHATION"
+  ],
+  "stats": {
+    "entries": 121,
+    "byCategory": {
+      "DETERMINANTS": 54,
+      "APOSTROPHATION": 67
+    }
+  },
+  "entries": [
+    {
+      "from": "del R+D",
+      "to": [
+        "de l'R+D"
+      ],
+      "tokens": [
+        "del",
+        "r",
+        "d"
+      ],
+      "before": [
+        "la",
+        "necessitat"
+      ],
+      "after": [
+        "i"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "La necessitat del R+D+I",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la R+D",
+      "to": [
+        "l'R+D"
+      ],
+      "tokens": [
+        "la",
+        "r",
+        "d"
+      ],
+      "before": [
+        "la",
+        "necessitat",
+        "de"
+      ],
+      "after": [
+        "i"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 7,
+      "sourceExample": "La necessitat de la R+D+I",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al \"home",
+      "to": [
+        "a l'\"home"
+      ],
+      "tokens": [
+        "al",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "al \"home\"",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al 1",
+      "to": [
+        "a l'1"
+      ],
+      "tokens": [
+        "al",
+        "1"
+      ],
+      "before": [
+        "fins"
+      ],
+      "after": [
+        "de",
+        "febrer"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "fins al 1 de febrer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al 1",
+      "to": [
+        "a l'1"
+      ],
+      "tokens": [
+        "al",
+        "1"
+      ],
+      "before": [
+        "fins"
+      ],
+      "after": [
+        "al",
+        "2",
+        "i",
+        "al"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 7,
+      "sourceExample": "fins al 1, al 2 i al 3 de febrer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al 1%",
+      "to": [
+        "a l'1%"
+      ],
+      "tokens": [
+        "al",
+        "1"
+      ],
+      "before": [
+        "fins"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "fins al 1%.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al home",
+      "to": [
+        "a l'home"
+      ],
+      "tokens": [
+        "al",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "al home",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "al uixer",
+      "to": [
+        "a l'uixer"
+      ],
+      "tokens": [
+        "al",
+        "uixer"
+      ],
+      "before": [
+        "fins"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "fins al uixer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "cal ample",
+      "to": [
+        "ca l'ample"
+      ],
+      "tokens": [
+        "cal",
+        "ample"
+      ],
+      "before": [
+        "una",
+        "victoria",
+        "de"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "una victòria de cal ample",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "cal Enric",
+      "to": [
+        "ca l'Enric"
+      ],
+      "tokens": [
+        "cal",
+        "enric"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "cal Enric",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del \"home",
+      "to": [
+        "de l'\"home"
+      ],
+      "tokens": [
+        "del",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "del \"home\"",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del FBI",
+      "to": [
+        "de l'FBI"
+      ],
+      "tokens": [
+        "del",
+        "fbi"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "del FBI",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del home",
+      "to": [
+        "de l'home"
+      ],
+      "tokens": [
+        "del",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "del home",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del Homo",
+      "to": [
+        "de l'Homo"
+      ],
+      "tokens": [
+        "del",
+        "homo"
+      ],
+      "before": [
+        "es",
+        "propi"
+      ],
+      "after": [
+        "sapiens"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "És propi del Homo sapiens.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del html",
+      "to": [
+        "de l'html"
+      ],
+      "tokens": [
+        "del",
+        "html"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "del html",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del imant",
+      "to": [
+        "de l'imant"
+      ],
+      "tokens": [
+        "del",
+        "imant"
+      ],
+      "before": [
+        "pel",
+        "pol",
+        "s"
+      ],
+      "after": [
+        "terrestre"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "pel pol S del imant terrestre",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del Osama",
+      "to": [
+        "de l'Osama"
+      ],
+      "tokens": [
+        "del",
+        "osama"
+      ],
+      "before": [
+        "es"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "És del Osama.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "del statu",
+      "to": [
+        "de l'statu"
+      ],
+      "tokens": [
+        "del",
+        "statu"
+      ],
+      "before": [],
+      "after": [
+        "quo"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "del statu quo",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el \"home",
+      "to": [
+        "l'\"home"
+      ],
+      "tokens": [
+        "el",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "el \"home\"",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el 1",
+      "to": [
+        "l'1"
+      ],
+      "tokens": [
+        "el",
+        "1"
+      ],
+      "before": [],
+      "after": [
+        "de",
+        "febrer"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "el 1 de febrer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el 1",
+      "to": [
+        "l'1"
+      ],
+      "tokens": [
+        "el",
+        "1"
+      ],
+      "before": [],
+      "after": [
+        "el",
+        "2",
+        "i",
+        "el"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "el 1, el 2 i el 3 de febrer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "El 11%",
+      "to": [
+        "L'11%"
+      ],
+      "tokens": [
+        "el",
+        "11"
+      ],
+      "before": [],
+      "after": [
+        "dels",
+        "assistents"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "El 11% dels assistents.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "El 11è",
+      "to": [
+        "L'11è"
+      ],
+      "tokens": [
+        "el",
+        "11e"
+      ],
+      "before": [],
+      "after": [
+        "dels",
+        "assistents"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "El 11è dels assistents.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el Esping",
+      "to": [
+        "l'Esping"
+      ],
+      "tokens": [
+        "el",
+        "esping"
+      ],
+      "before": [],
+      "after": [
+        "andersen"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "el Esping-Andersen.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el FBI",
+      "to": [
+        "l'FBI"
+      ],
+      "tokens": [
+        "el",
+        "fbi"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "el FBI",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el home",
+      "to": [
+        "l'home"
+      ],
+      "tokens": [
+        "el",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "el home",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "El IRA",
+      "to": [
+        "L'IRA"
+      ],
+      "tokens": [
+        "el",
+        "ira"
+      ],
+      "before": [],
+      "after": [
+        "irlandes"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "El IRA irlandès.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el statu",
+      "to": [
+        "l'statu"
+      ],
+      "tokens": [
+        "el",
+        "statu"
+      ],
+      "before": [],
+      "after": [
+        "quo"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "el statu quo",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el Stradivarius",
+      "to": [
+        "l'Stradivarius"
+      ],
+      "tokens": [
+        "el",
+        "stradivarius"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "el Stradivarius",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el XI",
+      "to": [
+        "l'XI"
+      ],
+      "tokens": [
+        "el",
+        "xi"
+      ],
+      "before": [
+        "va",
+        "participar",
+        "en"
+      ],
+      "after": [
+        "congres"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "Va participar en el XI Congrés.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "el últim",
+      "to": [
+        "l'últim"
+      ],
+      "tokens": [
+        "el",
+        "ultim"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "el últim",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'0,1%",
+      "to": [
+        "el 0,1%"
+      ],
+      "tokens": [
+        "l'0",
+        "1"
+      ],
+      "before": [
+        "de"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "de l'0,1%",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'intel·lectual",
+      "to": [
+        "la intel·lectual"
+      ],
+      "tokens": [
+        "l'intel",
+        "lectual"
+      ],
+      "before": [],
+      "after": [
+        "valenciana"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "l'intel·lectual valenciana",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la 11a",
+      "to": [
+        "l'11a"
+      ],
+      "tokens": [
+        "la",
+        "11a"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la 11a",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la AP-7",
+      "to": [
+        "l'AP-7"
+      ],
+      "tokens": [
+        "la",
+        "ap-7"
+      ],
+      "before": [
+        "a"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "A la AP-7",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la insta",
+      "to": [
+        "l'insta"
+      ],
+      "tokens": [
+        "la",
+        "insta"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la insta",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la L9",
+      "to": [
+        "l'L9"
+      ],
+      "tokens": [
+        "la",
+        "l9"
+      ],
+      "before": [
+        "a"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "A la L9",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la N-II",
+      "to": [
+        "l'N-II"
+      ],
+      "tokens": [
+        "la",
+        "n-ii"
+      ],
+      "before": [
+        "a"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "A la N-II",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la NBA",
+      "to": [
+        "l'NBA"
+      ],
+      "tokens": [
+        "la",
+        "nba"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la NBA",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la ombra",
+      "to": [
+        "l'ombra"
+      ],
+      "tokens": [
+        "la",
+        "ombra"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la ombra",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la UJI",
+      "to": [
+        "l'UJI"
+      ],
+      "tokens": [
+        "la",
+        "uji"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la UJI",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la umma",
+      "to": [
+        "l'umma"
+      ],
+      "tokens": [
+        "la",
+        "umma"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la umma",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la una",
+      "to": [
+        "l'una"
+      ],
+      "tokens": [
+        "la",
+        "una"
+      ],
+      "before": [
+        "hem",
+        "d'anar",
+        "tots",
+        "a"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "Hem d'anar tots a la una.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "la urca",
+      "to": [
+        "l'urca"
+      ],
+      "tokens": [
+        "la",
+        "urca"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "la urca",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel \"home",
+      "to": [
+        "per l'\"home"
+      ],
+      "tokens": [
+        "pel",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "pel \"home\"",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel 1",
+      "to": [
+        "per l'1"
+      ],
+      "tokens": [
+        "pel",
+        "1"
+      ],
+      "before": [],
+      "after": [
+        "de",
+        "febrer"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "pel 1 de febrer",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel FBI",
+      "to": [
+        "per l'FBI"
+      ],
+      "tokens": [
+        "pel",
+        "fbi"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "pel FBI",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel home",
+      "to": [
+        "per l'home"
+      ],
+      "tokens": [
+        "pel",
+        "home"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "pel home",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel Osama",
+      "to": [
+        "per l'Osama"
+      ],
+      "tokens": [
+        "pel",
+        "osama"
+      ],
+      "before": [
+        "es"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "És pel Osama.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Pel statu",
+      "to": [
+        "Per l'statu"
+      ],
+      "tokens": [
+        "pel",
+        "statu"
+      ],
+      "before": [],
+      "after": [
+        "quo"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Pel statu quo",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel Uixó",
+      "to": [
+        "per l'Uixó"
+      ],
+      "tokens": [
+        "pel",
+        "uixo"
+      ],
+      "before": [],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "pel Uixó",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'5",
+      "to": [
+        "el 5"
+      ],
+      "tokens": [
+        "l'5"
+      ],
+      "before": [
+        "es"
+      ],
+      "after": [
+        "km"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "És l'5 km.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'essa",
+      "to": [
+        "la essa"
+      ],
+      "tokens": [
+        "l'essa"
+      ],
+      "before": [
+        "darrere",
+        "de"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Darrere de l'essa",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'imiten",
+      "to": [
+        "la imiten"
+      ],
+      "tokens": [
+        "l'imiten"
+      ],
+      "before": [
+        "a",
+        "ella"
+      ],
+      "after": [
+        "aixi"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "A ella l'imiten així.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'imitessin",
+      "to": [
+        "la imitessin"
+      ],
+      "tokens": [
+        "l'imitessin"
+      ],
+      "before": [
+        "que",
+        "a",
+        "la",
+        "fornera"
+      ],
+      "after": [
+        "aixi"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "Que a la fornera l'imitessin així.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'imitàveu",
+      "to": [
+        "la imitàveu"
+      ],
+      "tokens": [
+        "l'imitaveu"
+      ],
+      "before": [
+        "a",
+        "anna"
+      ],
+      "after": [
+        "aixi"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "A Anna l'imitàveu així.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'important",
+      "to": [
+        "la important"
+      ],
+      "tokens": [
+        "l'important"
+      ],
+      "before": [],
+      "after": [
+        "tasca",
+        "de",
+        "pol",
+        "linitzar"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "l'important tasca de pol·linitzar",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'inestimable",
+      "to": [
+        "la inestimable"
+      ],
+      "tokens": [
+        "l'inestimable"
+      ],
+      "before": [
+        "vam",
+        "comptar",
+        "amb"
+      ],
+      "after": [
+        "ajuda",
+        "de",
+        "maria"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 7,
+      "sourceExample": "Vam comptar amb l'inestimable ajuda de Maria.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'interna",
+      "to": [
+        "la interna"
+      ],
+      "tokens": [
+        "l'interna"
+      ],
+      "before": [
+        "donis",
+        "la",
+        "documentacio",
+        "externa",
+        "vull"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "No em donis la documentació externa, vull l'interna.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "L'ira",
+      "to": [
+        "La ira"
+      ],
+      "tokens": [
+        "l'ira"
+      ],
+      "before": [],
+      "after": [
+        "el",
+        "feia",
+        "embogira"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "L'ira el feia embogira.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'una",
+      "to": [
+        "la una"
+      ],
+      "tokens": [
+        "l'una"
+      ],
+      "before": [
+        "ens",
+        "veurem",
+        "a"
+      ],
+      "after": [
+        "del",
+        "migdia"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "Ens veurem a l'una del migdia.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'una",
+      "to": [
+        "la una"
+      ],
+      "tokens": [
+        "l'una"
+      ],
+      "before": [
+        "hem",
+        "quedat",
+        "a"
+      ],
+      "after": [],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Hem quedat a l'una.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'una",
+      "to": [
+        "la una"
+      ],
+      "tokens": [
+        "l'una"
+      ],
+      "before": [
+        "sera",
+        "a"
+      ],
+      "after": [
+        "i",
+        "quart"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Serà a l'una i quart.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'una",
+      "to": [
+        "la una"
+      ],
+      "tokens": [
+        "l'una"
+      ],
+      "before": [
+        "sera",
+        "a"
+      ],
+      "after": [
+        "i",
+        "vint-i-cinc"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Serà a l'una i vint-i-cinc.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'€",
+      "to": [
+        "el €"
+      ],
+      "tokens": [
+        "l"
+      ],
+      "before": [
+        "ara"
+      ],
+      "after": [
+        "esta",
+        "alt"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Ara l'€ està alt",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "L'€",
+      "to": [
+        "El €"
+      ],
+      "tokens": [
+        "l"
+      ],
+      "before": [],
+      "after": [
+        "esta",
+        "alt"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "L'€ està alt",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "l'schola",
+      "to": [
+        "la schola"
+      ],
+      "tokens": [
+        "l'schola"
+      ],
+      "before": [],
+      "after": [
+        "cantorum"
+      ],
+      "category": "APOSTROPHATION",
+      "ltRule": "LA_SCHOLA",
+      "name": "Exigeix: la schola cantorum",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "l'schola cantorum",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "N'hi ha hagut algú",
+      "to": [
+        "N'hi ha hagut algun",
+        "Hi ha hagut algú"
+      ],
+      "tokens": [
+        "n'hi",
+        "ha",
+        "hagut",
+        "algu"
+      ],
+      "before": [],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "¿N'hi ha hagut algú'",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "n'hi va haver ningú",
+      "to": [
+        "n'hi va haver cap",
+        "hi va haver ningú"
+      ],
+      "tokens": [
+        "n'hi",
+        "va",
+        "haver",
+        "ningu"
+      ],
+      "before": [
+        "no"
+      ],
+      "after": [
+        "que",
+        "ho",
+        "sabes",
+        "fer"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 9,
+      "sourceExample": "No n'hi va haver ningú que ho sabés fer.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "alguna o algú",
+      "to": [
+        "algú"
+      ],
+      "tokens": [
+        "alguna",
+        "o",
+        "algu"
+      ],
+      "before": [
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Vindrà alguna o algú.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "algú o alguna",
+      "to": [
+        "algú"
+      ],
+      "tokens": [
+        "algu",
+        "o",
+        "alguna"
+      ],
+      "before": [
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Vindrà algú o alguna.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "N'hi ha algú",
+      "to": [
+        "N'hi ha algun",
+        "Hi ha algú"
+      ],
+      "tokens": [
+        "n'hi",
+        "ha",
+        "algu"
+      ],
+      "before": [],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "¿N'hi ha algú'",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "n'hi havia ningú",
+      "to": [
+        "n'hi havia cap",
+        "hi havia ningú"
+      ],
+      "tokens": [
+        "n'hi",
+        "havia",
+        "ningu"
+      ],
+      "before": [
+        "no"
+      ],
+      "after": [
+        "que",
+        "ho",
+        "sabes",
+        "fer"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 8,
+      "sourceExample": "No n'hi havia ningú que ho sabés fer.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "ningú o ninguna",
+      "to": [
+        "ningú"
+      ],
+      "tokens": [
+        "ningu",
+        "o",
+        "ninguna"
+      ],
+      "before": [
+        "creus",
+        "que",
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 6,
+      "sourceExample": "Creus que vindrà ningú o ninguna'",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Equador",
+      "to": [
+        "a l'Equador"
+      ],
+      "tokens": [
+        "a",
+        "equador"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Són a Equador.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Estats",
+      "to": [
+        "als Estats"
+      ],
+      "tokens": [
+        "a",
+        "estats"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [
+        "units"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Són a Estats Units.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a EUA",
+      "to": [
+        "als EUA"
+      ],
+      "tokens": [
+        "a",
+        "eua"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Són a EUA.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Perú",
+      "to": [
+        "al Perú"
+      ],
+      "tokens": [
+        "a",
+        "peru"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Són a Perú.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Vall",
+      "to": [
+        "a la Vall"
+      ],
+      "tokens": [
+        "a",
+        "vall"
+      ],
+      "before": [
+        "el",
+        "tren",
+        "cremallera",
+        "que",
+        "puja"
+      ],
+      "after": [
+        "de",
+        "nuria"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 9,
+      "sourceExample": "El tren cremallera que puja a Vall de Núria.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Xina",
+      "to": [
+        "a la Xina"
+      ],
+      "tokens": [
+        "a",
+        "xina"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Són a Xina.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "a Xina",
+      "to": [
+        "a la Xina"
+      ],
+      "tokens": [
+        "a",
+        "xina"
+      ],
+      "before": [
+        "el",
+        "japo",
+        "i"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "El Japó i a Xina.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "alguna/algú",
+      "to": [
+        "algú"
+      ],
+      "tokens": [
+        "alguna",
+        "algu"
+      ],
+      "before": [
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Vindrà alguna/algú.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "algú/alguna",
+      "to": [
+        "algú"
+      ],
+      "tokens": [
+        "algu",
+        "alguna"
+      ],
+      "before": [
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Vindrà algú/alguna.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "algú/na",
+      "to": [
+        "algú"
+      ],
+      "tokens": [
+        "algu",
+        "na"
+      ],
+      "before": [
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Vindrà algú/na.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "de Balears",
+      "to": [
+        "de les Balears"
+      ],
+      "tokens": [
+        "de",
+        "balears"
+      ],
+      "before": [
+        "el",
+        "pib"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "El PIB de Balears.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "de Gran",
+      "to": [
+        "de la Gran"
+      ],
+      "tokens": [
+        "de",
+        "gran"
+      ],
+      "before": [
+        "el",
+        "pib"
+      ],
+      "after": [
+        "bretanya"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "El PIB de Gran Bretanya.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "de Vaticà",
+      "to": [
+        "del Vaticà"
+      ],
+      "tokens": [
+        "de",
+        "vatica"
+      ],
+      "before": [
+        "del",
+        "palau"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "del palau de Vaticà",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "els als",
+      "to": [
+        "els",
+        "als"
+      ],
+      "tokens": [
+        "els",
+        "als"
+      ],
+      "before": [
+        "son"
+      ],
+      "after": [
+        "mateixos"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Són els als mateixos.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Els les",
+      "to": [
+        "Els",
+        "Les"
+      ],
+      "tokens": [
+        "els",
+        "les"
+      ],
+      "before": [],
+      "after": [
+        "professionals"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Els les professionals.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "La les",
+      "to": [
+        "Les",
+        "La"
+      ],
+      "tokens": [
+        "la",
+        "les"
+      ],
+      "before": [],
+      "after": [
+        "targetes"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "La les targetes.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Les els",
+      "to": [
+        "Els",
+        "Les"
+      ],
+      "tokens": [
+        "les",
+        "els"
+      ],
+      "before": [],
+      "after": [
+        "professionals"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Les els professionals.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "ningú/ninguna",
+      "to": [
+        "ningú"
+      ],
+      "tokens": [
+        "ningu",
+        "ninguna"
+      ],
+      "before": [
+        "creus",
+        "que",
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Creus que vindrà ningú/ninguna'",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "ningú/una",
+      "to": [
+        "ningú"
+      ],
+      "tokens": [
+        "ningu",
+        "una"
+      ],
+      "before": [
+        "creus",
+        "que",
+        "vindra"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Creus que vindrà ningú/una'",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel als",
+      "to": [
+        "per als",
+        "pel",
+        "als"
+      ],
+      "tokens": [
+        "pel",
+        "als"
+      ],
+      "before": [
+        "van"
+      ],
+      "after": [
+        "mateixos"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Van pel als mateixos.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pel el",
+      "to": [
+        "pel"
+      ],
+      "tokens": [
+        "pel",
+        "el"
+      ],
+      "before": [
+        "competeixen"
+      ],
+      "after": [
+        "mateix",
+        "espai"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Competeixen pel el mateix espai.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "pels als",
+      "to": [
+        "pels",
+        "als"
+      ],
+      "tokens": [
+        "pels",
+        "als"
+      ],
+      "before": [
+        "van"
+      ],
+      "after": [
+        "mateixos"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Van pels als mateixos.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "per Estats",
+      "to": [
+        "pels Estats"
+      ],
+      "tokens": [
+        "per",
+        "estats"
+      ],
+      "before": [
+        "corren"
+      ],
+      "after": [
+        "units"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Corren per Estats Units.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "per EUA",
+      "to": [
+        "pels EUA"
+      ],
+      "tokens": [
+        "per",
+        "eua"
+      ],
+      "before": [
+        "corren"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Corren per EUA.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Altra",
+      "to": [
+        "Una altra"
+      ],
+      "tokens": [
+        "altra"
+      ],
+      "before": [],
+      "after": [
+        "de",
+        "les",
+        "raons"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Altra de les raons.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "altra",
+      "to": [
+        "una altra"
+      ],
+      "tokens": [
+        "altra"
+      ],
+      "before": [
+        "vaja"
+      ],
+      "after": [
+        "errada",
+        "informatica"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Vaja, altra «errada informàtica».",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Altre",
+      "to": [
+        "Un altre"
+      ],
+      "tokens": [
+        "altre"
+      ],
+      "before": [],
+      "after": [
+        "dels",
+        "motius"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Altre dels motius.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "altre",
+      "to": [
+        "un altre"
+      ],
+      "tokens": [
+        "altre"
+      ],
+      "before": [
+        "el",
+        "conseller",
+        "es"
+      ],
+      "after": [
+        "que",
+        "hauria",
+        "de",
+        "dimitir"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 8,
+      "sourceExample": "El conseller és altre que hauria de dimitir.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Balears",
+      "to": [
+        "Les Balears"
+      ],
+      "tokens": [
+        "balears"
+      ],
+      "before": [],
+      "after": [
+        "es",
+        "una",
+        "destinacio",
+        "turistica"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Balears és una destinació turística.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "cals",
+      "to": [
+        "cal"
+      ],
+      "tokens": [
+        "cals"
+      ],
+      "before": [
+        "ara"
+      ],
+      "after": [
+        "que",
+        "vinguis"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Ara cals que vinguis.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "cals",
+      "to": [
+        "cal"
+      ],
+      "tokens": [
+        "cals"
+      ],
+      "before": [
+        "ara"
+      ],
+      "after": [
+        "fer-ho",
+        "de",
+        "seguida"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Ara cals fer-ho de seguida.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "d'Estats",
+      "to": [
+        "dels Estats"
+      ],
+      "tokens": [
+        "d'estats"
+      ],
+      "before": [
+        "venen"
+      ],
+      "after": [
+        "units"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Vénen d'Estats Units.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "d'EUA",
+      "to": [
+        "dels EUA"
+      ],
+      "tokens": [
+        "d'eua"
+      ],
+      "before": [
+        "venen"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceExample": "Vénen d'EUA.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Els",
+      "to": [
+        "Tots"
+      ],
+      "tokens": [
+        "els"
+      ],
+      "before": [],
+      "after": [
+        "dos",
+        "poden",
+        "fer",
+        "el"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Els dos poden fer el mateix.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Equador",
+      "to": [
+        "L'Equador"
+      ],
+      "tokens": [
+        "equador"
+      ],
+      "before": [],
+      "after": [
+        "es",
+        "una",
+        "pais",
+        "d'america"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Equador és una país d'Amèrica.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Estats",
+      "to": [
+        "els Estats"
+      ],
+      "tokens": [
+        "estats"
+      ],
+      "before": [
+        "amb"
+      ],
+      "after": [
+        "units"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Amb Estats Units.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "EUA",
+      "to": [
+        "Els EUA"
+      ],
+      "tokens": [
+        "eua"
+      ],
+      "before": [],
+      "after": [
+        "son",
+        "una",
+        "potencia",
+        "mundial"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "EUA són una potència mundial.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "EUA",
+      "to": [
+        "els EUA"
+      ],
+      "tokens": [
+        "eua"
+      ],
+      "before": [
+        "son",
+        "amb"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Són amb EUA.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Les",
+      "to": [
+        "Totes"
+      ],
+      "tokens": [
+        "les"
+      ],
+      "before": [],
+      "after": [
+        "dues",
+        "poden",
+        "fer",
+        "el"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Les dues poden fer el mateix.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Moncloa",
+      "to": [
+        "La Moncloa"
+      ],
+      "tokens": [
+        "moncloa"
+      ],
+      "before": [],
+      "after": [
+        "informa",
+        "de",
+        "la",
+        "reunio"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Moncloa informa de la reunió.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Moncloa",
+      "to": [
+        "la Moncloa"
+      ],
+      "tokens": [
+        "moncloa"
+      ],
+      "before": [
+        "reunio",
+        "en"
+      ],
+      "after": [
+        "entre",
+        "el",
+        "president",
+        "i"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 7,
+      "sourceExample": "Reunió en Moncloa entre el president i el líder de l'oposició.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "moncloa",
+      "to": [
+        "la Moncloa"
+      ],
+      "tokens": [
+        "moncloa"
+      ],
+      "before": [
+        "el",
+        "responsable",
+        "no",
+        "sera"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "El responsable no serà moncloa.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "Vall",
+      "to": [
+        "La Vall"
+      ],
+      "tokens": [
+        "vall"
+      ],
+      "before": [],
+      "after": [
+        "d'albaida",
+        "es",
+        "una",
+        "comarca"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 5,
+      "sourceExample": "Vall d'Albaida és una comarca del País Valencià.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "varis",
+      "to": [
+        "diversos",
+        "alguns",
+        "uns quants",
+        "diferents"
+      ],
+      "tokens": [
+        "varis"
+      ],
+      "before": [
+        "te"
+      ],
+      "after": [
+        "subtemes"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceExample": "Te varis subtemes",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "varis",
+      "to": [
+        "diversos",
+        "alguns",
+        "uns quants",
+        "diferents"
+      ],
+      "tokens": [
+        "varis"
+      ],
+      "before": [
+        "aqui",
+        "n'hi",
+        "ha"
+      ],
+      "after": [],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Aquí n'hi ha varis.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "vàries",
+      "to": [
+        "diverses",
+        "algunes",
+        "unes quantes",
+        "diferents"
+      ],
+      "tokens": [
+        "varies"
+      ],
+      "before": [
+        "hi",
+        "ha"
+      ],
+      "after": [
+        "solucions"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 4,
+      "sourceExample": "Hi ha vàries solucions.",
+      "wave": "7C-articles"
+    },
+    {
+      "from": "vàries",
+      "to": [
+        "diverses",
+        "algunes",
+        "unes quantes",
+        "diferents"
+      ],
+      "tokens": [
+        "varies"
+      ],
+      "before": [
+        "es",
+        "va",
+        "involucrar",
+        "en"
+      ],
+      "after": [
+        "d'aquestes",
+        "questions"
+      ],
+      "category": "DETERMINANTS",
+      "ltRule": "",
+      "name": "",
+      "risk": "safe",
+      "complexity": 7,
+      "sourceExample": "Es va involucrar en vàries d'aquestes qüestions.",
+      "wave": "7C-articles"
+    }
+  ]
+}

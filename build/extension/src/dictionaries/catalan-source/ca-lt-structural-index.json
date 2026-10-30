@@ -1,0 +1,6449 @@
+{
+  "version": 1,
+  "source": {
+    "grammar": "C:/Users/artur/Documents/Codex/2026-06-04/files-mentioned-by-the-user-language/work/audit/lt-ca/src/main/resources/org/languagetool/rules/ca/grammar.xml",
+    "disambiguation": "C:/Users/artur/Documents/Codex/2026-06-04/files-mentioned-by-the-user-language/work/audit/lt-ca/src/main/resources/org/languagetool/resource/ca/disambiguation.xml"
+  },
+  "generatedBy": "scripts/build-ca-lt-structural-index.mjs",
+  "stats": {
+    "grammarAntipatterns": 4982,
+    "grammarExceptions": 5850,
+    "grammarSkip": 2112,
+    "grammarUnify": 196,
+    "grammarUnifyIgnore": 56,
+    "disambiguationRules": 1960,
+    "disambiguationWd": 1078
+  },
+  "families": {
+    "CONCORDANCES_DET_POSSESSIU": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 1,
+      "executableAntipatterns": 1,
+      "entries": [
+        {
+          "id": "CONCORDANCES_DET_POSSESSIU_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_POSSESSIU",
+          "line": 4982,
+          "tokens": [
+            {
+              "text": "dos",
+              "rawText": "dos",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "_QM_OPEN",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.MP.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "dos"
+          ]
+        }
+      ],
+      "byKey": {
+        "dos": [
+          0
+        ]
+      }
+    },
+    "CONCORDANCES_DET_NOM": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 26,
+      "executableAntipatterns": 24,
+      "entries": [
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5230,
+          "tokens": [
+            {
+              "text": "joc",
+              "rawText": "joc",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "de",
+              "rawText": "de",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "l",
+              "rawText": "l",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "gallina",
+              "rawText": "gallina",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "joc",
+            "de",
+            "l",
+            "gallina"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_2",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5236,
+          "tokens": [
+            {
+              "text": "ser tornar comportar",
+              "rawText": "ser|tornar|comportar",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 2,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "un",
+              "rawText": "un",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "gallina",
+              "rawText": "gallina",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "un",
+            "gallina"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_3",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5241,
+          "tokens": [
+            {
+              "text": "el l",
+              "rawText": "el|l",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "tots",
+              "rawText": "tots",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "contra",
+              "rawText": "contra",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "tots un",
+              "rawText": "tots|un",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "tots",
+            "contra"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_4",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5247,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "molt",
+              "rawText": "molt",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "fans",
+              "rawText": "fans",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser",
+            "molt",
+            "fans"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_5",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5253,
+          "tokens": [
+            {
+              "text": "gracies",
+              "rawText": "gràcies",
+              "regexp": false,
+              "postag": "P[DI].*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "gracies",
+            "a"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_6",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5075,
+          "tokens": [
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "les",
+              "rawText": "les",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "afores",
+              "rawText": "afores",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "a",
+            "les",
+            "afores"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_7",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5080,
+          "tokens": [
+            {
+              "text": "de",
+              "rawText": "de",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "l",
+              "rawText": "l",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "/",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "de",
+              "rawText": "de",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "la",
+              "rawText": "la",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "de",
+            "l",
+            "la"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_8",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5087,
+          "tokens": [
+            {
+              "text": "pe",
+              "rawText": "pe",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "l",
+              "rawText": "l",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "/",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "per",
+              "rawText": "per",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "la",
+              "rawText": "la",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "pe",
+            "l",
+            "per",
+            "la"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_9",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5094,
+          "tokens": [
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "l",
+              "rawText": "l",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "/",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "la",
+              "rawText": "la",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "a",
+            "l",
+            "la"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_10",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5101,
+          "tokens": [
+            {
+              "text": "el",
+              "rawText": "el",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "/",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "els",
+              "rawText": "els",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "el",
+            "els"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_11",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5289,
+          "tokens": [
+            {
+              "text": "barca",
+              "rawText": "barça",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "barca"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_12",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5292,
+          "tokens": [
+            {
+              "text": "des",
+              "rawText": "des",
+              "regexp": false,
+              "postag": "DA.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "_possible_nompropi",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "des"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_13",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5297,
+          "tokens": [
+            {
+              "text": "regexp english nouns common english nouns masculine",
+              "rawText": "&regexp_english_nouns; &common_english_nouns_masculine;",
+              "regexp": false,
+              "postag": "D.0[MC]S0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "common english nouns masculine",
+                  "rawText": "&common_english_nouns_masculine;",
+                  "postag": "",
+                  "regexp": true,
+                  "scope": "",
+                  "inflected": false
+                }
+              ]
+            },
+            {
+              "text": "common english nouns masculine",
+              "rawText": "&common_english_nouns_masculine;",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": true,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "regexp english nouns common english nouns masculine"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_14",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5302,
+          "tokens": [
+            {
+              "text": "regexp english nouns p lu s",
+              "rawText": "&regexp_english_nouns; \\p{Lu}.+s",
+              "regexp": false,
+              "postag": "D.0.P0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "p lu s",
+                  "rawText": "\\p{Lu}.+s",
+                  "postag": "",
+                  "regexp": true,
+                  "scope": "",
+                  "inflected": false
+                }
+              ]
+            },
+            {
+              "text": "p lu s",
+              "rawText": "\\p{Lu}.+s",
+              "regexp": true,
+              "postag": "UNKNOWN|_english_ignore_",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": true,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "regexp english nouns p lu s"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_15",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5307,
+          "tokens": [
+            {
+              "text": "regexp english nouns common english nouns feminine",
+              "rawText": "&regexp_english_nouns; &common_english_nouns_feminine;",
+              "regexp": false,
+              "postag": "D.0[FC]S0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "common english nouns feminine",
+                  "rawText": "&common_english_nouns_feminine;",
+                  "postag": "",
+                  "regexp": true,
+                  "scope": "",
+                  "inflected": false
+                }
+              ]
+            },
+            {
+              "text": "common english nouns feminine",
+              "rawText": "&common_english_nouns_feminine;",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": true,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "regexp english nouns common english nouns feminine"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_16",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5314,
+          "tokens": [
+            {
+              "text": "un",
+              "rawText": "un",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "vora",
+              "rawText": "vora",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "l'altre",
+              "rawText": "l'altre",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "un",
+            "vora",
+            "l'altre"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_17",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5106,
+          "tokens": [
+            {
+              "text": "els ls",
+              "rawText": "els|ls",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i o",
+              "rawText": "/|i|o",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "les",
+              "rawText": "les",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "les"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_18",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5112,
+          "tokens": [
+            {
+              "text": "el l",
+              "rawText": "el|l",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i o",
+              "rawText": "/|i|o",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "la",
+              "rawText": "la",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "la"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_19",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5460,
+          "tokens": [
+            {
+              "text": "cada",
+              "rawText": "cada",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "d",
+              "rawText": "\\d+°",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "cada"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_21",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5507,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "un",
+              "rawText": "un",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "soca",
+              "rawText": "soca",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser",
+            "un",
+            "soca"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_22",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5512,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "uns",
+              "rawText": "uns",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "soques",
+              "rawText": "soques",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser",
+            "uns",
+            "soques"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_23",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5517,
+          "tokens": [
+            {
+              "text": "ser semblar pareixer",
+              "rawText": "ser|semblar|parèixer",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "tot",
+              "rawText": "tot",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NC.P.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "tot"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_24",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5523,
+          "tokens": [
+            {
+              "text": "gracies hostia",
+              "rawText": "gràcies|hòstia",
+              "regexp": false,
+              "postag": "D..MS.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "gracies hostia"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_DET_NOM_AP_26",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_DET_NOM",
+          "line": 5534,
+          "tokens": [
+            {
+              "text": "un",
+              "rawText": "un",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "gracies",
+              "rawText": "gràcies",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "un",
+            "gracies"
+          ]
+        }
+      ],
+      "byKey": {
+        "joc": [
+          0
+        ],
+        "de": [
+          0,
+          6
+        ],
+        "l": [
+          0,
+          6,
+          7,
+          8
+        ],
+        "gallina": [
+          0,
+          1
+        ],
+        "un": [
+          1,
+          15,
+          19,
+          23
+        ],
+        "tots": [
+          2
+        ],
+        "contra": [
+          2
+        ],
+        "ser": [
+          3,
+          19,
+          20
+        ],
+        "molt": [
+          3
+        ],
+        "fans": [
+          3
+        ],
+        "gracies": [
+          4,
+          23
+        ],
+        "a": [
+          4,
+          5,
+          8
+        ],
+        "les": [
+          5,
+          16
+        ],
+        "afores": [
+          5
+        ],
+        "la": [
+          6,
+          7,
+          8,
+          17
+        ],
+        "pe": [
+          7
+        ],
+        "per": [
+          7
+        ],
+        "el": [
+          9
+        ],
+        "els": [
+          9
+        ],
+        "barca": [
+          10
+        ],
+        "des": [
+          11
+        ],
+        "regexp english nouns common english nouns masculine": [
+          12
+        ],
+        "regexp english nouns p lu s": [
+          13
+        ],
+        "regexp english nouns common english nouns feminine": [
+          14
+        ],
+        "vora": [
+          15
+        ],
+        "l'altre": [
+          15
+        ],
+        "cada": [
+          18
+        ],
+        "soca": [
+          19
+        ],
+        "uns": [
+          20
+        ],
+        "soques": [
+          20
+        ],
+        "tot": [
+          21
+        ],
+        "gracies hostia": [
+          22
+        ]
+      }
+    },
+    "CONCORDANCES_ADJ_NOM": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 35,
+      "executableAntipatterns": 28,
+      "entries": [
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5611,
+          "tokens": [
+            {
+              "text": "haver",
+              "rawText": "haver",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.P..SM.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "CC",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.P..SM.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "haver"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_2",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5620,
+          "tokens": [
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "AO0MS0",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "AO0MS0",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NC[CM][PN]000",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "i"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_3",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5627,
+          "tokens": [
+            {
+              "text": "senyors",
+              "rawText": "senyors",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "senyores",
+              "rawText": "senyores",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "senyors",
+            "i",
+            "senyores"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_4",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5632,
+          "tokens": [
+            {
+              "text": "senyores",
+              "rawText": "senyores",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "senyors",
+              "rawText": "senyors",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "senyores",
+            "i",
+            "senyors"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_5",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5638,
+          "tokens": [
+            {
+              "text": "de",
+              "rawText": "de",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "primer",
+              "rawText": "primer",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "de",
+            "primer"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_6",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5642,
+          "tokens": [
+            {
+              "text": "gracies",
+              "rawText": "gràcies",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "gracies",
+            "a"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_8",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5652,
+          "tokens": [
+            {
+              "text": "davant darrere rere",
+              "rawText": "davant|darrere|rere",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "seu",
+              "rawText": "seu",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "seu"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_9",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5656,
+          "tokens": [
+            {
+              "text": "especial",
+              "rawText": "especial",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "eleccions",
+              "rawText": "eleccions",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "especial",
+            "eleccions"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_10",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5660,
+          "tokens": [
+            {
+              "text": "aci aqui ahi alli alla dema hui avui ahir despus-ahir despus-dema",
+              "rawText": "ací|aquí|ahí|allí|allà|demà|hui|avui|ahir|despús-ahir|despús-demà",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "mateix",
+              "rawText": "mateix",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "mateix"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_11",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5664,
+          "tokens": [
+            {
+              "text": "una",
+              "rawText": "una",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "vegada volta",
+              "rawText": "vegada|volta",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i darrere rere",
+              "rawText": "i|darrere|rere",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "una l'",
+              "rawText": "una|l'",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "altra",
+              "rawText": "altra",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "una",
+            "altra"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_12",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5672,
+          "tokens": [
+            {
+              "text": "gracies",
+              "rawText": "gràcies",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "a",
+              "rawText": "a",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "gracies",
+            "a"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_13",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5677,
+          "tokens": [
+            {
+              "text": "colors composts1",
+              "rawText": "&colors_composts1;",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "colors composts2",
+              "rawText": "&colors_composts2;",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_14",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5681,
+          "tokens": [
+            {
+              "text": "continguts parada sl empresa empreses capacitats",
+              "rawText": "continguts?|parada|SL|empresa|empreses|capacitats?",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_15",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5687,
+          "tokens": [
+            {
+              "text": "bufa estanc semiconductor consultor processador objectiu lexic marista escolapi jesuita convocatoria formulari horari",
+              "rawText": "bufa|estanc|semiconductor|consultor|processador|objectiu|lèxic|marista|escolapi|jesuïta|convocatòria|formulari|horari",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_17",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5705,
+          "tokens": [
+            {
+              "text": "activa actives som",
+              "rawText": "activa|actives|som",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_18",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5713,
+          "tokens": [
+            {
+              "text": "1r 2n 3r 4t 5-9 e",
+              "rawText": "1r|2n|3r|4t|[5-9]è",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "primaria secundaria",
+              "rawText": "primària|secundària",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_19",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5717,
+          "tokens": [
+            {
+              "text": "ment",
+              "rawText": ".*ment",
+              "regexp": true,
+              "postag": "RG",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i o ni",
+              "rawText": "i|o|ni",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "AQ0[FC][SN]0|V.P..SF",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_21",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5728,
+          "tokens": [
+            {
+              "text": "si jo tu ell ella nosaltres vosaltres ells elles",
+              "rawText": "si|jo|tu|ell|ella|nosaltres|vosaltres|ells|elles",
+              "regexp": false,
+              "postag": "SPS00",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "mateix",
+              "rawText": "mateix",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "si jo tu ell ella nosaltres vosaltres ells elles",
+            "mateix"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_22",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5733,
+          "tokens": [
+            {
+              "text": "º",
+              "rawText": ".+[º°]",
+              "regexp": false,
+              "postag": "A.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "º"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_23",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5737,
+          "tokens": [
+            {
+              "text": "per",
+              "rawText": "per",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "complet igual",
+              "rawText": "complet|igual",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "per"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_25",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5745,
+          "tokens": [
+            {
+              "text": "actuals",
+              "rawText": "actuals",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NP.*|_possible_nompropi",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "CC|_PUNCT.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NP.*|_possible_nompropi",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "actuals"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_28",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5788,
+          "tokens": [
+            {
+              "text": "fer",
+              "rawText": "fer",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "possible impossible",
+              "rawText": "possible|impossible",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "fer"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_29",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5792,
+          "tokens": [
+            {
+              "text": "benvolguts",
+              "rawText": "benvolguts",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "NP[MC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NP[MFC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "benvolguts",
+            "i"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_30",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5798,
+          "tokens": [
+            {
+              "text": "benvolguts",
+              "rawText": "benvolguts",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "NP[MFC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NP[MC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "benvolguts",
+            "i"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_32",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5807,
+          "tokens": [
+            {
+              "text": "fer",
+              "rawText": "fer",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "PX.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "fer"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_33",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5863,
+          "tokens": [
+            {
+              "text": "las",
+              "rawText": "las",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "las"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_34",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5866,
+          "tokens": [
+            {
+              "text": "1r 2n 3r 4t",
+              "rawText": "1r|2n|3r|4t",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "eso",
+              "rawText": "ESO",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "eso"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ADJ_NOM_AP_35",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ADJ_NOM",
+          "line": 5870,
+          "tokens": [
+            {
+              "text": "benvolgudes",
+              "rawText": "benvolgudes",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i",
+              "rawText": "i",
+              "regexp": false,
+              "postag": "NP[FC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "NP[FC].SP0",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "benvolgudes",
+            "i"
+          ]
+        }
+      ],
+      "byKey": {
+        "haver": [
+          0
+        ],
+        "i": [
+          1,
+          2,
+          3,
+          22,
+          23,
+          27
+        ],
+        "senyors": [
+          2,
+          3
+        ],
+        "senyores": [
+          2,
+          3
+        ],
+        "de": [
+          4
+        ],
+        "primer": [
+          4
+        ],
+        "gracies": [
+          5,
+          10
+        ],
+        "a": [
+          5,
+          10
+        ],
+        "seu": [
+          6
+        ],
+        "especial": [
+          7
+        ],
+        "eleccions": [
+          7
+        ],
+        "mateix": [
+          8,
+          17
+        ],
+        "una": [
+          9
+        ],
+        "altra": [
+          9
+        ],
+        "*": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "si jo tu ell ella nosaltres vosaltres ells elles": [
+          17
+        ],
+        "º": [
+          18
+        ],
+        "per": [
+          19
+        ],
+        "actuals": [
+          20
+        ],
+        "fer": [
+          21,
+          24
+        ],
+        "benvolguts": [
+          22,
+          23
+        ],
+        "las": [
+          25
+        ],
+        "eso": [
+          26
+        ],
+        "benvolgudes": [
+          27
+        ]
+      }
+    },
+    "CONCORDANCES_QUIN": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 0,
+      "executableAntipatterns": 0,
+      "entries": [],
+      "byKey": {}
+    },
+    "CONCORDANCES_QUAL": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 0,
+      "executableAntipatterns": 0,
+      "entries": [],
+      "byKey": {}
+    },
+    "CONCORD_SUBJECTE_VERB": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 4,
+      "executableAntipatterns": 3,
+      "entries": [
+        {
+          "id": "CONCORD_SUBJECTE_VERB_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORD_SUBJECTE_VERB",
+          "line": 9370,
+          "tokens": [
+            {
+              "text": "la",
+              "rawText": "la",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "resta majoria",
+              "rawText": "resta|majoria",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "la"
+          ]
+        },
+        {
+          "id": "CONCORD_SUBJECTE_VERB_AP_2",
+          "source": "grammar.xml",
+          "family": "CONCORD_SUBJECTE_VERB",
+          "line": 9376,
+          "tokens": [
+            {
+              "text": "en",
+              "rawText": "en",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 2,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "convergir confluir",
+              "rawText": "convergir|confluir",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "en"
+          ]
+        },
+        {
+          "id": "CONCORD_SUBJECTE_VERB_AP_4",
+          "source": "grammar.xml",
+          "family": "CONCORD_SUBJECTE_VERB",
+          "line": 9463,
+          "tokens": [
+            {
+              "text": "euros dolars pessetes lliures",
+              "rawText": "euros|dòlars|pessetes|lliures|[$€]",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "costar",
+              "rawText": "costar",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "costar"
+          ]
+        }
+      ],
+      "byKey": {
+        "la": [
+          0
+        ],
+        "en": [
+          1
+        ],
+        "costar": [
+          2
+        ]
+      }
+    },
+    "CONCORDANCES_ATRIBUT": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 26,
+      "executableAntipatterns": 17,
+      "entries": [
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9890,
+          "tokens": [
+            {
+              "text": "parts dia resta majoria vegada volta cop dies setmana mesos any unitats temps expressions temps d 3 4",
+              "rawText": "&parts_dia;|resta|majoria|vegada|volta|cop|&dies_setmana;|&mesos_any;|&unitats_temps;|&expressions_temps;|\\d{3,4}",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_2",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9893,
+          "tokens": [
+            {
+              "text": "public grup familia",
+              "rawText": "públic|grup|família",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 3,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_3",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9900,
+          "tokens": [
+            {
+              "text": "maxim",
+              "rawText": "màxim",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "DN.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "maxim"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_4",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9905,
+          "tokens": [
+            {
+              "text": "dret",
+              "rawText": "dret",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "a de",
+              "rawText": "a|de",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "dret"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_5",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9911,
+          "tokens": [
+            {
+              "text": "major gran bona",
+              "rawText": "major|gran|bona",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "part",
+              "rawText": "part",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "part"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_6",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9917,
+          "tokens": [
+            {
+              "text": "terme paraula mot denominacio",
+              "rawText": "terme|paraula|mot|denominació",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "N.*|A.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": []
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_7",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9923,
+          "tokens": [
+            {
+              "text": "ser estar semblar pareixer quedar",
+              "rawText": "ser|estar|semblar|parèixer|quedar",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "obvi evident clar possible probable",
+              "rawText": "obvi|evident|clar|possible|probable",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "que",
+              "rawText": "que",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "que"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_10",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9942,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "preparats",
+              "rawText": "preparats?",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_12",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9952,
+          "tokens": [
+            {
+              "text": "estar",
+              "rawText": "estar",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.G.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "estar"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_13",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9957,
+          "tokens": [
+            {
+              "text": "haver",
+              "rawText": "haver",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "haver",
+                  "rawText": "haver",
+                  "postag": "",
+                  "regexp": false,
+                  "scope": "",
+                  "inflected": true
+                }
+              ]
+            },
+            {
+              "text": "de d'",
+              "rawText": "de|d'",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.N.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.P.*|A.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "haver"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_14",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9967,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "iniciativa conjunt capacitat qualsevol estat motor generador dispositiu baia caracteristica despesa empresa entrada llati material parella tret herbivor carnivor teixit politica cel·lulosa",
+              "rawText": "iniciativa|conjunt|capacitat|qualsevol|estat|motor|generador|dispositiu|baia|característica|despesa|empresa|entrada|llatí|material|parella|tret|herbívor|carnívor|teixit|política|cel·lulosa",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_15",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9973,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "iniciativa fets conjunts capacitats qualsevol estats motors generadors dispositius baia baies caracteristica caracteristiques despesa despeses empresa empreses entrada entrades llati material materials parella parelles trets herbivors carnivors teixits politica politiques cel·lulosa",
+              "rawText": "iniciativa|fets?|conjunts?|capacitats?|qualsevol|estats?|motors?|generadors?|dispositius?|baia|baies|característica|característiques|despesa|despeses|empresa|empreses|entrada|entrades|llatí|material|materials|parella|parelles|trets?|herbívors?|carnívors?|teixits?|política|polítiques|cel·lulosa",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_16",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9980,
+          "tokens": [
+            {
+              "text": "multiplicar",
+              "rawText": "multiplicar",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "per",
+              "rawText": "per",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "multiplicar",
+            "per"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_17",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9984,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "V...3P..",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "i o",
+              "rawText": "i|o|,",
+              "regexp": false,
+              "postag": "V.P..S..|A...S.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.P..S..|A...S.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser",
+            "i o"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_19",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 9996,
+          "tokens": [
+            {
+              "text": "tot",
+              "rawText": "tot",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "recte dret",
+              "rawText": "recte|dret",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "tot"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_21",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 10005,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "_GN_.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_ATRIBUT_AP_22",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_ATRIBUT",
+          "line": 10010,
+          "tokens": [
+            {
+              "text": "mig",
+              "rawText": "mig",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "ser estar semblar pareixer quedar",
+              "rawText": "ser|estar|semblar|parèixer|quedar",
+              "regexp": false,
+              "postag": "NPFSG00",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "ser estar semblar pareixer quedar",
+                  "rawText": "ser|estar|semblar|parèixer|quedar",
+                  "postag": "",
+                  "regexp": true,
+                  "scope": "",
+                  "inflected": true
+                }
+              ]
+            },
+            {
+              "text": "ser estar semblar pareixer quedar",
+              "rawText": "ser|estar|semblar|parèixer|quedar",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V.P..SF.|A..[FC][SN].",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "mig",
+            "ser estar semblar pareixer quedar"
+          ]
+        }
+      ],
+      "byKey": {
+        "*": [
+          0,
+          5
+        ],
+        "ser": [
+          1,
+          7,
+          10,
+          11,
+          13,
+          15
+        ],
+        "maxim": [
+          2
+        ],
+        "dret": [
+          3
+        ],
+        "part": [
+          4
+        ],
+        "que": [
+          6
+        ],
+        "estar": [
+          8
+        ],
+        "haver": [
+          9
+        ],
+        "multiplicar": [
+          12
+        ],
+        "per": [
+          12
+        ],
+        "i o": [
+          13
+        ],
+        "tot": [
+          14
+        ],
+        "mig": [
+          16
+        ],
+        "ser estar semblar pareixer quedar": [
+          16
+        ]
+      }
+    },
+    "CONCORDANCES_PRONOM_VERB": {
+      "source": "grammar.xml",
+      "totalAntipatterns": 11,
+      "executableAntipatterns": 10,
+      "entries": [
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_1",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10450,
+          "tokens": [
+            {
+              "text": "hi",
+              "rawText": "hi",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "haver",
+              "rawText": "haver",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": true,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "hi",
+            "haver"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_2",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10454,
+          "tokens": [
+            {
+              "text": "sembla semblava sembla semblar",
+              "rawText": "sembla|semblava|semblà|semblar",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "que",
+              "rawText": "que",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "que"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_3",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10458,
+          "tokens": [
+            {
+              "text": "jo",
+              "rawText": "jo",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "som",
+              "rawText": "som",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "jo",
+            "som"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_4",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10463,
+          "tokens": [
+            {
+              "text": "tot",
+              "rawText": "tot",
+              "regexp": false,
+              "postag": "SPS00|.*LOC_PREP.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "jo tu ella nosaltres vosaltres elle s vost ee s vos",
+              "rawText": "jo|tu|ella?|nosaltres|vosaltres|elle?s|vost[èé]s?|vós",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "tot"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_5",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10472,
+          "tokens": [
+            {
+              "text": "caldre",
+              "rawText": "caldre",
+              "regexp": false,
+              "postag": "V.[MIS].*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "caldre",
+                  "rawText": "caldre",
+                  "postag": ".*LOC_ADV.*",
+                  "regexp": false,
+                  "scope": "",
+                  "inflected": false
+                }
+              ]
+            },
+            {
+              "text": "jo tu ella nosaltres vosaltres elle s vost ee s vos",
+              "rawText": "jo|tu|ella?|nosaltres|vosaltres|elle?s|vost[èé]s?|vós",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "caldre"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_6",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10480,
+          "tokens": [
+            {
+              "text": "caldre",
+              "rawText": "caldre",
+              "regexp": false,
+              "postag": "V.[MIS].*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": [
+                {
+                  "text": "caldre",
+                  "rawText": "caldre",
+                  "postag": ".*LOC_ADV.*",
+                  "regexp": false,
+                  "scope": "",
+                  "inflected": false
+                }
+              ]
+            },
+            {
+              "text": "jo tu ella nosaltres vosaltres elle s vost ee s vos",
+              "rawText": "jo|tu|ella?|nosaltres|vosaltres|elle?s|vost[èé]s?|vós",
+              "regexp": false,
+              "postag": "V.[NP].*|LOC_ADV|PI.*",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 4,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "caldre",
+            "jo tu ella nosaltres vosaltres elle s vost ee s vos"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_8",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10496,
+          "tokens": [
+            {
+              "text": "jo tu ella nosaltres vosaltres elle s vost ee s vos",
+              "rawText": "jo|tu|ella?|nosaltres|vosaltres|elle?s|vost[èé]s?|vós",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "no",
+              "rawText": "no",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 0,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "es",
+              "rawText": "és",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "que",
+              "rawText": "que",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "no",
+            "es",
+            "que"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_9",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10502,
+          "tokens": [
+            {
+              "text": "em",
+              "rawText": "em",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "pens penso pense",
+              "rawText": "pens|penso|pense",
+              "regexp": true,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "que",
+              "rawText": "que",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "em",
+            "que"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_10",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10507,
+          "tokens": [
+            {
+              "text": "un",
+              "rawText": "un",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "nosaltres",
+              "rawText": "nosaltres",
+              "regexp": false,
+              "postag": "",
+              "postagRegexp": false,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            },
+            {
+              "text": "",
+              "rawText": "",
+              "regexp": false,
+              "postag": "V...3S..",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 0,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "un",
+            "nosaltres"
+          ]
+        },
+        {
+          "id": "CONCORDANCES_PRONOM_VERB_AP_11",
+          "source": "grammar.xml",
+          "family": "CONCORDANCES_PRONOM_VERB",
+          "line": 10636,
+          "tokens": [
+            {
+              "text": "ser",
+              "rawText": "ser",
+              "regexp": false,
+              "postag": "DD..S.",
+              "postagRegexp": true,
+              "lemma": "",
+              "inflected": false,
+              "skip": 3,
+              "min": 1,
+              "max": 1,
+              "caseSensitive": false,
+              "exceptions": []
+            }
+          ],
+          "keys": [
+            "ser"
+          ]
+        }
+      ],
+      "byKey": {
+        "hi": [
+          0
+        ],
+        "haver": [
+          0
+        ],
+        "que": [
+          1,
+          6,
+          7
+        ],
+        "jo": [
+          2
+        ],
+        "som": [
+          2
+        ],
+        "tot": [
+          3
+        ],
+        "caldre": [
+          4,
+          5
+        ],
+        "jo tu ella nosaltres vosaltres elle s vost ee s vos": [
+          5
+        ],
+        "no": [
+          6
+        ],
+        "es": [
+          6
+        ],
+        "em": [
+          7
+        ],
+        "un": [
+          8
+        ],
+        "nosaltres": [
+          8
+        ],
+        "ser": [
+          9
+        ]
+      }
+    }
+  },
+  "disambiguation": {
+    "wdCount": 1078,
+    "locutions": [
+      {
+        "phrase": "mans lliures",
+        "lemma": "mans lliures",
+        "pos": "NCMN000",
+        "line": 2341
+      },
+      {
+        "phrase": "mans lliures",
+        "lemma": "mans lliures",
+        "pos": "AQ0MN0",
+        "line": 2342
+      },
+      {
+        "phrase": "a tocar",
+        "lemma": "a tocar",
+        "pos": "LOC_ADV",
+        "line": 2396
+      },
+      {
+        "phrase": "a tocar",
+        "lemma": "a tocar",
+        "pos": "LOC_ADV",
+        "line": 2397
+      },
+      {
+        "phrase": "a penes",
+        "lemma": "a penes",
+        "pos": "LOC_ADV",
+        "line": 2416
+      },
+      {
+        "phrase": "a penes",
+        "lemma": "a penes",
+        "pos": "LOC_ADV",
+        "line": 2417
+      },
+      {
+        "phrase": "un mica",
+        "lemma": "un mica",
+        "pos": "LOC_ADV",
+        "line": 2432
+      },
+      {
+        "phrase": "un mica",
+        "lemma": "un mica",
+        "pos": "LOC_ADV",
+        "line": 2433
+      },
+      {
+        "phrase": "un poc",
+        "lemma": "un poc",
+        "pos": "LOC_ADV",
+        "line": 2448
+      },
+      {
+        "phrase": "un poc",
+        "lemma": "un poc",
+        "pos": "LOC_ADV",
+        "line": 2449
+      },
+      {
+        "phrase": "d'acord",
+        "lemma": "d'acord",
+        "pos": "LOC_ADV",
+        "line": 2462
+      },
+      {
+        "phrase": "d'acord",
+        "lemma": "d'acord",
+        "pos": "LOC_ADV",
+        "line": 2463
+      },
+      {
+        "phrase": "a baix",
+        "lemma": "a baix",
+        "pos": "LOC_ADV",
+        "line": 2472
+      },
+      {
+        "phrase": "a baix",
+        "lemma": "a baix",
+        "pos": "LOC_ADV",
+        "line": 2473
+      },
+      {
+        "phrase": "de primer",
+        "lemma": "de primer",
+        "pos": "LOC_ADV",
+        "line": 2485
+      },
+      {
+        "phrase": "de primer",
+        "lemma": "de primer",
+        "pos": "LOC_ADV",
+        "line": 2486
+      },
+      {
+        "phrase": "a dalt",
+        "lemma": "a dalt",
+        "pos": "LOC_ADV",
+        "line": 2495
+      },
+      {
+        "phrase": "a dalt",
+        "lemma": "a dalt",
+        "pos": "LOC_ADV",
+        "line": 2496
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2506
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2507
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2516
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2517
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2527
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2528
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2529
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2539
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2540
+      },
+      {
+        "phrase": "altra vegada",
+        "lemma": "altra vegada",
+        "pos": "LOC_ADV",
+        "line": 2541
+      },
+      {
+        "phrase": "al limit",
+        "lemma": "al límit",
+        "pos": "LOC_ADV",
+        "line": 2563
+      },
+      {
+        "phrase": "al limit",
+        "lemma": "al límit",
+        "pos": "LOC_ADV",
+        "line": 2564
+      },
+      {
+        "phrase": "al limit",
+        "lemma": "al límit",
+        "pos": "LOC_ADV",
+        "line": 2565
+      },
+      {
+        "phrase": "gota a gota",
+        "lemma": "gota a gota",
+        "pos": "LOC_ADV",
+        "line": 2578
+      },
+      {
+        "phrase": "gota a gota",
+        "lemma": "gota a gota",
+        "pos": "LOC_ADV",
+        "line": 2579
+      },
+      {
+        "phrase": "gota a gota",
+        "lemma": "gota a gota",
+        "pos": "LOC_ADV",
+        "line": 2580
+      },
+      {
+        "phrase": "daltra banda",
+        "lemma": "daltra_banda",
+        "pos": "LOC_CONJ",
+        "line": 2594
+      },
+      {
+        "phrase": "daltra banda",
+        "lemma": "daltra_banda",
+        "pos": "LOC_CONJ",
+        "line": 2595
+      },
+      {
+        "phrase": "daltra banda",
+        "lemma": "daltra_banda",
+        "pos": "LOC_CONJ",
+        "line": 2596
+      },
+      {
+        "phrase": "temps ha",
+        "lemma": "temps ha",
+        "pos": "LOC_ADV",
+        "line": 2608
+      },
+      {
+        "phrase": "temps ha",
+        "lemma": "temps ha",
+        "pos": "LOC_ADV",
+        "line": 2609
+      },
+      {
+        "phrase": "a espai",
+        "lemma": "a espai",
+        "pos": "LOC_ADV",
+        "line": 2622
+      },
+      {
+        "phrase": "a espai",
+        "lemma": "a espai",
+        "pos": "LOC_ADV",
+        "line": 2623
+      },
+      {
+        "phrase": "de prop",
+        "lemma": "de prop",
+        "pos": "LOC_ADV",
+        "line": 2638
+      },
+      {
+        "phrase": "de prop",
+        "lemma": "de prop",
+        "pos": "LOC_ADV",
+        "line": 2639
+      },
+      {
+        "phrase": "de gust",
+        "lemma": "de gust",
+        "pos": "LOC_ADV",
+        "line": 2652
+      },
+      {
+        "phrase": "de gust",
+        "lemma": "de gust",
+        "pos": "LOC_ADV",
+        "line": 2653
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2666
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2667
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2681
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2682
+      },
+      {
+        "phrase": "fa poc",
+        "lemma": "fa poc",
+        "pos": "LOC_ADV",
+        "line": 2694
+      },
+      {
+        "phrase": "fa poc",
+        "lemma": "fa poc",
+        "pos": "LOC_ADV",
+        "line": 2695
+      },
+      {
+        "phrase": "fa molt poc",
+        "lemma": "fa molt poc",
+        "pos": "LOC_ADV",
+        "line": 2708
+      },
+      {
+        "phrase": "fa molt poc",
+        "lemma": "fa molt poc",
+        "pos": "LOC_ADV",
+        "line": 2709
+      },
+      {
+        "phrase": "fa molt poc",
+        "lemma": "fa molt poc",
+        "pos": "LOC_ADV",
+        "line": 2710
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2722
+      },
+      {
+        "phrase": "en va",
+        "lemma": "en va",
+        "pos": "LOC_ADV",
+        "line": 2723
+      },
+      {
+        "phrase": "com a minim",
+        "lemma": "com a mínim",
+        "pos": "LOC_ADV",
+        "line": 2736
+      },
+      {
+        "phrase": "com a minim",
+        "lemma": "com a mínim",
+        "pos": "LOC_ADV",
+        "line": 2737
+      },
+      {
+        "phrase": "com a minim",
+        "lemma": "com a mínim",
+        "pos": "LOC_ADV",
+        "line": 2738
+      },
+      {
+        "phrase": "un punt",
+        "lemma": "un punt",
+        "pos": "LOC_ADV",
+        "line": 2753
+      },
+      {
+        "phrase": "un punt",
+        "lemma": "un punt",
+        "pos": "LOC_ADV",
+        "line": 2754
+      },
+      {
+        "phrase": "un punt",
+        "lemma": "un punt",
+        "pos": "LOC_ADV",
+        "line": 2769
+      },
+      {
+        "phrase": "un punt",
+        "lemma": "un punt",
+        "pos": "LOC_ADV",
+        "line": 2770
+      },
+      {
+        "phrase": "al principi",
+        "lemma": "al principi",
+        "pos": "LOC_ADV",
+        "line": 2783
+      },
+      {
+        "phrase": "al principi",
+        "lemma": "al principi",
+        "pos": "LOC_ADV",
+        "line": 2784
+      },
+      {
+        "phrase": "al principi",
+        "lemma": "al principi",
+        "pos": "LOC_ADV",
+        "line": 2785
+      },
+      {
+        "phrase": "de primera",
+        "lemma": "de primera",
+        "pos": "LOC_ADV",
+        "line": 2797
+      },
+      {
+        "phrase": "de primera",
+        "lemma": "de primera",
+        "pos": "LOC_ADV",
+        "line": 2798
+      },
+      {
+        "phrase": "per fi",
+        "lemma": "per fi",
+        "pos": "LOC_ADV",
+        "line": 2809
+      },
+      {
+        "phrase": "per fi",
+        "lemma": "per fi",
+        "pos": "LOC_ADV",
+        "line": 2810
+      },
+      {
+        "phrase": "de moment",
+        "lemma": "de moment",
+        "pos": "LOC_ADV",
+        "line": 2830
+      },
+      {
+        "phrase": "de moment",
+        "lemma": "de moment",
+        "pos": "LOC_ADV",
+        "line": 2831
+      },
+      {
+        "phrase": "de moda",
+        "lemma": "de moda",
+        "pos": "LOC_ADJ",
+        "line": 2843
+      },
+      {
+        "phrase": "de moda",
+        "lemma": "de moda",
+        "pos": "LOC_ADJ",
+        "line": 2844
+      },
+      {
+        "phrase": "de mentida",
+        "lemma": "de mentida",
+        "pos": "LOC_ADJ",
+        "line": 2856
+      },
+      {
+        "phrase": "de mentida",
+        "lemma": "de mentida",
+        "pos": "LOC_ADJ",
+        "line": 2857
+      },
+      {
+        "phrase": "gracies a",
+        "lemma": "gràcies a",
+        "pos": "LOC_PREP",
+        "line": 2873
+      },
+      {
+        "phrase": "gracies a",
+        "lemma": "gràcies a",
+        "pos": "LOC_PREP",
+        "line": 2874
+      },
+      {
+        "phrase": "llevat de",
+        "lemma": "llevat de",
+        "pos": "LOC_PREP",
+        "line": 2887
+      },
+      {
+        "phrase": "llevat de",
+        "lemma": "llevat de",
+        "pos": "LOC_PREP",
+        "line": 2888
+      },
+      {
+        "phrase": "lluny de",
+        "lemma": "lluny de",
+        "pos": "LOC_PREP",
+        "line": 2901
+      },
+      {
+        "phrase": "lluny de",
+        "lemma": "lluny de",
+        "pos": "LOC_PREP",
+        "line": 2902
+      },
+      {
+        "phrase": "abans de",
+        "lemma": "abans de",
+        "pos": "LOC_PREP",
+        "line": 2913
+      },
+      {
+        "phrase": "abans de",
+        "lemma": "abans de",
+        "pos": "LOC_PREP",
+        "line": 2914
+      },
+      {
+        "phrase": "a fi de",
+        "lemma": "a fi de",
+        "pos": "LOC_CONJ",
+        "line": 2930
+      },
+      {
+        "phrase": "a fi de",
+        "lemma": "a fi de",
+        "pos": "LOC_CONJ",
+        "line": 2931
+      },
+      {
+        "phrase": "a fi de",
+        "lemma": "a fi de",
+        "pos": "LOC_CONJ",
+        "line": 2932
+      },
+      {
+        "phrase": "entorn de",
+        "lemma": "entorn de",
+        "pos": "LOC_PREP",
+        "line": 2944
+      },
+      {
+        "phrase": "entorn de",
+        "lemma": "entorn de",
+        "pos": "LOC_PREP",
+        "line": 2945
+      },
+      {
+        "phrase": "en contra de",
+        "lemma": "en contra de",
+        "pos": "LOC_PREP",
+        "line": 2957
+      },
+      {
+        "phrase": "en contra de",
+        "lemma": "en contra de",
+        "pos": "LOC_PREP",
+        "line": 2958
+      },
+      {
+        "phrase": "en contra de",
+        "lemma": "en contra de",
+        "pos": "LOC_PREP",
+        "line": 2959
+      },
+      {
+        "phrase": "en contra",
+        "lemma": "en contra",
+        "pos": "LOC_ADV",
+        "line": 2970
+      },
+      {
+        "phrase": "en contra",
+        "lemma": "en contra",
+        "pos": "LOC_ADV",
+        "line": 2971
+      },
+      {
+        "phrase": "a part de",
+        "lemma": "a part de",
+        "pos": "LOC_PREP",
+        "line": 2983
+      },
+      {
+        "phrase": "a part de",
+        "lemma": "a part de",
+        "pos": "LOC_PREP",
+        "line": 2984
+      },
+      {
+        "phrase": "a part de",
+        "lemma": "a part de",
+        "pos": "LOC_PREP",
+        "line": 2985
+      },
+      {
+        "phrase": "a part",
+        "lemma": "a part",
+        "pos": "LOC_ADV",
+        "line": 2996
+      },
+      {
+        "phrase": "a part",
+        "lemma": "a part",
+        "pos": "LOC_ADV",
+        "line": 2997
+      },
+      {
+        "phrase": "d'amagat de",
+        "lemma": "d'amagat de",
+        "pos": "LOC_PREP",
+        "line": 3009
+      },
+      {
+        "phrase": "d'amagat de",
+        "lemma": "d'amagat de",
+        "pos": "LOC_PREP",
+        "line": 3010
+      },
+      {
+        "phrase": "d'amagat de",
+        "lemma": "d'amagat de",
+        "pos": "LOC_PREP",
+        "line": 3011
+      },
+      {
+        "phrase": "d'amagat",
+        "lemma": "d'amagat",
+        "pos": "LOC_ADV",
+        "line": 3022
+      },
+      {
+        "phrase": "d'amagat",
+        "lemma": "d'amagat",
+        "pos": "LOC_ADV",
+        "line": 3023
+      },
+      {
+        "phrase": "al capdamunt de",
+        "lemma": "al capdamunt de",
+        "pos": "LOC_PREP",
+        "line": 3036
+      },
+      {
+        "phrase": "al capdamunt de",
+        "lemma": "al capdamunt de",
+        "pos": "LOC_PREP",
+        "line": 3037
+      },
+      {
+        "phrase": "al capdamunt de",
+        "lemma": "al capdamunt de",
+        "pos": "LOC_PREP",
+        "line": 3038
+      },
+      {
+        "phrase": "al capdamunt de",
+        "lemma": "al capdamunt de",
+        "pos": "LOC_PREP",
+        "line": 3039
+      },
+      {
+        "phrase": "al capdamunt",
+        "lemma": "al capdamunt",
+        "pos": "LOC_ADV",
+        "line": 3051
+      },
+      {
+        "phrase": "al capdamunt",
+        "lemma": "al capdamunt",
+        "pos": "LOC_ADV",
+        "line": 3052
+      },
+      {
+        "phrase": "al capdamunt",
+        "lemma": "al capdamunt",
+        "pos": "LOC_ADV",
+        "line": 3053
+      },
+      {
+        "phrase": "primer de tot",
+        "lemma": "primer de tot",
+        "pos": "LOC_ADV",
+        "line": 3066
+      },
+      {
+        "phrase": "primer de tot",
+        "lemma": "primer de tot",
+        "pos": "LOC_ADV",
+        "line": 3067
+      },
+      {
+        "phrase": "primer de tot",
+        "lemma": "primer de tot",
+        "pos": "LOC_ADV",
+        "line": 3068
+      },
+      {
+        "phrase": "a la lleugera",
+        "lemma": "a la lleugera",
+        "pos": "LOC_ADV",
+        "line": 3081
+      },
+      {
+        "phrase": "a la lleugera",
+        "lemma": "a la lleugera",
+        "pos": "LOC_ADV",
+        "line": 3082
+      },
+      {
+        "phrase": "a la lleugera",
+        "lemma": "a la lleugera",
+        "pos": "LOC_ADV",
+        "line": 3083
+      },
+      {
+        "phrase": "a mes",
+        "lemma": "a més",
+        "pos": "LOC_ADV",
+        "line": 3171
+      },
+      {
+        "phrase": "a mes",
+        "lemma": "a més",
+        "pos": "LOC_ADV",
+        "line": 3172
+      },
+      {
+        "phrase": "per tant",
+        "lemma": "per tant",
+        "pos": "LOC_CONJ",
+        "line": 3199
+      },
+      {
+        "phrase": "per tant",
+        "lemma": "per tant",
+        "pos": "LOC_CONJ",
+        "line": 3200
+      },
+      {
+        "phrase": "per primera vegada",
+        "lemma": "per primera vegada",
+        "pos": "LOC_ADV",
+        "line": 3534
+      },
+      {
+        "phrase": "per primera vegada",
+        "lemma": "per primera vegada",
+        "pos": "LOC_ADV",
+        "line": 3535
+      },
+      {
+        "phrase": "per primera vegada",
+        "lemma": "per primera vegada",
+        "pos": "LOC_ADV",
+        "line": 3536
+      },
+      {
+        "phrase": "fruit de",
+        "lemma": "fruit de",
+        "pos": "LOC_PREP",
+        "line": 3548
+      },
+      {
+        "phrase": "fruit de",
+        "lemma": "fruit de",
+        "pos": "LOC_PREP",
+        "line": 3549
+      },
+      {
+        "phrase": "d'esquena",
+        "lemma": "d'esquena",
+        "pos": "LOC_ADV",
+        "line": 3560
+      },
+      {
+        "phrase": "donat que",
+        "lemma": "donat que",
+        "pos": "LOC_CONJ",
+        "line": 3573
+      },
+      {
+        "phrase": "donat que",
+        "lemma": "donat que",
+        "pos": "LOC_CONJ",
+        "line": 3574
+      },
+      {
+        "phrase": "cat gramatical",
+        "lemma": "cat_gramatical",
+        "pos": "NCMN000",
+        "line": 3728
+      },
+      {
+        "phrase": "am pm",
+        "lemma": "am_pm",
+        "pos": "Y",
+        "line": 4315
+      },
+      {
+        "phrase": "tant de bo",
+        "lemma": "tant_de_bo",
+        "pos": "I",
+        "line": 4936
+      },
+      {
+        "phrase": "tant de bo",
+        "lemma": "tant_de_bo",
+        "pos": "I",
+        "line": 4937
+      },
+      {
+        "phrase": "tant de bo",
+        "lemma": "tant_de_bo",
+        "pos": "I",
+        "line": 4938
+      },
+      {
+        "phrase": "is url",
+        "lemma": "IS_URL",
+        "pos": "IS_URL",
+        "line": 23054
+      },
+      {
+        "phrase": "abrev biblia",
+        "lemma": "_abrev_biblia",
+        "pos": "_abrev_biblia",
+        "line": 23066
+      },
+      {
+        "phrase": "copia i enganxa",
+        "lemma": "copia i enganxa",
+        "pos": "NCMS000",
+        "line": 23732
+      },
+      {
+        "phrase": "copia i enganxa",
+        "lemma": "copia i enganxa",
+        "pos": "NCMS000",
+        "line": 23733
+      },
+      {
+        "phrase": "copia i enganxa",
+        "lemma": "copia i enganxa",
+        "pos": "NCMS000",
+        "line": 23734
+      }
+    ],
+    "gn": [
+      {
+        "phrase": "dona",
+        "lemma": "dona",
+        "pos": "_GN_FS",
+        "line": 6529
+      },
+      {
+        "phrase": "dona",
+        "lemma": "dona",
+        "pos": "_GN_FP",
+        "line": 6540
+      }
+    ],
+    "manualPhrases": [
+      {
+        "phrase": "cada cop",
+        "pos": "LOC_ADV",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "cada vegada",
+        "pos": "LOC_ADV",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "per exemple",
+        "pos": "LOC_ADV",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "com per exemple",
+        "pos": "LOC_ADV",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "per aixo",
+        "pos": "LOC_CONJ",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "en la mateixa mesura",
+        "pos": "LOC_ADV",
+        "source": "lt-disambiguation-pattern"
+      },
+      {
+        "phrase": "el qual",
+        "pos": "REL",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "la qual",
+        "pos": "REL",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "els quals",
+        "pos": "REL",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "les quals",
+        "pos": "REL",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "en la qual",
+        "pos": "REL_PREP",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "en el qual",
+        "pos": "REL_PREP",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "en els quals",
+        "pos": "REL_PREP",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "en les quals",
+        "pos": "REL_PREP",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "segons la qual",
+        "pos": "REL_PREP",
+        "source": "grammar-CONCORDANCES_QUAL"
+      },
+      {
+        "phrase": "tots els",
+        "pos": "_GN_MP",
+        "source": "grammar-CONCORDANCES_TOTS_ELS"
+      },
+      {
+        "phrase": "totes les",
+        "pos": "_GN_FP",
+        "source": "grammar-CONCORDANCES_TOTS_ELS"
+      },
+      {
+        "phrase": "quin motiu",
+        "pos": "_GN_MS",
+        "source": "grammar-CONCORDANCES_QUIN"
+      },
+      {
+        "phrase": "quina rao",
+        "pos": "_GN_FS",
+        "source": "grammar-CONCORDANCES_QUIN"
+      },
+      {
+        "phrase": "un antisistema",
+        "pos": "_GN_MS",
+        "source": "lt-lexical-guard"
+      },
+      {
+        "phrase": "una antisistema",
+        "pos": "_GN_FS",
+        "source": "lt-lexical-guard"
+      },
+      {
+        "phrase": "carrecs publics",
+        "pos": "_GN_MP",
+        "source": "grammar-CONCORDANCES_ADJ_NOM"
+      },
+      {
+        "phrase": "alts carrecs publics",
+        "pos": "_GN_MP",
+        "source": "grammar-CONCORDANCES_ADJ_NOM"
+      }
+    ],
+    "phraseMap": {
+      "mans lliures": [
+        {
+          "phrase": "mans lliures",
+          "lemma": "mans lliures",
+          "pos": "NCMN000",
+          "line": 2341
+        },
+        {
+          "phrase": "mans lliures",
+          "lemma": "mans lliures",
+          "pos": "AQ0MN0",
+          "line": 2342
+        }
+      ],
+      "a tocar": [
+        {
+          "phrase": "a tocar",
+          "lemma": "a tocar",
+          "pos": "LOC_ADV",
+          "line": 2396
+        },
+        {
+          "phrase": "a tocar",
+          "lemma": "a tocar",
+          "pos": "LOC_ADV",
+          "line": 2397
+        }
+      ],
+      "a penes": [
+        {
+          "phrase": "a penes",
+          "lemma": "a penes",
+          "pos": "LOC_ADV",
+          "line": 2416
+        },
+        {
+          "phrase": "a penes",
+          "lemma": "a penes",
+          "pos": "LOC_ADV",
+          "line": 2417
+        }
+      ],
+      "un mica": [
+        {
+          "phrase": "un mica",
+          "lemma": "un mica",
+          "pos": "LOC_ADV",
+          "line": 2432
+        },
+        {
+          "phrase": "un mica",
+          "lemma": "un mica",
+          "pos": "LOC_ADV",
+          "line": 2433
+        }
+      ],
+      "un poc": [
+        {
+          "phrase": "un poc",
+          "lemma": "un poc",
+          "pos": "LOC_ADV",
+          "line": 2448
+        },
+        {
+          "phrase": "un poc",
+          "lemma": "un poc",
+          "pos": "LOC_ADV",
+          "line": 2449
+        }
+      ],
+      "d'acord": [
+        {
+          "phrase": "d'acord",
+          "lemma": "d'acord",
+          "pos": "LOC_ADV",
+          "line": 2462
+        },
+        {
+          "phrase": "d'acord",
+          "lemma": "d'acord",
+          "pos": "LOC_ADV",
+          "line": 2463
+        }
+      ],
+      "a baix": [
+        {
+          "phrase": "a baix",
+          "lemma": "a baix",
+          "pos": "LOC_ADV",
+          "line": 2472
+        },
+        {
+          "phrase": "a baix",
+          "lemma": "a baix",
+          "pos": "LOC_ADV",
+          "line": 2473
+        }
+      ],
+      "de primer": [
+        {
+          "phrase": "de primer",
+          "lemma": "de primer",
+          "pos": "LOC_ADV",
+          "line": 2485
+        },
+        {
+          "phrase": "de primer",
+          "lemma": "de primer",
+          "pos": "LOC_ADV",
+          "line": 2486
+        }
+      ],
+      "a dalt": [
+        {
+          "phrase": "a dalt",
+          "lemma": "a dalt",
+          "pos": "LOC_ADV",
+          "line": 2495
+        },
+        {
+          "phrase": "a dalt",
+          "lemma": "a dalt",
+          "pos": "LOC_ADV",
+          "line": 2496
+        }
+      ],
+      "altra vegada": [
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2506
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2507
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2516
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2517
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2527
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2528
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2529
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2539
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2540
+        },
+        {
+          "phrase": "altra vegada",
+          "lemma": "altra vegada",
+          "pos": "LOC_ADV",
+          "line": 2541
+        }
+      ],
+      "al limit": [
+        {
+          "phrase": "al limit",
+          "lemma": "al límit",
+          "pos": "LOC_ADV",
+          "line": 2563
+        },
+        {
+          "phrase": "al limit",
+          "lemma": "al límit",
+          "pos": "LOC_ADV",
+          "line": 2564
+        },
+        {
+          "phrase": "al limit",
+          "lemma": "al límit",
+          "pos": "LOC_ADV",
+          "line": 2565
+        }
+      ],
+      "gota a gota": [
+        {
+          "phrase": "gota a gota",
+          "lemma": "gota a gota",
+          "pos": "LOC_ADV",
+          "line": 2578
+        },
+        {
+          "phrase": "gota a gota",
+          "lemma": "gota a gota",
+          "pos": "LOC_ADV",
+          "line": 2579
+        },
+        {
+          "phrase": "gota a gota",
+          "lemma": "gota a gota",
+          "pos": "LOC_ADV",
+          "line": 2580
+        }
+      ],
+      "daltra banda": [
+        {
+          "phrase": "daltra banda",
+          "lemma": "daltra_banda",
+          "pos": "LOC_CONJ",
+          "line": 2594
+        },
+        {
+          "phrase": "daltra banda",
+          "lemma": "daltra_banda",
+          "pos": "LOC_CONJ",
+          "line": 2595
+        },
+        {
+          "phrase": "daltra banda",
+          "lemma": "daltra_banda",
+          "pos": "LOC_CONJ",
+          "line": 2596
+        }
+      ],
+      "temps ha": [
+        {
+          "phrase": "temps ha",
+          "lemma": "temps ha",
+          "pos": "LOC_ADV",
+          "line": 2608
+        },
+        {
+          "phrase": "temps ha",
+          "lemma": "temps ha",
+          "pos": "LOC_ADV",
+          "line": 2609
+        }
+      ],
+      "a espai": [
+        {
+          "phrase": "a espai",
+          "lemma": "a espai",
+          "pos": "LOC_ADV",
+          "line": 2622
+        },
+        {
+          "phrase": "a espai",
+          "lemma": "a espai",
+          "pos": "LOC_ADV",
+          "line": 2623
+        }
+      ],
+      "de prop": [
+        {
+          "phrase": "de prop",
+          "lemma": "de prop",
+          "pos": "LOC_ADV",
+          "line": 2638
+        },
+        {
+          "phrase": "de prop",
+          "lemma": "de prop",
+          "pos": "LOC_ADV",
+          "line": 2639
+        }
+      ],
+      "de gust": [
+        {
+          "phrase": "de gust",
+          "lemma": "de gust",
+          "pos": "LOC_ADV",
+          "line": 2652
+        },
+        {
+          "phrase": "de gust",
+          "lemma": "de gust",
+          "pos": "LOC_ADV",
+          "line": 2653
+        }
+      ],
+      "en va": [
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2666
+        },
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2667
+        },
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2681
+        },
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2682
+        },
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2722
+        },
+        {
+          "phrase": "en va",
+          "lemma": "en va",
+          "pos": "LOC_ADV",
+          "line": 2723
+        }
+      ],
+      "fa poc": [
+        {
+          "phrase": "fa poc",
+          "lemma": "fa poc",
+          "pos": "LOC_ADV",
+          "line": 2694
+        },
+        {
+          "phrase": "fa poc",
+          "lemma": "fa poc",
+          "pos": "LOC_ADV",
+          "line": 2695
+        }
+      ],
+      "fa molt poc": [
+        {
+          "phrase": "fa molt poc",
+          "lemma": "fa molt poc",
+          "pos": "LOC_ADV",
+          "line": 2708
+        },
+        {
+          "phrase": "fa molt poc",
+          "lemma": "fa molt poc",
+          "pos": "LOC_ADV",
+          "line": 2709
+        },
+        {
+          "phrase": "fa molt poc",
+          "lemma": "fa molt poc",
+          "pos": "LOC_ADV",
+          "line": 2710
+        }
+      ],
+      "com a minim": [
+        {
+          "phrase": "com a minim",
+          "lemma": "com a mínim",
+          "pos": "LOC_ADV",
+          "line": 2736
+        },
+        {
+          "phrase": "com a minim",
+          "lemma": "com a mínim",
+          "pos": "LOC_ADV",
+          "line": 2737
+        },
+        {
+          "phrase": "com a minim",
+          "lemma": "com a mínim",
+          "pos": "LOC_ADV",
+          "line": 2738
+        }
+      ],
+      "un punt": [
+        {
+          "phrase": "un punt",
+          "lemma": "un punt",
+          "pos": "LOC_ADV",
+          "line": 2753
+        },
+        {
+          "phrase": "un punt",
+          "lemma": "un punt",
+          "pos": "LOC_ADV",
+          "line": 2754
+        },
+        {
+          "phrase": "un punt",
+          "lemma": "un punt",
+          "pos": "LOC_ADV",
+          "line": 2769
+        },
+        {
+          "phrase": "un punt",
+          "lemma": "un punt",
+          "pos": "LOC_ADV",
+          "line": 2770
+        }
+      ],
+      "al principi": [
+        {
+          "phrase": "al principi",
+          "lemma": "al principi",
+          "pos": "LOC_ADV",
+          "line": 2783
+        },
+        {
+          "phrase": "al principi",
+          "lemma": "al principi",
+          "pos": "LOC_ADV",
+          "line": 2784
+        },
+        {
+          "phrase": "al principi",
+          "lemma": "al principi",
+          "pos": "LOC_ADV",
+          "line": 2785
+        }
+      ],
+      "de primera": [
+        {
+          "phrase": "de primera",
+          "lemma": "de primera",
+          "pos": "LOC_ADV",
+          "line": 2797
+        },
+        {
+          "phrase": "de primera",
+          "lemma": "de primera",
+          "pos": "LOC_ADV",
+          "line": 2798
+        }
+      ],
+      "per fi": [
+        {
+          "phrase": "per fi",
+          "lemma": "per fi",
+          "pos": "LOC_ADV",
+          "line": 2809
+        },
+        {
+          "phrase": "per fi",
+          "lemma": "per fi",
+          "pos": "LOC_ADV",
+          "line": 2810
+        }
+      ],
+      "de moment": [
+        {
+          "phrase": "de moment",
+          "lemma": "de moment",
+          "pos": "LOC_ADV",
+          "line": 2830
+        },
+        {
+          "phrase": "de moment",
+          "lemma": "de moment",
+          "pos": "LOC_ADV",
+          "line": 2831
+        }
+      ],
+      "de moda": [
+        {
+          "phrase": "de moda",
+          "lemma": "de moda",
+          "pos": "LOC_ADJ",
+          "line": 2843
+        },
+        {
+          "phrase": "de moda",
+          "lemma": "de moda",
+          "pos": "LOC_ADJ",
+          "line": 2844
+        }
+      ],
+      "de mentida": [
+        {
+          "phrase": "de mentida",
+          "lemma": "de mentida",
+          "pos": "LOC_ADJ",
+          "line": 2856
+        },
+        {
+          "phrase": "de mentida",
+          "lemma": "de mentida",
+          "pos": "LOC_ADJ",
+          "line": 2857
+        }
+      ],
+      "gracies a": [
+        {
+          "phrase": "gracies a",
+          "lemma": "gràcies a",
+          "pos": "LOC_PREP",
+          "line": 2873
+        },
+        {
+          "phrase": "gracies a",
+          "lemma": "gràcies a",
+          "pos": "LOC_PREP",
+          "line": 2874
+        }
+      ],
+      "llevat de": [
+        {
+          "phrase": "llevat de",
+          "lemma": "llevat de",
+          "pos": "LOC_PREP",
+          "line": 2887
+        },
+        {
+          "phrase": "llevat de",
+          "lemma": "llevat de",
+          "pos": "LOC_PREP",
+          "line": 2888
+        }
+      ],
+      "lluny de": [
+        {
+          "phrase": "lluny de",
+          "lemma": "lluny de",
+          "pos": "LOC_PREP",
+          "line": 2901
+        },
+        {
+          "phrase": "lluny de",
+          "lemma": "lluny de",
+          "pos": "LOC_PREP",
+          "line": 2902
+        }
+      ],
+      "abans de": [
+        {
+          "phrase": "abans de",
+          "lemma": "abans de",
+          "pos": "LOC_PREP",
+          "line": 2913
+        },
+        {
+          "phrase": "abans de",
+          "lemma": "abans de",
+          "pos": "LOC_PREP",
+          "line": 2914
+        }
+      ],
+      "a fi de": [
+        {
+          "phrase": "a fi de",
+          "lemma": "a fi de",
+          "pos": "LOC_CONJ",
+          "line": 2930
+        },
+        {
+          "phrase": "a fi de",
+          "lemma": "a fi de",
+          "pos": "LOC_CONJ",
+          "line": 2931
+        },
+        {
+          "phrase": "a fi de",
+          "lemma": "a fi de",
+          "pos": "LOC_CONJ",
+          "line": 2932
+        }
+      ],
+      "entorn de": [
+        {
+          "phrase": "entorn de",
+          "lemma": "entorn de",
+          "pos": "LOC_PREP",
+          "line": 2944
+        },
+        {
+          "phrase": "entorn de",
+          "lemma": "entorn de",
+          "pos": "LOC_PREP",
+          "line": 2945
+        }
+      ],
+      "en contra de": [
+        {
+          "phrase": "en contra de",
+          "lemma": "en contra de",
+          "pos": "LOC_PREP",
+          "line": 2957
+        },
+        {
+          "phrase": "en contra de",
+          "lemma": "en contra de",
+          "pos": "LOC_PREP",
+          "line": 2958
+        },
+        {
+          "phrase": "en contra de",
+          "lemma": "en contra de",
+          "pos": "LOC_PREP",
+          "line": 2959
+        }
+      ],
+      "en contra": [
+        {
+          "phrase": "en contra",
+          "lemma": "en contra",
+          "pos": "LOC_ADV",
+          "line": 2970
+        },
+        {
+          "phrase": "en contra",
+          "lemma": "en contra",
+          "pos": "LOC_ADV",
+          "line": 2971
+        }
+      ],
+      "a part de": [
+        {
+          "phrase": "a part de",
+          "lemma": "a part de",
+          "pos": "LOC_PREP",
+          "line": 2983
+        },
+        {
+          "phrase": "a part de",
+          "lemma": "a part de",
+          "pos": "LOC_PREP",
+          "line": 2984
+        },
+        {
+          "phrase": "a part de",
+          "lemma": "a part de",
+          "pos": "LOC_PREP",
+          "line": 2985
+        }
+      ],
+      "a part": [
+        {
+          "phrase": "a part",
+          "lemma": "a part",
+          "pos": "LOC_ADV",
+          "line": 2996
+        },
+        {
+          "phrase": "a part",
+          "lemma": "a part",
+          "pos": "LOC_ADV",
+          "line": 2997
+        }
+      ],
+      "d'amagat de": [
+        {
+          "phrase": "d'amagat de",
+          "lemma": "d'amagat de",
+          "pos": "LOC_PREP",
+          "line": 3009
+        },
+        {
+          "phrase": "d'amagat de",
+          "lemma": "d'amagat de",
+          "pos": "LOC_PREP",
+          "line": 3010
+        },
+        {
+          "phrase": "d'amagat de",
+          "lemma": "d'amagat de",
+          "pos": "LOC_PREP",
+          "line": 3011
+        }
+      ],
+      "d'amagat": [
+        {
+          "phrase": "d'amagat",
+          "lemma": "d'amagat",
+          "pos": "LOC_ADV",
+          "line": 3022
+        },
+        {
+          "phrase": "d'amagat",
+          "lemma": "d'amagat",
+          "pos": "LOC_ADV",
+          "line": 3023
+        }
+      ],
+      "al capdamunt de": [
+        {
+          "phrase": "al capdamunt de",
+          "lemma": "al capdamunt de",
+          "pos": "LOC_PREP",
+          "line": 3036
+        },
+        {
+          "phrase": "al capdamunt de",
+          "lemma": "al capdamunt de",
+          "pos": "LOC_PREP",
+          "line": 3037
+        },
+        {
+          "phrase": "al capdamunt de",
+          "lemma": "al capdamunt de",
+          "pos": "LOC_PREP",
+          "line": 3038
+        },
+        {
+          "phrase": "al capdamunt de",
+          "lemma": "al capdamunt de",
+          "pos": "LOC_PREP",
+          "line": 3039
+        }
+      ],
+      "al capdamunt": [
+        {
+          "phrase": "al capdamunt",
+          "lemma": "al capdamunt",
+          "pos": "LOC_ADV",
+          "line": 3051
+        },
+        {
+          "phrase": "al capdamunt",
+          "lemma": "al capdamunt",
+          "pos": "LOC_ADV",
+          "line": 3052
+        },
+        {
+          "phrase": "al capdamunt",
+          "lemma": "al capdamunt",
+          "pos": "LOC_ADV",
+          "line": 3053
+        }
+      ],
+      "primer de tot": [
+        {
+          "phrase": "primer de tot",
+          "lemma": "primer de tot",
+          "pos": "LOC_ADV",
+          "line": 3066
+        },
+        {
+          "phrase": "primer de tot",
+          "lemma": "primer de tot",
+          "pos": "LOC_ADV",
+          "line": 3067
+        },
+        {
+          "phrase": "primer de tot",
+          "lemma": "primer de tot",
+          "pos": "LOC_ADV",
+          "line": 3068
+        }
+      ],
+      "a la lleugera": [
+        {
+          "phrase": "a la lleugera",
+          "lemma": "a la lleugera",
+          "pos": "LOC_ADV",
+          "line": 3081
+        },
+        {
+          "phrase": "a la lleugera",
+          "lemma": "a la lleugera",
+          "pos": "LOC_ADV",
+          "line": 3082
+        },
+        {
+          "phrase": "a la lleugera",
+          "lemma": "a la lleugera",
+          "pos": "LOC_ADV",
+          "line": 3083
+        }
+      ],
+      "a mes": [
+        {
+          "phrase": "a mes",
+          "lemma": "a més",
+          "pos": "LOC_ADV",
+          "line": 3171
+        },
+        {
+          "phrase": "a mes",
+          "lemma": "a més",
+          "pos": "LOC_ADV",
+          "line": 3172
+        }
+      ],
+      "per tant": [
+        {
+          "phrase": "per tant",
+          "lemma": "per tant",
+          "pos": "LOC_CONJ",
+          "line": 3199
+        },
+        {
+          "phrase": "per tant",
+          "lemma": "per tant",
+          "pos": "LOC_CONJ",
+          "line": 3200
+        }
+      ],
+      "per primera vegada": [
+        {
+          "phrase": "per primera vegada",
+          "lemma": "per primera vegada",
+          "pos": "LOC_ADV",
+          "line": 3534
+        },
+        {
+          "phrase": "per primera vegada",
+          "lemma": "per primera vegada",
+          "pos": "LOC_ADV",
+          "line": 3535
+        },
+        {
+          "phrase": "per primera vegada",
+          "lemma": "per primera vegada",
+          "pos": "LOC_ADV",
+          "line": 3536
+        }
+      ],
+      "fruit de": [
+        {
+          "phrase": "fruit de",
+          "lemma": "fruit de",
+          "pos": "LOC_PREP",
+          "line": 3548
+        },
+        {
+          "phrase": "fruit de",
+          "lemma": "fruit de",
+          "pos": "LOC_PREP",
+          "line": 3549
+        }
+      ],
+      "d'esquena": [
+        {
+          "phrase": "d'esquena",
+          "lemma": "d'esquena",
+          "pos": "LOC_ADV",
+          "line": 3560
+        }
+      ],
+      "donat que": [
+        {
+          "phrase": "donat que",
+          "lemma": "donat que",
+          "pos": "LOC_CONJ",
+          "line": 3573
+        },
+        {
+          "phrase": "donat que",
+          "lemma": "donat que",
+          "pos": "LOC_CONJ",
+          "line": 3574
+        }
+      ],
+      "cat gramatical": [
+        {
+          "phrase": "cat gramatical",
+          "lemma": "cat_gramatical",
+          "pos": "NCMN000",
+          "line": 3728
+        }
+      ],
+      "am pm": [
+        {
+          "phrase": "am pm",
+          "lemma": "am_pm",
+          "pos": "Y",
+          "line": 4315
+        }
+      ],
+      "tant de bo": [
+        {
+          "phrase": "tant de bo",
+          "lemma": "tant_de_bo",
+          "pos": "I",
+          "line": 4936
+        },
+        {
+          "phrase": "tant de bo",
+          "lemma": "tant_de_bo",
+          "pos": "I",
+          "line": 4937
+        },
+        {
+          "phrase": "tant de bo",
+          "lemma": "tant_de_bo",
+          "pos": "I",
+          "line": 4938
+        }
+      ],
+      "is url": [
+        {
+          "phrase": "is url",
+          "lemma": "IS_URL",
+          "pos": "IS_URL",
+          "line": 23054
+        }
+      ],
+      "abrev biblia": [
+        {
+          "phrase": "abrev biblia",
+          "lemma": "_abrev_biblia",
+          "pos": "_abrev_biblia",
+          "line": 23066
+        }
+      ],
+      "copia i enganxa": [
+        {
+          "phrase": "copia i enganxa",
+          "lemma": "copia i enganxa",
+          "pos": "NCMS000",
+          "line": 23732
+        },
+        {
+          "phrase": "copia i enganxa",
+          "lemma": "copia i enganxa",
+          "pos": "NCMS000",
+          "line": 23733
+        },
+        {
+          "phrase": "copia i enganxa",
+          "lemma": "copia i enganxa",
+          "pos": "NCMS000",
+          "line": 23734
+        }
+      ],
+      "dona": [
+        {
+          "phrase": "dona",
+          "lemma": "dona",
+          "pos": "_GN_FS",
+          "line": 6529
+        },
+        {
+          "phrase": "dona",
+          "lemma": "dona",
+          "pos": "_GN_FP",
+          "line": 6540
+        }
+      ],
+      "cada cop": [
+        {
+          "phrase": "cada cop",
+          "pos": "LOC_ADV",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "cada vegada": [
+        {
+          "phrase": "cada vegada",
+          "pos": "LOC_ADV",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "per exemple": [
+        {
+          "phrase": "per exemple",
+          "pos": "LOC_ADV",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "com per exemple": [
+        {
+          "phrase": "com per exemple",
+          "pos": "LOC_ADV",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "per aixo": [
+        {
+          "phrase": "per aixo",
+          "pos": "LOC_CONJ",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "en la mateixa mesura": [
+        {
+          "phrase": "en la mateixa mesura",
+          "pos": "LOC_ADV",
+          "source": "lt-disambiguation-pattern"
+        }
+      ],
+      "el qual": [
+        {
+          "phrase": "el qual",
+          "pos": "REL",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "la qual": [
+        {
+          "phrase": "la qual",
+          "pos": "REL",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "els quals": [
+        {
+          "phrase": "els quals",
+          "pos": "REL",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "les quals": [
+        {
+          "phrase": "les quals",
+          "pos": "REL",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "en la qual": [
+        {
+          "phrase": "en la qual",
+          "pos": "REL_PREP",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "en el qual": [
+        {
+          "phrase": "en el qual",
+          "pos": "REL_PREP",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "en els quals": [
+        {
+          "phrase": "en els quals",
+          "pos": "REL_PREP",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "en les quals": [
+        {
+          "phrase": "en les quals",
+          "pos": "REL_PREP",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "segons la qual": [
+        {
+          "phrase": "segons la qual",
+          "pos": "REL_PREP",
+          "source": "grammar-CONCORDANCES_QUAL"
+        }
+      ],
+      "tots els": [
+        {
+          "phrase": "tots els",
+          "pos": "_GN_MP",
+          "source": "grammar-CONCORDANCES_TOTS_ELS"
+        }
+      ],
+      "totes les": [
+        {
+          "phrase": "totes les",
+          "pos": "_GN_FP",
+          "source": "grammar-CONCORDANCES_TOTS_ELS"
+        }
+      ],
+      "quin motiu": [
+        {
+          "phrase": "quin motiu",
+          "pos": "_GN_MS",
+          "source": "grammar-CONCORDANCES_QUIN"
+        }
+      ],
+      "quina rao": [
+        {
+          "phrase": "quina rao",
+          "pos": "_GN_FS",
+          "source": "grammar-CONCORDANCES_QUIN"
+        }
+      ],
+      "un antisistema": [
+        {
+          "phrase": "un antisistema",
+          "pos": "_GN_MS",
+          "source": "lt-lexical-guard"
+        }
+      ],
+      "una antisistema": [
+        {
+          "phrase": "una antisistema",
+          "pos": "_GN_FS",
+          "source": "lt-lexical-guard"
+        }
+      ],
+      "carrecs publics": [
+        {
+          "phrase": "carrecs publics",
+          "pos": "_GN_MP",
+          "source": "grammar-CONCORDANCES_ADJ_NOM"
+        }
+      ],
+      "alts carrecs publics": [
+        {
+          "phrase": "alts carrecs publics",
+          "pos": "_GN_MP",
+          "source": "grammar-CONCORDANCES_ADJ_NOM"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "rules" : [ {
+    "caseSensitive" : true,
+    "category" : "CASING",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "CAPITALIZATION[2]",
+    "id" : "CAPITALIZATION",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "STARTUPPER",
+      "regexMatch" : "(^.)",
+      "regexReplace" : "$1"
+    } ],
+    "message" : "Capitalize specific geographical regions.",
+    "pattern" : "\\b(((north|south)(?:[\\s  ]+)(Atlantic|American?|African?|Korean?|Carolina|Dakota))|((east|west)(ern)?(?:[\\s  ]+)(Germany?|Europe|Virginia))|(grand(?:[\\s  ]+)[cC]anyon)|(mount(?:[\\s  ]+)Everest)|(great(?:[\\s  ]+)[Bb]ritain)|(great(?:[\\s  ]+)[Bb]ritish))\\b",
+    "picky" : false,
+    "priority" : 0,
+    "registrationOrder" : 55,
+    "shortMessage" : "Capitalization",
+    "suggestionsOutMsg" : "<suggestion>\\1</suggestion>"
+  }, {
+    "caseSensitive" : true,
+    "category" : "PUNCTUATION",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "UNIT_SPACE[1]",
+    "id" : "UNIT_SPACE",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : "((\\-)?[0-9]+[0-9,.]*{1,30})",
+      "regexReplace" : "$1 "
+    } ],
+    "message" : "Insert a space between the numerical value and the unit symbol.",
+    "pattern" : "(?<![A-Z\\$€£¥฿฿=]-?[0-9\\.]{0,5})((\\b|\\-)[0-9]{1,5}[0-9,.]{0,5}(€|¥|฿|฿|°C|°F|°De?|°R[éeøa]?|(Z|E|P|T|G|M|k|h|da|d|c|m|µ|n|f|z|y)[ΩΩm]|[ΩΩ]|(Z|E|P|T|G|M|k|h|da|d|c|m|µ|n|p|f|a|z|y)?N|[kKMGTPEZY]i?B|[kmµnp]g|[Mk]t|kWh|GWa|MWd|MWh)(?!\\w))",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 3710,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion>\\1</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "PUNCTUATION",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "UNIT_SPACE[2]",
+    "id" : "UNIT_SPACE",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "message" : "For the unit symbols for degree, minute, and second for plane angle no space is left between the numerical value and the unit symbol.",
+    "pattern" : "((\\-)?[0-9]{0,10}[0-9.,]{0,10})(?:[\\s  ]+)°\\s([CFK])",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 3711,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion>\\1 °\\3</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "PUNCTUATION",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "UNIT_SPACE[3]",
+    "id" : "UNIT_SPACE",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "matchesOutMsg" : [ ],
+    "message" : "For the unit symbols for degree, minute, and second for plane angle no space is left between the numerical value and the unit symbol: <suggestion>\\1°</suggestion> or add a missing unit symbol (e.g., <suggestion>\\1 °C</suggestion>).",
+    "pattern" : "((\\-)?[0-9]{0,10}[0-9.,]{0,10})(?:[\\s  ]+)(°)(?!\\s*[CFKSN])",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 3712,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : ""
+  }, {
+    "caseSensitive" : false,
+    "category" : "PUNCTUATION",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "UNIT_SPACE[4]",
+    "id" : "UNIT_SPACE",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "message" : "For the unit symbols for degree, minute, and second for plane angle no space is left between the numerical value and the unit symbol.",
+    "pattern" : "(\\-?[0-9]{1,10})(?:[\\s  ]+)(″)",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 3713,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion>\\1\\2</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "TYPOGRAPHY",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "CONSECUTIVE_SPACES[1]",
+    "id" : "CONSECUTIVE_SPACES",
+    "includedAllAtOnce" : false,
+    "markGroup" : 1,
+    "matches" : [ ],
+    "matchesOutMsg" : [ ],
+    "message" : "It seems like there are too many consecutive spaces here.",
+    "pattern" : "[A-Za-zéèëêïîìáàâçôòüûùäöüß,.;\\d]([  ]{2})[A-Za-zéèëêïîìáàâçôòüûùäöüß,.;\\d]",
+    "picky" : false,
+    "priority" : 0,
+    "registrationOrder" : 5079,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion> </suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "TYPOGRAPHY",
+    "filterArguments" : "antipatterns:\\d[-–—]\\d{1,10}[$€£¥฿]",
+    "filterClass" : "org.languagetool.rules.patterns.RegexAntiPatternFilter",
+    "fullId" : "CURRENCY[1]",
+    "id" : "CURRENCY",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "message" : "The currency mark is usually put at the beginning of the number.",
+    "pattern" : "(?<!$)([\\d,.]{0,10}[\\d]{1,10})\\s?([$€£¥฿\\u8371])(?!\\d)",
+    "picky" : false,
+    "priority" : 0,
+    "registrationOrder" : 5113,
+    "shortMessage" : "Put currency at the beginning",
+    "suggestionsOutMsg" : "<suggestion>\\2\\1</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "TYPOGRAPHY",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "MULTIPLICATION_SIGN[2]",
+    "id" : "MULTIPLICATION_SIGN",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "message" : "Replace with the typographical symbol.",
+    "pattern" : "(?<!([a-vyz]|[a-vyz]\\d|[a-vyz]\\d{2}|[a-vyz]\\d{3}|[a-vyz]\\d{4}|[a-vyz]\\d{5}))((?!(?:[,;\\(\\.][x\\*]([\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+?)|(?:[\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+?)[x\\*][,;\\.\\)\\!\\?]))([\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+?)[x\\*]([\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+))",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 5170,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion>\\4×\\5</suggestion><suggestion>\\4·\\5</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "TYPOGRAPHY",
+    "filterArguments" : "antipatterns:b\\*tch|b\\*tched|b\\*tches|b\\*tching|c\\*nt|c\\*nts|c\\*nty|d\\*mn|d\\*mned|f\\*ck|f\\*cks|f\\*cked|f\\*cking|p\\*ss|p\\*ssed|p\\*sses|p\\*ssing|sh\\*t|sh\\*ts|sh\\*tted|sh\\*tting|M\\*A\\*S\\*H",
+    "filterClass" : "org.languagetool.rules.patterns.RegexAntiPatternFilter",
+    "fullId" : "MULTIPLICATION_SIGN[3]",
+    "id" : "MULTIPLICATION_SIGN",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    }, {
+      "caseConversion" : "NONE",
+      "regexMatch" : null,
+      "regexReplace" : null
+    } ],
+    "message" : "Replace with the typographical symbol.",
+    "pattern" : "([a-z]|[\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+?[a-z]{0,1})\\*([a-z]|[\\d\\.,⁻¹²³⁴⁵⁶⁷⁸⁹⁰]+?[a-z]{0,1})",
+    "picky" : true,
+    "priority" : 0,
+    "registrationOrder" : 5171,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : "<suggestion>\\1×\\2</suggestion><suggestion>\\1·\\2</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "STYLE",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "LIGHTYEAR[1]",
+    "id" : "LIGHTYEAR",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ ],
+    "message" : "Formally, a light-year is a unit of length (not of time) used to express astronomical distances.",
+    "pattern" : "\\b(light[- ]?years?(?:[\\s  ]+)ago)\\b",
+    "picky" : true,
+    "priority" : -50,
+    "registrationOrder" : 5421,
+    "shortMessage" : "Semantic error",
+    "suggestionsOutMsg" : "<suggestion>many years ago</suggestion><suggestion>ages ago</suggestion><suggestion>eons ago</suggestion><suggestion>a lifetime ago</suggestion>"
+  }, {
+    "caseSensitive" : false,
+    "category" : "STYLE",
+    "filterArguments" : null,
+    "filterClass" : null,
+    "fullId" : "RUDE_SARCASTIC[1]",
+    "id" : "RUDE_SARCASTIC",
+    "includedAllAtOnce" : false,
+    "markGroup" : 0,
+    "matches" : [ ],
+    "matchesOutMsg" : [ ],
+    "message" : "Sarcasm can be rude. Consider alternatives.",
+    "pattern" : "\\b((?:Best(?:[\\s  ]+)Korea|but(?:[\\s  ]+)who's(?:[\\s  ]+)counting|Captain(?:[\\s  ]+)Obvious|cry(?:[\\s  ]+)someone(?:[\\s  ]+)a(?:[\\s  ]+)river|deathbed(?:[\\s  ]+)conversion|don't(?:[\\s  ]+)let(?:[\\s  ]+)the(?:[\\s  ]+)door(?:[\\s  ]+)hit(?:[\\s  ]+)you(?:[\\s  ]+)on(?:[\\s  ]+)the(?:[\\s  ]+)way(?:[\\s  ]+)out|ermahgerd|fat(?:[\\s  ]+)chance|fly(?:[\\s  ]+)like(?:[\\s  ]+)a(?:[\\s  ]+)rock|freeze(?:[\\s  ]+)peach|goddidit|goody(?:[\\s  ]+)gumdrops|hay(?:[\\s  ]+)is(?:[\\s  ]+)for(?:[\\s  ]+)horses|I(?:[\\s  ]+)believe(?:[\\s  ]+)you,(?:[\\s  ]+)thousands(?:[\\s  ]+)wouldn't|just(?:[\\s  ]+)ducky|keep(?:[\\s  ]+)telling(?:[\\s  ]+)yourself(?:[\\s  ]+)that|kiddie(?:[\\s  ]+)table|king(?:[\\s  ]+)of(?:[\\s  ]+)the(?:[\\s  ]+)castle|know(?:[\\s  ]+)how(?:[\\s  ]+)to(?:[\\s  ]+)pick(?:[\\s  ]+)'em|less-than-stellar|let's(?:[\\s  ]+)not(?:[\\s  ]+)and(?:[\\s  ]+)say(?:[\\s  ]+)we(?:[\\s  ]+)did|make(?:[\\s  ]+)baby(?:[\\s  ]+)Jesus(?:[\\s  ]+)cry|my(?:[\\s  ]+)eyes(?:[\\s  ]+)are(?:[\\s  ]+)up(?:[\\s  ]+)here|no(?:[\\s  ]+)duh|no(?:[\\s  ]+)homo|no(?:[\\s  ]+)kidding|no(?:[\\s  ]+)shit|no(?:[\\s  ]+)shit,(?:[\\s  ]+)Sherlock|obvi|oh,(?:[\\s  ]+)the(?:[\\s  ]+)humanity|one(?:[\\s  ]+)should(?:[\\s  ]+)be(?:[\\s  ]+)so(?:[\\s  ]+)lucky|pray(?:[\\s  ]+)tell|puh-lease|quelle(?:[\\s  ]+)surprise|Soon™|surprise(?:[\\s  ]+)surprise|talk(?:[\\s  ]+)to(?:[\\s  ]+)the(?:[\\s  ]+)hand|thanks(?:[\\s  ]+)a(?:[\\s  ]+)heap|tyvm|what(?:[\\s  ]+)do(?:[\\s  ]+)you(?:[\\s  ]+)want,(?:[\\s  ]+)a(?:[\\s  ]+)cookie|what(?:[\\s  ]+)does(?:[\\s  ]+)that(?:[\\s  ]+)have(?:[\\s  ]+)to(?:[\\s  ]+)do(?:[\\s  ]+)with(?:[\\s  ]+)the(?:[\\s  ]+)price(?:[\\s  ]+)of(?:[\\s  ]+)corn|what(?:[\\s  ]+)does(?:[\\s  ]+)that(?:[\\s  ]+)have(?:[\\s  ]+)to(?:[\\s  ]+)do(?:[\\s  ]+)with(?:[\\s  ]+)the(?:[\\s  ]+)price(?:[\\s  ]+)of(?:[\\s  ]+)tea(?:[\\s  ]+)in(?:[\\s  ]+)China|who(?:[\\s  ]+)died(?:[\\s  ]+)and(?:[\\s  ]+)left(?:[\\s  ]+)you(?:[\\s  ]+)in(?:[\\s  ]+)charge|who(?:[\\s  ]+)died(?:[\\s  ]+)and(?:[\\s  ]+)made(?:[\\s  ]+)you(?:[\\s  ]+)boss|who(?:[\\s  ]+)would(?:[\\s  ]+)have(?:[\\s  ]+)thunk(?:[\\s  ]+)it|who's(?:[\\s  ]+)your(?:[\\s  ]+)daddy|whoopdee(?:[\\s  ]+)doo|why(?:[\\s  ]+)not(?:[\\s  ]+)Zoidberg|wisehead|wonders(?:[\\s  ]+)never(?:[\\s  ]+)cease|yippee(?:[\\s  ]+)skippy|you(?:[\\s  ]+)and(?:[\\s  ]+)whose(?:[\\s  ]+)army|you(?:[\\s  ]+)got(?:[\\s  ]+)a(?:[\\s  ]+)mouse(?:[\\s  ]+)in(?:[\\s  ]+)your(?:[\\s  ]+)pocket|you(?:[\\s  ]+)kiss(?:[\\s  ]+)your(?:[\\s  ]+)mother(?:[\\s  ]+)with(?:[\\s  ]+)that(?:[\\s  ]+)mouth|you(?:[\\s  ]+)must(?:[\\s  ]+)be(?:[\\s  ]+)fun(?:[\\s  ]+)at(?:[\\s  ]+)parties|Your(?:[\\s  ]+)Highness|Your(?:[\\s  ]+)Majesty))\\b|^((?:are(?:[\\s  ]+)you(?:[\\s  ]+)blind\\?|are(?:[\\s  ]+)you(?:[\\s  ]+)deaf\\?|bite(?:[\\s  ]+)me|I(?:[\\s  ]+)hope(?:[\\s  ]+)you're(?:[\\s  ]+)happy[\\.!]|oh(?:[\\s  ]+)really\\!?\\?|since(?:[\\s  ]+)when\\?|whoosh[\\.!]|you(?:[\\s  ]+)don't(?:[\\s  ]+)say\\?|you(?:[\\s  ]+)think\\?))",
+    "picky" : true,
+    "priority" : 6,
+    "registrationOrder" : 5620,
+    "shortMessage" : "",
+    "suggestionsOutMsg" : ""
+  } ],
+  "profile" : "en-US",
+  "schemaVersion" : 1
+}

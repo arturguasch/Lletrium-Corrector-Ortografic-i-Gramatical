@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "profile": "en-US",
+  "source": "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+  "sourceJar": {
+    "file": "english-pos-dict-0.6.jar",
+    "sha256": "2a3e96b49854e5275f8eb7a1bb5b3b85b82f687fed272f3043882ccc0b1634b1"
+  },
+  "pos": {
+    "schema": 1,
+    "format": "CFAS1",
+    "profile": "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+    "dataFile": "en-US-pos-fsa.bin.gz",
+    "rawBytes": 3355024,
+    "compressedBytes": 1029006,
+    "rawSha256": "19a8730c6d4d7405e15e8ad8a40d6f10adcc723f5ab05bbc990c44f4caf4305f",
+    "compressedSha256": "85de0b39320fe679df57c6037bf59d727ad4c9d6670c753120d2f559b2170718",
+    "nodes": 113985,
+    "arcs": 241589,
+    "separator": 43,
+    "sourceSha256": "f2a0ea88cff225d1073321ad8ad795c9aa8eb08613f1d74a88895bfe9b992142",
+    "encoding": "utf-8",
+    "sequenceEncoder": "SUFFIX"
+  },
+  "posIndex": {
+    "file": "en-US-pos-entries.json.gz",
+    "entries": 259353,
+    "forms": 213097,
+    "rawBytes": 8076864,
+    "compressedBytes": 1470268,
+    "rawSha256": "12a81666df1c90d26c14be23a353efb805d5fb4f0f674dd4c18abc3853984944",
+    "compressedSha256": "876285fb2406a626579020e64d70cfe84c5c9d07eda740aea8bdce2f2e210dc2",
+    "sourceSha256": "16e1f9a2fa4185faf7f0d11e32b3eda57a2c0225515654cae6b9a591da2be0f8"
+  },
+  "synthesis": {
+    "schema": 1,
+    "format": "CFAS1",
+    "profile": "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+    "dataFile": "en-US-synthesis-fsa.bin.gz",
+    "rawBytes": 3180132,
+    "compressedBytes": 999752,
+    "rawSha256": "2ef046fc10065a2c65479cd25191c23db36a912b77a612fdd494f8f552cc7b84",
+    "compressedSha256": "8b06db770df5bc481c509980b5864dc7afee42f775ee0230302d14af88955bf5",
+    "nodes": 113312,
+    "arcs": 227239,
+    "separator": 43,
+    "sourceSha256": "b86fc704dbaa9d8088d2c66963ac66d295bf786827e80bc9b91a994ac698b318",
+    "encoding": "utf-8",
+    "sequenceEncoder": "SUFFIX"
+  },
+  "synthesisIndex": {
+    "file": "en-US-synthesis-entries.json.gz",
+    "entries": 259332,
+    "keys": 257188,
+    "rawBytes": 7598909,
+    "compressedBytes": 1348748,
+    "rawSha256": "23367d908dac7109bea539f3a5e5117d27ea529bd9c2eb3c0f5465a7f0a59be6",
+    "compressedSha256": "fc2c700b591f793a0efb3613dd20cd959c5c42308b603619690d52ac895c36f6",
+    "sourceSha256": "520332c31dd0ec58d4bdc6879450e75c8943b0bc8d52665c50ce922edfe4c240"
+  },
+  "spelling": {
+    "schema": 1,
+    "format": "CFAS1",
+    "profile": "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+    "dataFile": "en-US-spelling-fsa.bin.gz",
+    "rawBytes": 4014024,
+    "compressedBytes": 1232682,
+    "rawSha256": "1456d6608367fe5d913566660e00a93d792d65f39a43ae5b80880c0394742da4",
+    "compressedSha256": "786a81de0adc1c97a05f8dbdcae99452ac5f6b917d03e66db649c0ff83fa08c9",
+    "nodes": 138437,
+    "arcs": 288355,
+    "separator": 43,
+    "sourceSha256": "9ca20ca1dd0bda6d6484331ab72459ffe49bd2624e506c63b1b47651c28451d2",
+    "encoding": "utf-8",
+    "sequenceEncoder": "SUFFIX",
+    "locale": "en_US",
+    "frequencyIncluded": true,
+    "ignoreDiacritics": true,
+    "spellerFlags": {
+      "ignorePunctuation": true,
+      "ignoreNumbers": true,
+      "ignoreCamelCase": false,
+      "ignoreAllUppercase": false,
+      "convertCase": true,
+      "supportRunOnWords": false
+    },
+    "replacementPairs": {
+      "ninties": [
+        "1990s"
+      ],
+      "a": [
+        "ei",
+        "ey"
+      ],
+      "ei": [
+        "a"
+      ],
+      "ey": [
+        "a"
+      ],
+      "ai": [
+        "ie"
+      ],
+      "ie": [
+        "ai"
+      ],
+      "are": [
+        "air",
+        "ear",
+        "eir"
+      ],
+      "air": [
+        "are",
+        "ere",
+        "ear"
+      ],
+      "ere": [
+        "air",
+        "ear",
+        "eir"
+      ],
+      "ear": [
+        "are",
+        "air",
+        "ere",
+        "ier"
+      ],
+      "eir": [
+        "are",
+        "ere"
+      ],
+      "f": [
+        "ph",
+        "gh"
+      ],
+      "ph": [
+        "f"
+      ],
+      "gh": [
+        "f"
+      ],
+      "kw": [
+        "qu"
+      ],
+      "Bordo": [
+        "Bordeaux"
+      ],
+      "bato": [
+        "bateau"
+      ],
+      "bocoup": [
+        "beaucoup"
+      ],
+      "buro": [
+        "bureau"
+      ],
+      "bo": [
+        "beau"
+      ],
+      "oo": [
+        "ew",
+        "ui",
+        "ieu"
+      ],
+      "ew": [
+        "oo",
+        "ui"
+      ],
+      "ui": [
+        "ew",
+        "oo"
+      ],
+      "uff": [
+        "ough"
+      ],
+      "ieu": [
+        "oo"
+      ],
+      "ier": [
+        "ear"
+      ],
+      "shun": [
+        "tion",
+        "sion",
+        "cion"
+      ],
+      "yersa": [
+        "years"
+      ],
+      "phoby": [
+        "phobia"
+      ],
+      "lite": [
+        "light"
+      ]
+    },
+    "equivalentChars": {}
+  },
+  "openNlp": {
+    "version": "1.9.5",
+    "format": "ONLPX1",
+    "models": {
+      "tokenizer": {
+        "file": "en-US-tokenizer.onlpx.gz",
+        "sourceJar": "opennlp-tokenize-models-1.5.jar",
+        "sourceJarSha256": "1c10141d547b9ae1de1238d5a9ec69db043289cd6f8caf0d7d2f14bbfcda9502",
+        "sourceModelSha256": "2d0dd64ffb3d084382d7bdb65e7bd004c5001ba5503c36413d97c3e46321437c",
+        "rawBytes": 885762,
+        "compressedBytes": 450855,
+        "rawSha256": "76860ab8fb3db0bb5a1477979a51dd1262358033d654b96ea7e615def1f5cd47",
+        "compressedSha256": "3b7f34b730ca363995222c15c5d95cbda430d342582511a797d806825b7f0186"
+      },
+      "pos": {
+        "file": "en-US-pos-model.onlpx.gz",
+        "sourceJar": "opennlp-postag-models-1.5.jar",
+        "sourceJarSha256": "4d58462b891dbe478a8a68c8a93749af5bedd874af1974596a72f5667fffc8c9",
+        "sourceModelSha256": "645a094f45a866687a617385233fd23ae8b0f5fa8b1b76996781a50c17bdcf3d",
+        "rawBytes": 7981911,
+        "compressedBytes": 6285378,
+        "rawSha256": "bdfbeed0e1b809580a2fd1ffa90f5a96e4a2235dea7306568d9995080e31f58c",
+        "compressedSha256": "0946d9032a565c5057f1a6314534003d72d425c0a94db0684e74b201053eba49"
+      },
+      "chunker": {
+        "file": "en-US-chunker.onlpx.gz",
+        "sourceJar": "opennlp-chunk-models-1.5.jar",
+        "sourceJarSha256": "e7090de37093d2b91a0136f9e1e9cf60567bc27f72781cfdd083d86e342d7cb0",
+        "sourceModelSha256": "7861a0c2f134d9c12a022a1ba501e88bc7039f6db72b4140e1bafd1fb5ef76cc",
+        "rawBytes": 5190217,
+        "compressedBytes": 2948336,
+        "rawSha256": "384ccb19268f634dbad3ee965be4c5efac28a253cd2a3869aa26a48088fe2364",
+        "compressedSha256": "aeb34d49078bafb12a0417be5f6272c99df620179adb83c98347812403af6021"
+      }
+    },
+    "tokenizerAbbreviations": {
+      "file": "en-US-token-abbreviations.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "posNgramWords": {
+      "file": "en-US-pos-ngram-words.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "posTagDictionary": {
+      "file": "en-US-pos-tag-dictionary.tsv",
+      "entries": 16203,
+      "caseSensitive": true,
+      "sha256": "3ffae648f8578dc3f2d8235493926d22687ac1e77192e5ddcfa28bdc833690ec"
+    }
+  },
+  "tagsetSha256": "1670adb3abfffb3ca9f02e78a614f386b7f16c8374b0afdbf19db1dd141de872",
+  "sorosSha256": "ad78ab088ceb4a5b1858020facd818ac1df5433cead09e784833047691333d11",
+  "soros": {
+    "file": "en-US-en.sor",
+    "sha256": "ad78ab088ceb4a5b1858020facd818ac1df5433cead09e784833047691333d11",
+    "romanFile": "Roman.sor",
+    "romanSha256": "11002fdb8c7039c1a71a5ba8f3a2b405548e993f8668066363d6e1fea58ca4b1",
+    "source": "LanguageTool English number synthesizer and shared Roman numeral synthesizer"
+  },
+  "articleExceptions": {
+    "det_a.txt": "658248ca07325973372506c99460c2563bf63281cf887de247d1bc60c545c18d",
+    "det_an.txt": "2f4d8329de649f1a5b3f6d9b116d8396b34f2efcf2d1b61cfa8056e16d42a952"
+  },
+  "license": "LGPL-2.1; preserve the JAR and embedded dataset notices, including Moby and WordNet attribution.",
+  "manualTags": {
+    "file": "en-manual-tags.json",
+    "sha256": "650f6d8cfeac554d644749885f524df60fe201bb432fe4c1b767e3f509fac387",
+    "additions": 442,
+    "removals": 27,
+    "sourceHashes": {
+      "added.txt": "ac48758904839439ff46c2b893cd7c6e80237d6a5bf073f591ab6c175835a7a2",
+      "added_custom.txt": "30c7602fe9a69730e194dbe5f5b332fba6adf00f49af85d8c5358055c17d339b",
+      "removed.txt": "d34555d63c6a7c97cce1e48feef71e960acd2cf003d2863460c78a3d9da75b0c",
+      "removed_custom.txt": "b840a31465a40eaf6401e4262db9d9980cd81246e7ef23357cbc54bb6e8da31c"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "ca-central-v1",
+  "verbSuffixes": "0CXY12",
+  "excludedVerbLemmas": ["enterar", "sentar", "conseguir", "alcançar"],
+  "excludedNonVerbReadings": [
+    {"lemma":"este","tagPrefix":"DD"},{"lemma":"este","tagPrefix":"PD"},
+    {"lemma":"eixe","tagPrefix":"DD"},{"lemma":"eixe","tagPrefix":"PD"},
+    {"lemma":"meu","tagPrefix":"DP","forms":["meua","meues"]},
+    {"lemma":"teu","tagPrefix":"DP","forms":["teua","teues"]},
+    {"lemma":"seu","tagPrefix":"DP","forms":["seua","seues"]},
+    {"lemma":"meu","tagPrefix":"PX","forms":["meua","meues"]},
+    {"lemma":"teu","tagPrefix":"PX","forms":["teua","teues"]},
+    {"lemma":"seu","tagPrefix":"PX","forms":["seua","seues"]},
+    {"lemma":"ací","tagPrefix":"R"},{"lemma":"açò","tagPrefix":"P"},
+    {"lemma":"jo","tagPrefix":"P","forms":["io"]},
+    {"lemma":"nosaltres","tagPrefix":"P","forms":["nosatros","mosatros","noltros"]},
+    {"lemma":"vosaltres","tagPrefix":"P","forms":["vosatros","voltros","vostros"]}
+  ],
+  "excludedDemonstrativeForms": ["aquestos"],
+  "accentPolicy": "Use central accent only where an attested counterpart with equivalent lemma and identical POS exists; preserve lexical exceptions extracted from LT EXIGEIX_ACCENTUACIO_GENERAL.",
+  "sources": ["CatalanSynthesizer.java: verbTags ca-ES [0CXY12] and LemmasToIgnore", "grammar.xml: REGIONAL_NON_VERBS and EXIGEIX_ACCENTUACIO_GENERAL"],
+  "scope": "Central verb inflections and identified regional closed classes/accent variants. Not an exhaustive geographic classification of all lexical entries. Proper nouns and independent homograph readings are preserved."
+}

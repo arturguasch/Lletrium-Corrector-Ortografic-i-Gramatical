@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "profile": "en-US",
+  "source": "LanguageTool 6.9-SNAPSHOT EnglishWrongWordInContextRule",
+  "sourceSha256": "784ac0287d6a31cb142cb6c12de25b700099c3b4ecc02be4231ef0e278b5e87d",
+  "entryCount": 11,
+  "entries": [
+    {
+      "word1": "prescribe[ds]?",
+      "word2": "proscribe[sd]?",
+      "match1": "prescr",
+      "match2": "proscr",
+      "context1": "medication|medicine|antibiotics|doctors?",
+      "context2": "theft|murder",
+      "explanation1": "to recommend or authorize",
+      "explanation2": "to forbid, to limit or to banish"
+    },
+    {
+      "word1": "heroin",
+      "word2": "heroine",
+      "match1": "oin",
+      "match2": "oine",
+      "context1": "addict.*|morphine|drug|narcotics?|withdrawal",
+      "context2": "literature|novels?|author|story|poems?|play|female|dramatic|statue|heroes?",
+      "explanation1": "highly addictive narcotic",
+      "explanation2": "the chief female character; a woman admired for great deeds"
+    },
+    {
+      "word1": "bazaar",
+      "word2": "bizarre",
+      "match1": "azaar",
+      "match2": "izarre",
+      "context1": "oriental|marketplace|rummage|goods|buy|bought|sell|sold",
+      "context2": "moment|odd|unusual|incident|behaviou?r|situations?|stor(y|ies)|reasons?|moments?",
+      "explanation1": "a marketplace (noun)",
+      "explanation2": "unusual, odd, or whimsically strange (adjective)"
+    },
+    {
+      "word1": "bridal",
+      "word2": "bridle",
+      "match1": "ridal",
+      "match2": "ridle",
+      "context1": "weddings?|brides?|boutique|gowns?|church|party|shower|shop|jewellery|dress|fashion",
+      "context2": "horses?|cavalier|harness|headgear|headstall|rider?s?",
+      "explanation1": "related to a bride",
+      "explanation2": "a part of a horse's harness"
+    },
+    {
+      "word1": "desserts?",
+      "word2": "deserts?",
+      "match1": "esse",
+      "match2": "ese",
+      "context1": "chocolate|menu|wait(ers?|ress)|cookies|cakes?",
+      "context2": "bec[ao]me|dry|arid|vegetation|camels?|precipitation|rain",
+      "explanation1": "a confectionery course that concludes a main meal",
+      "explanation2": "a barren area of landscape with little precipitation"
+    },
+    {
+      "word1": "statutes?",
+      "word2": "statues?",
+      "match1": "ute",
+      "match2": "ue",
+      "context1": "government|legislat(ure|ive)|laws?|senators?|regulat(ions?|ed?|ing)|Republicans?|Democrats?|limitations",
+      "context2": "life-size|figur(ative|ine)|sculptur(ing|ed?)|modeling|art(ist)|temples?|marble|bronze|Gree(k|ce)",
+      "explanation1": "a formal written enactment of a legislative authority",
+      "explanation2": "a sculpture; a carved or shaped imitation of an object"
+    },
+    {
+      "word1": "gorilla",
+      "word2": "guerilla",
+      "match1": "o",
+      "match2": "ue",
+      "context1": "apes?|chimpanzees?|bonobos?|[Ss]ilverback|zoos?",
+      "context2": "marketing|war(fares?)?|insurgents?|soldiers?|army|(para)?military|ambush(ed)?",
+      "explanation1": "animal in ape family",
+      "explanation2": "soldier specializing surprise attacks"
+    },
+    {
+      "word1": "massage",
+      "word2": "message",
+      "match1": "ma",
+      "match2": "me",
+      "context1": "Thai|relaxing|naked|therap(eutic|y|ist)|prostate|erotic|tantric|lymphatic|muscles?",
+      "context2": "error|send(ing)?|sent|receive[dr]?|important|take|writ(e|ten)",
+      "explanation1": "action of rubbing, kneading or hitting someone's body",
+      "explanation2": "communication, or what is communicated"
+    },
+    {
+      "word1": "sing",
+      "word2": "sign",
+      "match1": "ing",
+      "match2": "ign",
+      "context1": "songs?|music|choirs?",
+      "context2": "contracts?",
+      "explanation1": "to produce musical or harmonious sounds with one’s voice",
+      "explanation2": "to write one's signature"
+    },
+    {
+      "word1": "neutrons?",
+      "word2": "neurons?",
+      "match1": "utr",
+      "match2": "ur",
+      "context1": "[fF]ermion(ic)?|[pP]rotons?|[Aa]tom(s?|ic)|[Ee]lectrons?|[nN]uclear|[Ss]pins?|hadron(ic)?|[tT]hermal|bound",
+      "context2": "ganglia|axons?|dendrits?|nervous|synapses?|stimul(i|us)|nerves?|neurotransmitters?|cerebral|(bi|uni)polar",
+      "explanation1": "subatomic particle",
+      "explanation2": "nerve cell"
+    },
+    {
+      "word1": "hangars?",
+      "word2": "hangers?",
+      "match1": "gar",
+      "match2": "ger",
+      "context1": "air(craft|plain)s?|aeroplains?|planes?",
+      "context2": "cloth(es?|ing)|coats?|garments?",
+      "explanation1": "shed or shelter",
+      "explanation2": "a frame for hanging clothes"
+    }
+  ]
+}

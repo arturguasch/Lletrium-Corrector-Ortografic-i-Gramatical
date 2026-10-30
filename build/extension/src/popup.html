@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lletrium!</title>
+  <style>
+    /* Leave room below Chromium's popup height limit; taller pages create a host scrollbar. */
+    :root { --popup-max-height: 580px; width: 390px; max-height: var(--popup-max-height); overflow: hidden; color-scheme: light; font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: #222938; background: #fff; }
+    * { box-sizing: border-box; }
+    body { width: 390px; max-height: var(--popup-max-height); margin: 0; overflow: hidden; background: #fff; }
+    button, input, select { font: inherit; color: inherit; }
+    button, a, input, select, summary { outline-offset: 2px; }
+    :focus-visible { outline: 2px solid #7693ef; }
+    .view { max-height: var(--popup-max-height); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; padding: 16px; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #777f8f transparent; }
+    .view::-webkit-scrollbar { width: 8px; }
+    .view::-webkit-scrollbar-track { background: transparent; }
+    .view::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 99px; background: #858c99; background-clip: padding-box; }
+    .view::-webkit-scrollbar-thumb:hover { background: #a4aab5; background-clip: padding-box; }
+    .view[hidden] { display: none; }
+    .brand, .view-header { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; }
+    .brand { justify-content: space-between; }
+    .brand-copy { display: flex; align-items: center; min-width: 0; gap: 10px; }
+    .settings-icon { display: grid; place-items: center; width: 34px; min-width: 34px; min-height: 34px; padding: 0; border-radius: 50%; color: #596477; }
+    .settings-icon svg { display: block; width: 22px; height: 22px; }
+    .brand-icon { display: block; width: 38px; height: 38px; flex: none; border-radius: 10px; object-fit: contain; }
+    h1 { margin: 0; font-size: 15px; line-height: 1.2; font-weight: 700; }
+    h2 { margin: 0 0 10px; font-size: 14px; }
+    p { margin: 6px 0; color: #6d7585; }
+    .version, .muted { color: #71798a; font-size: 11px; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 12px; border: 1px solid #e2e6ef; border-radius: 12px; background: #f7f8fc; }
+    .toggle-label { font-weight: 650; }
+    input[type=checkbox].switch { appearance: none; width: 38px; height: 22px; margin: 0; border-radius: 99px; background: #b9c0ce; position: relative; cursor: pointer; flex: none; }
+    input[type=checkbox].switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #0003; transition: transform .15s ease; }
+    input[type=checkbox].switch:checked { background: #506bd3; }
+    input[type=checkbox].switch:checked::after { transform: translateX(16px); }
+    label.field, .field { display: block; margin: 12px 0; font-size: 11px; font-weight: 650; }
+    label.field > span, label.field > select, .field-caption { display: block; }
+    .field-help { margin: 4px 0 0; font-size: 10px; font-weight: 400; line-height: 1.35; }
+    .language-select { position: relative; margin-top: 5px; }
+    .language-picker-trigger { display: flex; width: 100%; min-height: 40px; align-items: center; gap: 10px; margin: 0; padding: 6px 11px; text-align: left; font-size: 12px; }
+    .language-picker-trigger .language-name { flex: 1; }
+    .language-badge { display: block; width: 24px; height: 24px; flex: none; border: 1px solid #d9deea; border-radius: 50%; overflow: hidden; }
+    .language-badge svg { display: block; width: 100%; height: 100%; }
+    .language-badge img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .language-chevron { width: 15px; height: 15px; flex: none; transition: transform .15s ease; }
+    .language-picker-trigger[aria-expanded="true"] .language-chevron { transform: rotate(180deg); }
+    .language-options { position: relative; z-index: 5; overflow: hidden; margin-top: 4px; padding: 4px; border: 1px solid #d9deea; border-radius: 10px; background: #fff; box-shadow: 0 8px 24px #17203326; }
+    .language-option { display: flex; width: 100%; min-height: 38px; align-items: center; gap: 10px; padding: 6px 9px; border: 0; border-radius: 7px; background: transparent; text-align: left; font-size: 12px; }
+    .language-option:hover, .language-option[aria-selected="true"] { background: #eef2ff; }
+    .language-option[aria-selected="true"]::after { content: "✓"; margin-left: auto; color: #405abd; font-weight: 750; }
+    .language-option[aria-disabled="true"], .language-option[aria-disabled="true"]:hover { opacity: .55; cursor: not-allowed; background: transparent; }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+    .setting-row-copy { min-width: 0; }
+    .setting-row-copy strong { display: block; font-size: 12px; }
+    .setting-row-copy p { margin: 2px 0 0; font-size: 11px; }
+    select, input[type=text], input[type=number] { width: 100%; min-height: 36px; margin-top: 5px; padding: 7px 34px 7px 10px; border: 1px solid #d9deea; border-radius: 9px; background-color: #fff; transition: border-color .14s ease, box-shadow .14s ease, background-color .14s ease; }
+    select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236d7585' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+    select:hover, input[type=text]:hover, input[type=number]:hover { border-color: #aebbdc; }
+    select:focus-visible, input[type=text]:focus-visible, input[type=number]:focus-visible { border-color: #5874d8; box-shadow: 0 0 0 3px #5874d822; outline: 0; }
+    .status { display: flex; align-items: center; gap: 8px; min-height: 29px; margin: 7px 2px 10px; color: #697386; font-size: 11px; }
+    .status-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #9ba3b3; }
+    .status[data-state=ready] .status-dot { background: #2c9b65; }
+    .status[data-state=loading] .status-dot { background: #e4a11b; animation: pulse 1.2s ease-in-out infinite; }
+    .status[data-state=error] .status-dot { background: #c54d53; }
+    .status[data-state=error] { color: #b3261e; }
+    .engine-status-warning { flex: none; font-size: 13px; line-height: 1; }
+    .status[data-state=off] .status-dot { background: #81899a; }
+    .engine-failure-help { margin: -2px 2px 8px; color: #b3261e; font-size: 11px; line-height: 1.4; }
+    .engine-failure-help a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+    :root[data-theme="dark"] .engine-failure-help { color: #ff8a80; }
+    :root[data-theme="dark"] .status[data-state="error"] { color: #ff8a80; }
+    .site-support-warning { margin: -2px 2px 9px; padding: 8px 10px; border: 1px solid #efd28a; border-radius: 9px; background: #fff8e7; color: #76520a; font-size: 11px; line-height: 1.4; }
+    :root[data-theme="dark"] .site-support-warning { border-color: #70551b; background: #342b19; color: #f2cf75; }
+    @keyframes pulse { 50% { opacity: .35; } }
+    .nav-grid, .button-row { display: flex; gap: 8px; }
+    .nav-grid { border-top: 1px solid #eceef3; padding-top: 11px; }
+    .report-issue-button { width: 100%; min-height: 38px; margin: 8px 0 0; border-color: #3568d4; background: #3568d4; color: #fff; font-weight: 700; }
+    .report-issue-button:hover { border-color: #2858bd; background: #2858bd; }
+    .report-issue-notice { margin: 4px 2px 0; font-size: 10px; }
+    .popup-footer { padding: 9px 2px 0; text-align: center; }
+    .popup-footer p { margin: 3px 0; color: #7b8493; font-size: 9px; line-height: 1.4; }
+    .popup-footer .popup-footer-author { font-size: 10px; }
+    .popup-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+    .popup-footer a[aria-disabled="true"] { cursor: default; }
+    :root[data-theme="dark"] .popup-footer p { color: #9ca5b4; }
+    :root[data-theme="dark"] .report-issue-button { color: #fff; background: #3568d4; border-color: #3568d4; }
+    :root[data-theme="dark"] .report-issue-button:hover { background: #2858bd; border-color: #2858bd; }
+    .support-banner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px 12px; align-items: center; margin: 8px 0 0; padding: 12px; border: 1px solid #e2c28a; border-radius: 14px; background: linear-gradient(135deg, #fff8eb 0%, #ffe7bf 100%); color: #5c3d12; box-shadow: inset 0 1px 0 rgba(255,255,255,.7); }
+    .support-banner-icon { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #efd3a0; border-radius: 10px; background: rgba(255,255,255,.7); font-size: 18px; line-height: 1; }
+    .support-banner-copy { min-width: 0; }
+    .support-banner-title { margin: 0; color: #4a300c; font-size: 12px; font-weight: 700; line-height: 1.25; }
+    .support-banner-text { margin: 3px 0 0; color: #7a5620; font-size: 10px; line-height: 1.35; }
+    .support-banner-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 7px 12px; border: 1px solid #e0b800; border-radius: 999px; background: #ffdd00; color: #1f1608; font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: inset 0 1px 0 rgba(255,255,255,.55); }
+    .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+    button { min-height: 34px; padding: 6px 10px; border: 1px solid #d9deea; border-radius: 9px; background: #fff; cursor: pointer; font-size: 11px; font-weight: 620; }
+    button:hover { background: #f4f6fb; }
+    button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
+    button.primary:hover { background: #405abd; }
+    .nav-grid button { flex: 1; }
+    .view-header { padding-bottom: 9px; border-bottom: 1px solid #eceef3; }
+    .back { width: 32px; min-width: 32px; padding: 0; font-size: 17px; }
+    .view-header h1 { flex: 1; }
+    .add-form { display: flex; gap: 7px; }
+    .add-form input { flex: 1; min-width: 0; margin: 0; }
+    .search-row { display: flex; gap: 7px; margin-top: 9px; }
+    .search-row input { min-width: 0; margin: 0; }
+    .word-list, .site-list { list-style: none; margin: 8px 0 0; padding: 0; }
+    .word-list li, .site-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 0; border-top: 1px solid #eceef3; }
+    .word-list li span, .site-list li span { min-width: 0; overflow-wrap: anywhere; }
+    .word-list button, .site-list button { min-height: 28px; padding: 4px 8px; font-size: 10px; }
+    .site-management-card { padding: 12px; border: 1px solid #e2e6ef; border-radius: 12px; background: #f7f8fc; }
+    .site-help { margin: 0 0 11px; font-size: 11px; }
+    .site-current-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; border: 1px solid #e2e6ef; border-radius: 9px; background: #fff; }
+    .site-current-info { min-width: 0; }
+    .site-current-label { margin: 0 0 2px; color: #71798a; font-size: 10px; font-weight: 600; }
+    .site-current-host { margin: 0; color: inherit; font-size: 12px; font-weight: 650; overflow-wrap: anywhere; }
+    .site-state { display: inline-flex; align-items: center; gap: 6px; margin-top: 5px; color: #237a4b; font-size: 10px; font-weight: 650; }
+    .site-state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .site-state[data-state="disabled"] { color: #727b89; }
+    .site-state[hidden] { display: none; }
+    .site-current-card button { flex: none; }
+    .site-add-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 8px; align-items: end; margin: 0 0 10px; }
+    .site-add-form label { grid-column: 1 / -1; margin: 0; font-size: 11px; font-weight: 650; }
+    .site-add-form input { min-width: 0; margin: 0; }
+    .site-add-form button { white-space: nowrap; }
+    .site-input-help { grid-column: 1 / -1; margin: -2px 0 0; font-size: 10px; }
+    .site-list-heading { margin: 12px 0 3px; font-size: 11px; }
+    .site-empty { margin: 5px 0 0; padding: 8px 0 2px; border-top: 1px solid #eceef3; font-size: 10px; }
+    .danger-section { padding-top: 12px; }
+    .danger-button { width: 100%; color: #a3242b; background: #fff4f4; border-color: #e8a6a8; }
+    .danger-button:hover { background: #ffe7e8; border-color: #d5797d; }
+    .reset-confirm { margin-top: 8px; padding: 11px; border: 1px solid #e7a5a8; border-radius: 10px; background: #fff7f7; }
+    .reset-confirm p { margin: 0 0 9px; color: #743238; font-size: 11px; }
+    .reset-confirm-actions { display: flex; justify-content: flex-end; gap: 7px; }
+    .reset-confirm-actions .danger-button { width: auto; color: #fff; background: #b3261e; border-color: #b3261e; }
+    .site-list li span { font-size: 11px; }
+    .notice { min-height: 18px; margin-top: 6px; color: #28733b; font-size: 11px; }
+    #settingsNotice:empty { min-height: 0; margin: 0; }
+    .section { padding: 10px 0; border-bottom: 1px solid #eceef3; }
+    .section:last-child { border-bottom: 0; }
+    details > summary { cursor: pointer; color: #5e687a; font-weight: 650; }
+    .advanced-content { padding-top: 8px; }
+    .advanced-group { padding: 10px 0; border-top: 1px solid #eceef3; }
+    .advanced-group h3 { margin: 0 0 4px; font-size: 12px; }
+    .advanced-group > p { margin: 3px 0 8px; }
+    .advanced-group .setting-row { padding: 6px 0 2px; }
+    .diag-tool { margin-top: 8px; padding: 9px; border: 1px solid #e2e6ef; border-radius: 10px; background: #f7f8fc; }
+    .diag-tool:first-of-type { margin-top: 0; }
+    .diag-tool-title { margin: 0; font-size: 11px; font-weight: 700; }
+    .diag-tool-help { margin: 3px 0 7px; font-size: 10px; }
+    .diag-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 7px 0 0; }
+    .diag-actions button { flex: 1 1 auto; }
+    .diag-actions button[hidden] { display: none !important; }
+    .diag-status { min-height: 15px; margin: 5px 0 0; font-size: 10px; }
+    .diag-output { display: none; max-height: 200px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 8px; border: 1px solid #e1e5ed; border-radius: 8px; background: #f7f8fa; font: 10px/1.4 ui-monospace, Consolas, monospace; }
+    .empty { padding: 9px 0; color: #737c8e; font-size: 11px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    [hidden] { display: none !important; }
+    :root[data-theme="dark"] { color-scheme: dark; color: #edf0f6; background: #202124; }
+    :root[data-theme="dark"] body { background: #202124; }
+    :root[data-theme="dark"] p, :root[data-theme="dark"] .version, :root[data-theme="dark"] .muted, :root[data-theme="dark"] .status, :root[data-theme="dark"] .empty { color: #aab1c0; }
+    :root[data-theme="dark"] .toggle-row, :root[data-theme="dark"] select, :root[data-theme="dark"] input[type=text], :root[data-theme="dark"] input[type=number], :root[data-theme="dark"] button, :root[data-theme="dark"] .diag-output { color: inherit; background-color: #292c32; border-color: #444954; }
+    :root[data-theme="dark"] .site-current-card { background: #292c32; border-color: #444954; }
+    :root[data-theme="dark"] .site-management-card { background: #25282e; border-color: #444954; }
+    :root[data-theme="dark"] .site-current-label, :root[data-theme="dark"] .site-input-help, :root[data-theme="dark"] .site-empty { color: #aab1c0; }
+    :root[data-theme="dark"] .site-empty { border-color: #3a3e47; }
+    :root[data-theme="dark"] .view { scrollbar-color: #5e6572 transparent; }
+    :root[data-theme="dark"] .view::-webkit-scrollbar-thumb { background: #5e6572; background-clip: padding-box; }
+    :root[data-theme="dark"] .view::-webkit-scrollbar-thumb:hover { background: #7a8290; background-clip: padding-box; }
+    :root[data-theme="dark"] .danger-button { color: #ffb4ab; background: #3a2528; border-color: #78464a; }
+    :root[data-theme="dark"] .danger-button:hover { background: #4a2b2e; border-color: #a65b61; }
+    :root[data-theme="dark"] .reset-confirm { background: #302225; border-color: #78464a; }
+    :root[data-theme="dark"] .reset-confirm p { color: #f2c6c3; }
+    :root[data-theme="dark"] .reset-confirm-actions .danger-button { color: #fff; background: #b3261e; border-color: #b3261e; }
+    :root[data-theme="dark"] .site-state { color: #8bd1a0; }
+    :root[data-theme="dark"] .site-state[data-state="disabled"] { color: #aab1c0; }
+    :root[data-theme="dark"] .language-options { background: #292c32; border-color: #444954; box-shadow: 0 8px 24px #0007; }
+    :root[data-theme="dark"] .language-option:hover, :root[data-theme="dark"] .language-option[aria-selected="true"] { background: #343d55; }
+    :root[data-theme="dark"] .support-banner { border-color: #8a6a28; background: linear-gradient(135deg, #3a2c14 0%, #2a2112 100%); color: #ffe7a8; box-shadow: none; }
+    :root[data-theme="dark"] .support-banner-icon { border-color: #8a6a28; background: rgba(255,255,255,.06); }
+    :root[data-theme="dark"] .support-banner-title { color: #ffe7a8; }
+    :root[data-theme="dark"] .support-banner-text { color: #d6b56a; }
+    :root[data-theme="dark"] .support-banner-btn { border-color: #e0b800; background: #ffdd00; color: #1f1608; }
+    :root[data-theme="dark"] .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+    :root[data-theme="dark"] select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23b8c0d0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+    :root[data-theme="dark"] button:hover { background-color: #343944; }
+    :root[data-theme="dark"] button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
+    :root[data-theme="dark"] .nav-grid, :root[data-theme="dark"] .view-header, :root[data-theme="dark"] .section, :root[data-theme="dark"] .word-list li, :root[data-theme="dark"] .site-list li { border-color: #3a3e47; }
+    :root[data-theme="dark"] .diag-output { background-color: #1b1d22; }
+    :root[data-theme="dark"] .advanced-group { border-color: #3a3e47; }
+    :root[data-theme="dark"] .diag-tool { background: #25282e; border-color: #444954; }
+    :root[data-theme="dark"] .notice { color: #8bd1a0; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]):not([data-theme="dark"]) { color-scheme: dark; color: #edf0f6; background: #202124; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) body { background: #202124; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) p, :root:not([data-theme="light"]):not([data-theme="dark"]) .version, :root:not([data-theme="light"]):not([data-theme="dark"]) .muted, :root:not([data-theme="light"]):not([data-theme="dark"]) .status, :root:not([data-theme="light"]):not([data-theme="dark"]) .empty { color: #aab1c0; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle-row, :root:not([data-theme="light"]):not([data-theme="dark"]) select, :root:not([data-theme="light"]):not([data-theme="dark"]) input[type=text], :root:not([data-theme="light"]):not([data-theme="dark"]) input[type=number], :root:not([data-theme="light"]):not([data-theme="dark"]) button, :root:not([data-theme="light"]):not([data-theme="dark"]) .diag-output { color: inherit; background-color: #292c32; border-color: #444954; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-current-card { background: #292c32; border-color: #444954; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-management-card { background: #25282e; border-color: #444954; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-current-label, :root:not([data-theme="light"]):not([data-theme="dark"]) .site-input-help, :root:not([data-theme="light"]):not([data-theme="dark"]) .site-empty { color: #aab1c0; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-empty { border-color: #3a3e47; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .view { scrollbar-color: #5e6572 transparent; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .view::-webkit-scrollbar-thumb { background: #5e6572; background-clip: padding-box; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .view::-webkit-scrollbar-thumb:hover { background: #7a8290; background-clip: padding-box; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .danger-button { color: #ffb4ab; background: #3a2528; border-color: #78464a; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .danger-button:hover { background: #4a2b2e; border-color: #a65b61; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .reset-confirm { background: #302225; border-color: #78464a; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .reset-confirm p { color: #f2c6c3; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .reset-confirm-actions .danger-button { color: #fff; background: #b3261e; border-color: #b3261e; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-state { color: #8bd1a0; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .site-state[data-state="disabled"] { color: #aab1c0; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .language-options { background: #292c32; border-color: #444954; box-shadow: 0 8px 24px #0007; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .language-option:hover, :root:not([data-theme="light"]):not([data-theme="dark"]) .language-option[aria-selected="true"] { background: #343d55; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner { border-color: #8a6a28; background: linear-gradient(135deg, #3a2c14 0%, #2a2112 100%); color: #ffe7a8; box-shadow: none; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-icon { border-color: #8a6a28; background: rgba(255,255,255,.06); }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-title { color: #ffe7a8; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-text { color: #d6b56a; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-btn { border-color: #e0b800; background: #ffdd00; color: #1f1608; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .engine-failure-help { color: #ff8a80; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) button:hover { background-color: #343944; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .nav-grid, :root:not([data-theme="light"]):not([data-theme="dark"]) .view-header, :root:not([data-theme="light"]):not([data-theme="dark"]) .section, :root:not([data-theme="light"]):not([data-theme="dark"]) .word-list li, :root:not([data-theme="light"]):not([data-theme="dark"]) .site-list li { border-color: #3a3e47; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .diag-output { background-color: #1b1d22; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .advanced-group { border-color: #3a3e47; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .diag-tool { background: #25282e; border-color: #444954; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .notice { color: #8bd1a0; }
+    }
+    .toggle-row:has(#enabled:checked) { background: #eef9f1; border-color: #8ac69d; }
+    .toggle-row:has(#enabled:not(:checked)) { background: #fff1f1; border-color: #e1a1a1; }
+    #enabled:checked { background: #29945b; }
+    #enabled:not(:checked) { background: #c34d52; }
+    :root[data-theme="dark"] .toggle-row:has(#enabled:checked) { background: #20382c; border-color: #3d7853; }
+    :root[data-theme="dark"] .toggle-row:has(#enabled:not(:checked)) { background: #3d2529; border-color: #8c484f; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle-row:has(#enabled:checked) { background: #20382c; border-color: #3d7853; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle-row:has(#enabled:not(:checked)) { background: #3d2529; border-color: #8c484f; }
+    }
+  </style>
+</head>
+<body>
+  <main id="homeView" class="view" data-view="home">
+    <header class="brand"><div class="brand-copy"><img class="brand-icon" src="icons/icon48.png" alt="" aria-hidden="true"><div><h1 data-i18n="appTitle">Lletrium!</h1><div id="versionInfo" class="version"></div></div></div><button id="openSettings" class="settings-icon" type="button" aria-label="Configuració" title="Configuració" data-i18n-aria="settings" data-i18n-title="settings"><svg viewBox="0 -1.5 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5h4l.55 2.2c.5.17.96.44 1.4.74l2.14-.8 2 3.46-1.6 1.6c.06.52.06 1.06 0 1.58l1.6 1.6-2 3.46-2.14-.8c-.44.3-.9.57-1.4.74L14 18.5h-4l-.55-2.2c-.5-.17-.96-.44-1.4-.74l-2.14.8-2-3.46 1.6-1.6a6.8 6.8 0 0 1 0-1.58l-1.6-1.6 2-3.46 2.14.8c.44-.3.9-.57 1.4-.74z"/><circle cx="12" cy="10.5" r="3.1"/></svg></button></header>
+    <section class="toggle-row" aria-label="Estat del corrector" data-i18n-aria="enabled"><div class="toggle-label" data-i18n="enabled">Corrector activat</div><input id="enabled" class="switch" type="checkbox" role="switch" aria-label="Corrector activat" data-i18n-aria="enabled"></section>
+    <div class="field"><span id="proofingLanguageLabel" class="field-caption" data-i18n="proofingLanguage">Llengua del text que vols corregir</span><div class="language-select"><button id="languagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="languageOptions" aria-labelledby="proofingLanguageLabel languagePickerLabel"><span id="languageBadge" class="language-badge" aria-hidden="true"></span><span id="languagePickerLabel" class="language-name">Català central</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="languageOptions" class="language-options" role="listbox" aria-labelledby="proofingLanguageLabel" hidden></div><select id="language" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="central">Català central</option><option value="ca-ES-valencia" data-i18n="valencian">Català valencià</option><option value="ca-ES-balear" data-i18n="balearic">Català balear</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option><option value="gl-ES" data-i18n="galicianSoon" disabled>Gallec — pròximament</option><option value="eu-ES" data-i18n="basqueSoon" disabled>Euskera — pròximament</option></select></div><p class="field-help" data-i18n="proofingLanguageHelp">Tria l’idioma en què està escrit el text.</p></div>
+    <div class="field"><span id="interfaceLanguageLabel" class="field-caption" data-i18n="interfaceLanguage">Idioma dels menús i les explicacions</span><div id="uiLanguagePicker" class="language-select"><button id="uiLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="uiLanguageOptions" aria-labelledby="interfaceLanguageLabel uiLanguagePickerLabel"><span id="uiLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="uiLanguageOptions" class="language-options" role="listbox" aria-labelledby="interfaceLanguageLabel" hidden></div><select id="uiLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca" data-i18n="catalan">Català</option><option value="es" data-i18n="spanishInterface">Español</option><option value="en" data-i18n="englishInterface">English</option></select></div><p class="field-help" data-i18n="interfaceLanguageHelp">Només canvia l’idioma dels menús i missatges de l’extensió.</p></div>
+    <div id="engineStatus" class="status" data-state="loading" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="engineStatusWarning" class="engine-status-warning" aria-hidden="true" hidden>⚠️</span><span id="engineMessage">Carregant el motor…</span></div>
+    <p id="engineFailureHelp" class="engine-failure-help" role="alert" hidden><span data-i18n="engineFailureHelp">Si després de recarregar la pàgina continua igual, envia un missatge a</span> <a href="mailto:upfcalendarexporter@gmail.com">upfcalendarexporter@gmail.com</a>.</p>
+    <p id="unsupportedSiteNotice" class="site-support-warning" role="status" aria-live="polite" hidden></p>
+    <button id="reportIssueButton" class="report-issue-button primary" type="button" data-i18n="reportIssue">Reportar un error</button>
+    <p id="reportIssueNotice" class="report-issue-notice muted" role="status" aria-live="polite" hidden data-i18n="reportIssueComingSoon">L’enllaç per reportar errors arribarà més endavant.</p>
+    <nav class="nav-grid" aria-label="Accions del corrector" data-i18n-aria="actions"><button type="button" data-open-view="dictionary" data-i18n="dictionary">Diccionari personal</button><button type="button" data-open-view="sites" data-i18n="manageSites">Webs desactivades</button></nav>
+    <aside class="support-banner" aria-label="Suport al projecte" data-i18n-aria="supportProject"><span class="support-banner-icon" aria-hidden="true">☕</span><div class="support-banner-copy"><p class="support-banner-title" data-i18n="supportBannerTitle">Aquesta extensió és gratuïta</p><p class="support-banner-text" data-i18n="supportBannerText">Si t’ha estalviat temps, qualsevol suport ajuda a cobrir les despeses de manteniment.</p></div><a class="support-banner-btn" href="https://buymeacoffee.com/openextensions" target="_blank" rel="noopener noreferrer" data-i18n="supportProjectLink">Donar suport</a></aside>
+    <footer class="popup-footer"><p class="popup-footer-author" data-i18n="popupAuthor">Fet per: Artur Guasch</p><p><span data-i18n="popupPrivacyNote">La revisió es fa localment; el text no s’envia a cap servidor.</span> <a id="privacyPolicyLink" aria-disabled="true" tabindex="-1" data-i18n="privacyPolicyLink">Política de privacitat</a></p></footer>
+  </main>
+
+  <section id="dictionaryView" class="view" data-view="dictionary" hidden>
+    <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="dictionary">Diccionari personal</h1></header>
+    <div class="field"><span id="dictionaryLanguageLabel" class="field-caption" data-i18n="dictionaryLanguage">Idioma del diccionari</span><div class="language-select"><button id="dictionaryLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="dictionaryLanguageOptions" aria-labelledby="dictionaryLanguageLabel dictionaryLanguagePickerLabel"><span id="dictionaryLanguageBadge" class="language-badge" aria-hidden="true"></span><span id="dictionaryLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="dictionaryLanguageOptions" class="language-options" role="listbox" aria-labelledby="dictionaryLanguageLabel" hidden></div><select id="dictionaryLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="catalan">Català</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option></select></div></div>
+    <p id="dictionaryProfileNote" class="muted" data-i18n="dictionaryForProfile">Diccionari del perfil actual</p><p class="muted" data-i18n="dictionaryHelp">Les paraules afegides deixen d’aparèixer com a errors d’ortografia. Es desen només en aquest dispositiu.</p>
+    <form id="addWordForm" class="add-form"><label class="sr-only" for="newWord" data-i18n="newWord">Paraula nova</label><input id="newWord" type="text" maxlength="80" autocomplete="off" placeholder="Paraula o sigla" data-i18n-placeholder="wordPlaceholder" required><button class="primary" type="submit" data-i18n="add">Afegir</button></form>
+    <div class="search-row"><input id="wordSearch" type="text" placeholder="Cerca al diccionari" aria-label="Cerca al diccionari" data-i18n-placeholder="searchDictionary" data-i18n-aria="searchDictionary"><button id="exportDictionary" type="button" data-i18n="export">Exportar</button><button id="importDictionary" type="button" data-i18n="import">Importar</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+    <div id="dictionaryNotice" class="notice" role="status" aria-live="polite"></div><div id="dictionaryEmpty" class="empty" hidden data-i18n="noWords">Encara no hi ha paraules desades.</div><ul id="wordList" class="word-list"></ul>
+  </section>
+
+  <section id="sitesView" class="view" data-view="sites" hidden>
+    <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="siteSection">Desactivar el corrector en webs concretes</h1></header><div class="site-management-card"><p class="muted site-help" data-i18n="siteSectionHelp">Indica en quines webs vols desactivar el corrector. A la resta, continuarà actiu.</p><form id="addExcludedSiteForm" class="site-add-form"><label for="siteAddress" data-i18n="siteAddressLabel">Desactiva el corrector en una web</label><input id="siteAddress" type="text" inputmode="url" autocomplete="url" placeholder="exemple.cat o https://exemple.cat/pàgina" data-i18n-placeholder="siteAddressPlaceholder" maxlength="2048"><button class="primary" type="submit" data-i18n="addSite">Desactivar</button><p class="muted site-input-help" data-i18n="siteAddressHelp">S’aplicarà a tot el domini i als seus subdominis.</p></form><div class="site-current-card"><div class="site-current-info"><p class="site-current-label" data-i18n="currentPage">Web oberta ara</p><p id="currentHost" class="site-current-host" data-i18n="checkingSite">Comprovant lloc…</p><span id="currentSiteState" class="site-state" role="status" aria-live="polite"></span></div><button id="excludeCurrentSite" type="button" data-i18n="disableHere">Desactivar el corrector</button></div><h3 class="site-list-heading" data-i18n="disabledSites">Webs amb el corrector desactivat</h3><p id="siteListEmpty" class="muted site-empty" data-i18n="noDisabledSites">No has desactivat el corrector en cap web.</p><ul id="siteList" class="site-list"></ul><div id="siteNotice" class="notice" role="status" aria-live="polite"></div></div>
+  </section>
+
+  <section id="settingsView" class="view" data-view="settings" hidden>
+    <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="settings">Configuració</h1></header>
+    <div id="settingsNotice" class="notice" role="status" aria-live="polite"></div>
+    <section class="section"><h2 data-i18n="preferences">Preferències</h2><div class="setting-row"><div class="setting-row-copy"><strong data-i18n="darkMode">Mode fosc</strong><p data-i18n="darkModeHelp">Canvia l’aparença del corrector.</p></div><input id="darkMode" class="switch" type="checkbox" role="switch" aria-label="Mode fosc" data-i18n-aria="darkMode"></div></section>
+    <section class="section"><h2 data-i18n="reviewButtonSection">Botó de resum</h2><label class="setting-row" for="showReviewButton"><span class="setting-row-copy"><strong data-i18n="showReviewButton">Mostrar el botón lateral</strong><p data-i18n="showReviewButtonHelp">Puedes ocultar el botón; los errores seguirán subrayados y podrás corregirlos.</p></span><input id="showReviewButton" class="switch" type="checkbox" role="switch" aria-label="Mostrar el botón lateral" data-i18n-aria="showReviewButton"></label></section>
+    <section class="section danger-section"><button id="showResetConfirm" class="danger-button" type="button" data-i18n="resetAllButton">Reiniciar extensió per defecte</button><div id="resetConfirm" class="reset-confirm" role="group" aria-labelledby="resetConfirmTitle" aria-describedby="resetConfirmText" hidden><strong id="resetConfirmTitle" data-i18n="resetConfirmTitle">Vols restablir l’extensió?</strong><p id="resetConfirmText" data-i18n="resetConfirmText">S’esborraran les preferències, els llocs pausats i tot el diccionari personal. L’extensió tornarà a la configuració inicial.</p><div class="reset-confirm-actions"><button id="cancelReset" type="button" data-i18n="cancel">Cancel·lar</button><button id="confirmReset" class="danger-button" type="button" data-i18n="confirmReset">Sí, restablir-ho tot</button></div></div></section>
+    <details id="advancedSection" class="section advanced-section" hidden>
+      <summary data-i18n="advanced">Avançat · diagnòstics i proves</summary>
+      <div class="advanced-content">
+        <section class="advanced-group">
+          <h3 data-i18n="advancedEngineGroup">Proves del motor</h3>
+          <label class="setting-row" for="engineErrorTestMode"><span class="setting-row-copy"><strong data-i18n="engineErrorTestMode">Simular error del motor</strong><p data-i18n="engineErrorTestModeHelp">Mostra l’avís al botó lateral i al popup, però no atura el motor.</p></span><input id="engineErrorTestMode" class="switch" type="checkbox" role="switch" aria-label="Simular error del motor" data-i18n-aria="engineErrorTestMode"></label>
+          <div class="diag-actions"><button id="coldStartBtn" type="button" data-i18n="coldStart">Prova d’inici fred</button><button id="preloadBtn" type="button" data-i18n="preload">Preparar motor</button></div>
+        </section>
+        <section class="advanced-group">
+          <h3 data-i18n="advancedPageGroup">Analitzar una pàgina</h3>
+          <p class="muted" data-i18n="advancedPageHelp">Eines per trobar per què un camp editable no es corregeix.</p>
+          <div class="diag-tool">
+            <p class="diag-tool-title" data-i18n="analyzeEditorPage">Analitzar editor i camps</p>
+            <p class="diag-tool-help muted" data-i18n="editorAnalysisHelp">Fes clic primer al camp que falla. Mostra estructura i estat, sense incloure el text.</p>
+            <div class="diag-actions"><button id="editorAnalysisBtn" type="button" data-i18n="analyzeEditorPage">Analitzar editor i camps</button><button id="copyEditorAnalysisBtn" type="button" hidden data-i18n="copyEditorAnalysis">Copiar anàlisi</button></div>
+            <p id="editorAnalysisStatus" class="muted diag-status" aria-live="polite"></p>
+          </div>
+          <div class="diag-tool">
+            <p class="diag-tool-title" data-i18n="fullDiagnostics">Diagnòstic complet</p>
+            <div class="diag-actions"><button id="diagnosticsBtn" type="button" data-i18n="fullDiagnostics">Diagnòstic complet</button><button id="copyDiagnosticsBtn" type="button" hidden data-i18n="copy">Copiar</button></div>
+            <p class="diag-tool-help muted" data-i18n="paragraphInteractionDiagnosticsHint">Després d’una acció, espera uns segons i genera el diagnòstic. No s’hi desa el text.</p>
+            <pre id="diagnostics" class="diag-output" aria-live="polite"></pre>
+          </div>
+        </section>
+        <section class="advanced-group">
+          <h3 data-i18n="advancedRecordingGroup">Gravacions de la pàgina activa</h3>
+          <div class="diag-tool">
+            <p class="diag-tool-title" data-i18n="paintRecordingTitle">Pintades i scroll</p>
+            <p class="diag-tool-help muted" data-i18n="paintRecordingHelp">Registra quan apareixen o desapareixen les marques mentre et mous pel document.</p>
+            <div class="diag-actions"><button id="paintRecordBtn" type="button" data-i18n="paintRecordingStart">Gravar pintades</button><button id="paintRecordingCopyBtn" type="button" data-i18n="paintRecordingCopy">Copiar gravació</button></div>
+            <p id="paintRecordingStatus" class="muted diag-status" aria-live="polite" data-i18n="paintRecordingStopped">Aturat</p>
+          </div>
+          <div class="diag-tool">
+            <p class="diag-tool-title" data-i18n="readRecordingTitle">Procés de lectura</p>
+            <p class="diag-tool-help muted" data-i18n="readRecordingHelp">Mesura les fases de lectura, anàlisi i revisió del document.</p>
+            <div class="diag-actions"><button id="readRecordBtn" type="button" data-i18n="readRecordingStart">Gravar procés de lectura</button><button id="readRecordingCopyBtn" type="button" data-i18n="readRecordingCopy">Copiar lectura</button></div>
+            <p id="readRecordingStatus" class="muted diag-status" aria-live="polite" data-i18n="readRecordingStopped">Gravació de lectura aturada</p>
+          </div>
+        </section>
+      </div>
+    </details>
+  </section>
+  <script src="ui-localization.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
+

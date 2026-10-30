@@ -1,0 +1,7 @@
+Historical provenance note for earlier product builds:
+- catalan.aff
+- catalan.dic
+
+Those Hunspell files are not included in Corrector gramatical català 1.0.0.
+The active 1.0.0 spelling and morphology resources are listed in
+THIRD_PARTY_NOTICES.md and carry their own source and license notices.

@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "language": "ca",
+  "source": "LanguageTool rules/ca/replace_multiwords.txt",
+  "scope": "weak-pronouns-and-apostrophe",
+  "stats": {
+    "entries": 8
+  },
+  "entries": [
+    {
+      "from": "-le'n",
+      "to": [
+        "-l'en",
+        "-li'n"
+      ],
+      "message": "Apostrofació incorrecta de pronoms febles.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 289
+    },
+    {
+      "from": "celebrant-t'ho",
+      "to": [
+        "celebrant-ho"
+      ],
+      "message": "Probablement sobra el pronom \"t'\" (=a tu).",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 641
+    },
+    {
+      "from": "els hi ho",
+      "to": [
+        "els ho"
+      ],
+      "message": "Combinació incorrecta de pronoms febles.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 370
+    },
+    {
+      "from": "la deixat",
+      "to": [
+        "l'ha deixat"
+      ],
+      "message": "Si és del v. 'haver', s'escriu amb hac.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 151
+    },
+    {
+      "from": "le'n",
+      "to": [
+        "l'en",
+        "li'n"
+      ],
+      "message": "Apostrofació incorrecta de pronoms febles.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 290
+    },
+    {
+      "from": "n'hi a",
+      "to": [
+        "n'hi ha"
+      ],
+      "message": "S'escriu amb 'h' si és del verb 'haver'.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 260
+    },
+    {
+      "from": "se l'iva",
+      "to": [
+        "se li va"
+      ],
+      "message": "Combinació incorrecta de pronoms febles.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 249
+    },
+    {
+      "from": "se'l iva",
+      "to": [
+        "se li va"
+      ],
+      "message": "Combinació incorrecta de pronoms febles.",
+      "source": "rules/ca/replace_multiwords.txt",
+      "line": 249
+    }
+  ]
+}

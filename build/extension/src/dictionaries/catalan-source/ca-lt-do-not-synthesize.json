@@ -1,0 +1,395 @@
+{
+  "schema": 1,
+  "language": "ca",
+  "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+  "stats": {
+    "entries": 55
+  },
+  "entries": [
+    {
+      "form": "bon",
+      "lemma": "bo",
+      "tag": "AQ0MS0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 62
+    },
+    {
+      "form": "caler",
+      "lemma": "caldre",
+      "tag": "VMN00000",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 60
+    },
+    {
+      "form": "confuit",
+      "lemma": "confugir",
+      "tag": "VMP00SMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 44
+    },
+    {
+      "form": "confuita",
+      "lemma": "confugir",
+      "tag": "VMP00SFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 45
+    },
+    {
+      "form": "confuites",
+      "lemma": "confugir",
+      "tag": "VMP00PFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 46
+    },
+    {
+      "form": "confuits",
+      "lemma": "confugir",
+      "tag": "VMP00PMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 47
+    },
+    {
+      "form": "defuit",
+      "lemma": "defugir",
+      "tag": "VMP00SMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 48
+    },
+    {
+      "form": "defuita",
+      "lemma": "defugir",
+      "tag": "VMP00SFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 49
+    },
+    {
+      "form": "defuites",
+      "lemma": "defugir",
+      "tag": "VMP00PFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 50
+    },
+    {
+      "form": "defuits",
+      "lemma": "defugir",
+      "tag": "VMP00PMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 51
+    },
+    {
+      "form": "enfuit",
+      "lemma": "enfugir",
+      "tag": "VMP00SMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 52
+    },
+    {
+      "form": "enfuita",
+      "lemma": "enfugir",
+      "tag": "VMP00SFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 53
+    },
+    {
+      "form": "enfuites",
+      "lemma": "enfugir",
+      "tag": "VMP00PFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 54
+    },
+    {
+      "form": "enfuits",
+      "lemma": "enfugir",
+      "tag": "VMP00PMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 55
+    },
+    {
+      "form": "essent",
+      "lemma": "ser",
+      "tag": "VSG00000",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 17
+    },
+    {
+      "form": "fe",
+      "lemma": "fer",
+      "tag": "VMIS3S0B",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 63
+    },
+    {
+      "form": "fis",
+      "lemma": "fi2",
+      "tag": "NCFP000",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 18
+    },
+    {
+      "form": "fuit",
+      "lemma": "fugir",
+      "tag": "VMP00SMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 56
+    },
+    {
+      "form": "fuita",
+      "lemma": "fugir",
+      "tag": "VMP00SFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 57
+    },
+    {
+      "form": "fuites",
+      "lemma": "fugir",
+      "tag": "VMP00PFB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 58
+    },
+    {
+      "form": "fuits",
+      "lemma": "fugir",
+      "tag": "VMP00PMB",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 59
+    },
+    {
+      "form": "ment",
+      "lemma": "mentir",
+      "tag": "VMIP1S0Z",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 19
+    },
+    {
+      "form": "ment",
+      "lemma": "mentir",
+      "tag": "VMIP3S00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 20
+    },
+    {
+      "form": "ment",
+      "lemma": "mentir",
+      "tag": "VMM02S00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 21
+    },
+    {
+      "form": "menta",
+      "lemma": "mentir",
+      "tag": "VMM03S0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 22
+    },
+    {
+      "form": "menta",
+      "lemma": "mentir",
+      "tag": "VMSP1S0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 23
+    },
+    {
+      "form": "menta",
+      "lemma": "mentir",
+      "tag": "VMSP3S0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 24
+    },
+    {
+      "form": "menten",
+      "lemma": "mentir",
+      "tag": "VMIP3P00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 25
+    },
+    {
+      "form": "menten",
+      "lemma": "mentir",
+      "tag": "VMM03P0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 26
+    },
+    {
+      "form": "menten",
+      "lemma": "mentir",
+      "tag": "VMSP3P0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 27
+    },
+    {
+      "form": "mentes",
+      "lemma": "mentir",
+      "tag": "VMSP2S0V",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 28
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMM03S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 29
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMM03S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 30
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMSP1S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 31
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMSP1S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 32
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMSP3S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 33
+    },
+    {
+      "form": "menti",
+      "lemma": "mentir",
+      "tag": "VMSP3S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 34
+    },
+    {
+      "form": "mentin",
+      "lemma": "mentir",
+      "tag": "VMM03P0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 35
+    },
+    {
+      "form": "mentin",
+      "lemma": "mentir",
+      "tag": "VMSP3P0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 36
+    },
+    {
+      "form": "mentis",
+      "lemma": "mentir",
+      "tag": "VMSP2S0Y",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 37
+    },
+    {
+      "form": "mento",
+      "lemma": "mentir",
+      "tag": "VMIP1S0C",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 38
+    },
+    {
+      "form": "ments",
+      "lemma": "mentir",
+      "tag": "VMIP2S00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 39
+    },
+    {
+      "form": "meua",
+      "lemma": "meu",
+      "tag": "PX1FS0S0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 7
+    },
+    {
+      "form": "meues",
+      "lemma": "meu",
+      "tag": "PX1FP0S0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 8
+    },
+    {
+      "form": "prevaldre",
+      "lemma": "prevaler",
+      "tag": "VMN00000",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 65
+    },
+    {
+      "form": "seua",
+      "lemma": "seu",
+      "tag": "PX3FS0C0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 9
+    },
+    {
+      "form": "seues",
+      "lemma": "seu",
+      "tag": "PX3FP0C0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 10
+    },
+    {
+      "form": "sóc",
+      "lemma": "ser",
+      "tag": "VSIP1S00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 61
+    },
+    {
+      "form": "teua",
+      "lemma": "teu",
+      "tag": "PX2FS0S0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 11
+    },
+    {
+      "form": "teues",
+      "lemma": "teu",
+      "tag": "PX2FP0S0",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 12
+    },
+    {
+      "form": "varen",
+      "lemma": "anar",
+      "tag": "VAIP3P00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 40
+    },
+    {
+      "form": "vares",
+      "lemma": "anar",
+      "tag": "VAIP2S00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 41
+    },
+    {
+      "form": "vindre",
+      "lemma": "venir",
+      "tag": "VMN00000",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 64
+    },
+    {
+      "form": "vàrem",
+      "lemma": "anar",
+      "tag": "VAIP1P00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 42
+    },
+    {
+      "form": "vàreu",
+      "lemma": "anar",
+      "tag": "VAIP2P00",
+      "source": "LanguageTool resource/ca/do-not-synthesize.txt",
+      "line": 43
+    }
+  ]
+}

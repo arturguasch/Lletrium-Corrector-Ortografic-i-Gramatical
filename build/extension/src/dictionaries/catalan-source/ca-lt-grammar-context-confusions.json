@@ -1,0 +1,7760 @@
+{
+  "version": 3,
+  "source": "LanguageTool rules/ca/grammar.xml CONFUSIONS/CONFUSIONS2/INCORRECT_WORDS_IN_CONTEXT",
+  "count": 615,
+  "summary": [
+    {
+      "category": "CONFUSIONS",
+      "risk": "contextual",
+      "count": 179
+    },
+    {
+      "category": "CONFUSIONS",
+      "risk": "safe",
+      "count": 183
+    },
+    {
+      "category": "CONFUSIONS2",
+      "risk": "contextual",
+      "count": 48
+    },
+    {
+      "category": "CONFUSIONS2",
+      "risk": "safe",
+      "count": 34
+    },
+    {
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "risk": "contextual",
+      "count": 111
+    },
+    {
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "risk": "safe",
+      "count": 60
+    }
+  ],
+  "entries": [
+    {
+      "from": "abans d'ahir",
+      "to": [
+        "abans-d'ahir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ABANS_DAHIR",
+      "name": "Abans d'ahir/abans-d'ahir",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52351
+    },
+    {
+      "from": "posterior ment",
+      "to": [
+        "posteriorment"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ADVERBI_MENT",
+      "name": "posterior ment -> posteriorment",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 43864
+    },
+    {
+      "from": "Li ah",
+      "to": [
+        "Li ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AH_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 45101
+    },
+    {
+      "from": "Això i tot",
+      "to": [
+        "Així i tot",
+        "Tot i això"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AIXO_I_TOT",
+      "name": "això i tot -> així i tot",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 39985
+    },
+    {
+      "from": "ales hores",
+      "to": [
+        "aleshores",
+        "a les hores"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALES_A_LES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53652
+    },
+    {
+      "from": "All llarg",
+      "to": [
+        "Al llarg"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALL_LLARG",
+      "name": "*all/al llarg",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49351
+    },
+    {
+      "from": "Al menys",
+      "to": [
+        "Almenys"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALMENYS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 58326
+    },
+    {
+      "from": "al manco",
+      "to": [
+        "almanco"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALMENYS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 58340
+    },
+    {
+      "from": "altes coses",
+      "to": [
+        "altres coses"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALTES_ALTRES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47407
+    },
+    {
+      "from": "altes títols",
+      "to": [
+        "altres títols"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALTES_ALTRES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47415
+    },
+    {
+      "from": "alt i baixos",
+      "to": [
+        "alts i baixos"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ALT_I_BAIXOS",
+      "name": "alt i baixos -> alts i baixos",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 40783
+    },
+    {
+      "from": "la principi",
+      "to": [
+        "al principi",
+        "el principi"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AL_PRINCIPI",
+      "name": "*la principi",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43417
+    },
+    {
+      "from": "Al seva",
+      "to": [
+        "La seva",
+        "A la seva"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AL_SEVA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42075
+    },
+    {
+      "from": "al seva",
+      "to": [
+        "la seva"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AL_SEVA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 42062
+    },
+    {
+      "from": "al seva",
+      "to": [
+        "la seva",
+        "La seva",
+        "A la seva"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AL_SEVA",
+      "name": "*al seva/la seva",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 42073
+    },
+    {
+      "from": "al voltat",
+      "to": [
+        "al voltant"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AL_VOLTANT",
+      "name": "al *voltat/voltant",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45417
+    },
+    {
+      "from": "en el benentés",
+      "to": [
+        "amb el benentés"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AMB_EL_BENENTES",
+      "name": "*en/amb el benentès",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52581
+    },
+    {
+      "from": "Amb sap",
+      "to": [
+        "Em sap"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AMB_EM",
+      "name": "*amb/em quedo",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 45205
+    },
+    {
+      "from": "amb quedo",
+      "to": [
+        "em quedo"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AMB_EM",
+      "name": "*amb/em quedo",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 45205
+    },
+    {
+      "from": "amb posteritat",
+      "to": [
+        "amb posterioritat",
+        "posteriorment"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AMB_POSTERITAT",
+      "name": "amb posteritat/posterioritat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46879
+    },
+    {
+      "from": "Del angles",
+      "to": [
+        "De l'anglès",
+        "De l'anglés",
+        "Dels angles"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ANGLES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 55611
+    },
+    {
+      "from": "el angles",
+      "to": [
+        "l'anglès",
+        "l'anglés",
+        "els angles"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ANGLES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 55624
+    },
+    {
+      "from": "Ans el contrari",
+      "to": [
+        "Ans al contrari"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ANS_AL_CONTRARI",
+      "name": "ans el contrari -> ans al contrari",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43738
+    },
+    {
+      "from": "arran el",
+      "to": [
+        "arran del"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ARRAN_DE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37254
+    },
+    {
+      "from": "Atenent a",
+      "to": [
+        "Ateses",
+        "Atenint-nos a",
+        "Tenint en compte"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ATENDRE_ATENIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 47328
+    },
+    {
+      "from": "Atenent a",
+      "to": [
+        "Atenint-nos a",
+        "Tenint en compte"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ATENDRE_ATENIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47344
+    },
+    {
+      "from": "Atenent als",
+      "to": [
+        "Atesos els",
+        "Atenint-nos als",
+        "Tenint en compte els"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ATENDRE_ATENIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47312
+    },
+    {
+      "from": "atenem a",
+      "to": [
+        "ens atenim a",
+        "atenem"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ATENDRE_ATENIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47372
+    },
+    {
+      "from": "atenem al",
+      "to": [
+        "ens atenim al",
+        "atenem el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ATENDRE_ATENIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47359
+    },
+    {
+      "from": "La verdadera avantatja competitiva",
+      "to": [
+        "El verdader avantatge competitiu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AVANTATJA_AVANTATGE",
+      "name": "avantatja -> avantatge",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 34418
+    },
+    {
+      "from": "una gran avantatja",
+      "to": [
+        "un gran avantatge"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AVANTATJA_AVANTATGE",
+      "name": "avantatja -> avantatge",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 34418
+    },
+    {
+      "from": "avantatja decisiva",
+      "to": [
+        "avantatge decisiu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "AVANTATJA_AVANTATGE",
+      "name": "avantatja -> avantatge",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 34418
+    },
+    {
+      "from": "a bans",
+      "to": [
+        "abans"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_BANS_ABANS",
+      "name": "*a bans / abans",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54605
+    },
+    {
+      "from": "a capella",
+      "to": [
+        "a cappella"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_CAPELLA",
+      "name": "a *capella/cappella",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 46761
+    },
+    {
+      "from": "Com a com a",
+      "to": [
+        "Com a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_COM_A",
+      "name": "a com a",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45790
+    },
+    {
+      "from": "a com a",
+      "to": [
+        "com a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_COM_A",
+      "name": "a com a",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 45802
+    },
+    {
+      "from": "A costat",
+      "to": [
+        "Al costat",
+        "Ha costat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_COSTAT",
+      "name": "a costat/al costat",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 47858
+    },
+    {
+      "from": "a fi",
+      "to": [
+        "afí"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_FI_AFI",
+      "name": "a fi/afí",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46322
+    },
+    {
+      "from": "a horabaixa",
+      "to": [
+        "a hora baixa"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_HORABAIXA",
+      "name": "a *horabaixa/hora baixa",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51317
+    },
+    {
+      "from": "A llarg",
+      "to": [
+        "Al llarg"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_LLARG_DE",
+      "name": "a llarg de",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51191
+    },
+    {
+      "from": "A mena de",
+      "to": [
+        "A manera de"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_MENA_DE",
+      "name": "a mena de",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 50388
+    },
+    {
+      "from": "a molestat",
+      "to": [
+        "a molestar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_PARTICIPI_INFINITIU",
+      "name": "veniu a repetit -> repetir",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 37106
+    },
+    {
+      "from": "a registrat",
+      "to": [
+        "a registrar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_PARTICIPI_INFINITIU",
+      "name": "veniu a repetit -> repetir",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 37106
+    },
+    {
+      "from": "a repetit",
+      "to": [
+        "a repetir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_PARTICIPI_INFINITIU",
+      "name": "veniu a repetit -> repetir",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 37106
+    },
+    {
+      "from": "a profunditat",
+      "to": [
+        "en profunditat",
+        "a fons"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_PROFUNDITAT",
+      "name": "a profunditat -> a fons, en profunditat",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 40063
+    },
+    {
+      "from": "a tot hora",
+      "to": [
+        "a tota hora"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_TOTA_HORA",
+      "name": "a *tot/tota hora",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51677
+    },
+    {
+      "from": "A traves",
+      "to": [
+        "A través",
+        "a través"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_TRAVES",
+      "name": "a traves",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 50729
+    },
+    {
+      "from": "a ver",
+      "to": [
+        "haver"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_VER_HAVER",
+      "name": "a ver/haver",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 45402
+    },
+    {
+      "from": "a visar",
+      "to": [
+        "avisar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "A_VISAR",
+      "name": "a visar -> avisar",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 39456
+    },
+    {
+      "from": "País Bacs",
+      "to": [
+        "País Basc"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BACS",
+      "name": "bacs/basc",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45393
+    },
+    {
+      "from": "A bans",
+      "to": [
+        "Abans",
+        "abans"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BANS_ABANS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34805
+    },
+    {
+      "from": "bat i bull",
+      "to": [
+        "batibull"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BATIBULL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54526
+    },
+    {
+      "from": "la benentesa",
+      "to": [
+        "l'avinentesa"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BENENTESA_AVINENTESA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 37600
+    },
+    {
+      "from": "el ben entès",
+      "to": [
+        "el benentès"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BEN_ENTES",
+      "name": "ben entès / benentès",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52570
+    },
+    {
+      "from": "mal intencionada",
+      "to": [
+        "malintencionada"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BEN_INTENCIONAT",
+      "name": "*ben intencionat/benintencionat",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 52545
+    },
+    {
+      "from": "ben vinguts",
+      "to": [
+        "benvinguts"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BEN_VINGUT",
+      "name": "ben vingut",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52560
+    },
+    {
+      "from": "bo cantar",
+      "to": [
+        "bon cantar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BO_BON",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 50549
+    },
+    {
+      "from": "bo home",
+      "to": [
+        "bon home"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "BO_BON",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 50540
+    },
+    {
+      "from": "Cada quan",
+      "to": [
+        "Cada quant"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CADA_QUAN_QUANT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54626
+    },
+    {
+      "from": "Cal a dir",
+      "to": [
+        "Val a dir",
+        "Cal dir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAL_A_DIR",
+      "name": "*cal/val a dir",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48449
+    },
+    {
+      "from": "Ho can",
+      "to": [
+        "Ho van"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAN_CAL_VAN",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 40964
+    },
+    {
+      "from": "capa al",
+      "to": [
+        "cap al"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAPA_CAP_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34549
+    },
+    {
+      "from": "capa el",
+      "to": [
+        "cap al"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAPA_CAP_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34559
+    },
+    {
+      "from": "cap a munt",
+      "to": [
+        "cap amunt"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAP_A_MUNT",
+      "name": "cap *a munt/amunt",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47437
+    },
+    {
+      "from": "cap cot",
+      "to": [
+        "capcot"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAP_COT",
+      "name": "cap cot",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52199
+    },
+    {
+      "from": "cap damunt",
+      "to": [
+        "capdamunt"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CAP_DAMUNT",
+      "name": "cap damunt/capdamunt",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52216
+    },
+    {
+      "from": "ca sa",
+      "to": [
+        "casa"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CA_SA_CASA",
+      "name": "ca sa -> casa",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 41268
+    },
+    {
+      "from": "en cel",
+      "to": [
+        "en zel"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CEL_ZEL",
+      "name": "en *cel/zel",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 45507
+    },
+    {
+      "from": "Comunitat València",
+      "to": [
+        "Comunitat Valenciana"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "COMUNITAT_VALENCIA",
+      "name": "Comunitat València/valenciana",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48388
+    },
+    {
+      "from": "Com a ha",
+      "to": [
+        "Com a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "COM_A_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 37206
+    },
+    {
+      "from": "Com a",
+      "to": [
+        "Com"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "COM_A_HA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 37204
+    },
+    {
+      "from": "com és aviat",
+      "to": [
+        "com més aviat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "COM_MES_AVIAT_COM_ES_AVIAT",
+      "name": "com més aviat/com és aviat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52142
+    },
+    {
+      "from": "A ems a mes",
+      "to": [
+        "A més a més"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIONS_EMS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 38051
+    },
+    {
+      "from": "A ems",
+      "to": [
+        "A més"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIONS_EMS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 38067
+    },
+    {
+      "from": "Ems ap",
+      "to": [
+        "Em sap"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIONS_EMS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 38157
+    },
+    {
+      "from": "hi e fixat",
+      "to": [
+        "hi he fixat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_E",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47694
+    },
+    {
+      "from": "e el",
+      "to": [
+        "del",
+        "i el",
+        "en el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_E",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47706
+    },
+    {
+      "from": "e estat",
+      "to": [
+        "he estat",
+        "d'estat",
+        "i estat",
+        "en estat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_E",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47730
+    },
+    {
+      "from": "e les",
+      "to": [
+        "de les",
+        "i les",
+        "en les"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_E",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47718
+    },
+    {
+      "from": "e pensat",
+      "to": [
+        "he pensat",
+        "de pensat",
+        "i pensat",
+        "en pensat",
+        "el pensat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_E",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 47743
+    },
+    {
+      "from": "En els ha",
+      "to": [
+        "Ens els ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_EN_ENS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 35307
+    },
+    {
+      "from": "En els han",
+      "to": [
+        "Ens els han"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_EN_ENS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 35292
+    },
+    {
+      "from": "En l'han",
+      "to": [
+        "Ens l'han"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_EN_ENS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 35292
+    },
+    {
+      "from": "Fem arribat",
+      "to": [
+        "Fem arribar",
+        "Hem arribat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_FEM_HEM",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 37994
+    },
+    {
+      "from": "fem arribat",
+      "to": [
+        "fem arribar",
+        "hem arribat",
+        "Fem arribar",
+        "Hem arribat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONFUSIO_FEM_HEM",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 38002
+    },
+    {
+      "from": "per conseqüent",
+      "to": [
+        "per consegüent"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONSEGUENT_CONSEQUENT",
+      "name": "consegüent/conseqüent",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52002
+    },
+    {
+      "from": "contat i debatut",
+      "to": [
+        "comptat i debatut"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "CONTAT_I_DEBATUT",
+      "name": "*contat/comptat i debatut",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50600
+    },
+    {
+      "from": "D església",
+      "to": [
+        "D'església"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "D",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 50139
+    },
+    {
+      "from": "D veritat",
+      "to": [
+        "De veritat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "D",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 50167
+    },
+    {
+      "from": "d altres",
+      "to": [
+        "d'altres"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "D",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50126
+    },
+    {
+      "from": "d eles",
+      "to": [
+        "de les"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "D",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50118
+    },
+    {
+      "from": "0,45 dècimes",
+      "to": [
+        "45 dècimes",
+        "0,45"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DECIMES",
+      "name": "dècimes",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44805
+    },
+    {
+      "from": "en dejuni",
+      "to": [
+        "en dejú"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DEJU_DEJUNI",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 40122
+    },
+    {
+      "from": "l s",
+      "to": [
+        "ls"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DEL_S",
+      "name": "del s / dels",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47500
+    },
+    {
+      "from": "un s",
+      "to": [
+        "uns"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DEL_S",
+      "name": "del s / dels",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47500
+    },
+    {
+      "from": "des des",
+      "to": [
+        "des de"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DES_DE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 51857
+    },
+    {
+      "from": "de bades",
+      "to": [
+        "debades"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DE_BADES_DEBADES",
+      "name": "de bades / debades",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51887
+    },
+    {
+      "from": "de temps",
+      "to": [
+        "molt de temps",
+        "temps"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DE_FA_DE_TEMPS",
+      "name": "de fa (molt) de temps",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45028
+    },
+    {
+      "from": "de quals",
+      "to": [
+        "dels quals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DE_QUAL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48491
+    },
+    {
+      "from": "en qual",
+      "to": [
+        "en el qual",
+        "en la qual"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DE_QUAL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48519
+    },
+    {
+      "from": "en quals",
+      "to": [
+        "en els quals",
+        "en les quals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DE_QUAL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48519
+    },
+    {
+      "from": "ho dia",
+      "to": [
+        "ho deia"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DIA_DEIA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 41023
+    },
+    {
+      "from": "Un altre diferència",
+      "to": [
+        "Una altra diferència"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DIFERENCIA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 57189
+    },
+    {
+      "from": "El diferència",
+      "to": [
+        "La diferència",
+        "Les diferències"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DIFERENCIA_SENSEACCENT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 57544
+    },
+    {
+      "from": "Els diferències",
+      "to": [
+        "Les diferències",
+        "La diferència"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DIFERENCIA_SENSEACCENT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 57557
+    },
+    {
+      "from": "de direccions",
+      "to": [
+        "d'adreces"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DIRECCIO_ADRECA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49776
+    },
+    {
+      "from": "di a",
+      "to": [
+        "dia"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DI_DIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42949
+    },
+    {
+      "from": "dret a llei",
+      "to": [
+        "dreta llei"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DRET_A_LLEI",
+      "name": "*dret a llei/dreta llei",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51303
+    },
+    {
+      "from": "en dubta",
+      "to": [
+        "en dubte"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DUBTA_DUBTE",
+      "name": "dubta/dubte",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 45220
+    },
+    {
+      "from": "Durant al",
+      "to": [
+        "Durant el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 43759
+    },
+    {
+      "from": "Durant al",
+      "to": [
+        "Durant la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 43774
+    },
+    {
+      "from": "Durant al",
+      "to": [
+        "Durant la",
+        "Durant el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43791
+    },
+    {
+      "from": "Durant al",
+      "to": [
+        "Durant el",
+        "Durant la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 43770
+    },
+    {
+      "from": "Durant als",
+      "to": [
+        "Durant els"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43748
+    },
+    {
+      "from": "durant a",
+      "to": [
+        "durant la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "DURANT_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 43804
+    },
+    {
+      "from": "d'a fora",
+      "to": [
+        "de fora"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "D_AFORA_DE_FORA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46151
+    },
+    {
+      "from": "ela clàssics",
+      "to": [
+        "els clàssics"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ELA_ELS",
+      "name": "ela/els",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44651
+    },
+    {
+      "from": "El capdavall",
+      "to": [
+        "Al capdavall"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EL_CAPDAVALL",
+      "name": "el/al capdavall",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45899
+    },
+    {
+      "from": "El la",
+      "to": [
+        "En la",
+        "en la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EL_LA_EN_LA",
+      "name": "*el/en la",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 45462
+    },
+    {
+      "from": "El les",
+      "to": [
+        "En les",
+        "Les"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EL_LA_EN_LA",
+      "name": "*el/en la",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 45479
+    },
+    {
+      "from": "el el",
+      "to": [
+        "en el",
+        "el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EL_LA_EN_LA",
+      "name": "*el/en la",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 45480
+    },
+    {
+      "from": "Dels empalmes",
+      "to": [
+        "De les connexions",
+        "Dels enllaços",
+        "De les empiuladures",
+        "Dels empalmaments"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EMPALME",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42277
+    },
+    {
+      "from": "Un empalme",
+      "to": [
+        "Una connexió",
+        "Un enllaç",
+        "Una empiuladura",
+        "Un empalmament"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EMPALME",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 42292
+    },
+    {
+      "from": "Uns empalmes",
+      "to": [
+        "Unes connexions",
+        "Uns enllaços",
+        "Unes empiuladures",
+        "Uns empalmaments"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EMPALME",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 42306
+    },
+    {
+      "from": "Em dir",
+      "to": [
+        "En dir",
+        "Em diu",
+        "Em dirà"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EM_EN",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 41632
+    },
+    {
+      "from": "em vist",
+      "to": [
+        "hem vist"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EM_VIST",
+      "name": "em vist",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52300
+    },
+    {
+      "from": "a les engonals",
+      "to": [
+        "als engonals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENGONAL",
+      "name": "engonal (nom masculí)",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 51338
+    },
+    {
+      "from": "de les engonals",
+      "to": [
+        "dels engonals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENGONAL",
+      "name": "engonal (nom masculí)",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 51338
+    },
+    {
+      "from": "Les engonals",
+      "to": [
+        "Els engonals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENGONAL",
+      "name": "engonal (nom masculí)",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 51338
+    },
+    {
+      "from": "Quines engonals",
+      "to": [
+        "Quins engonals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENGONAL",
+      "name": "engonal (nom masculí)",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 51338
+    },
+    {
+      "from": "Una engonal",
+      "to": [
+        "Un engonal"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENGONAL",
+      "name": "engonal (nom masculí)",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 51338
+    },
+    {
+      "from": "ens en ensortim",
+      "to": [
+        "ens en sortim"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44493
+    },
+    {
+      "from": "ens en ensortíem",
+      "to": [
+        "ens en sortíem"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44493
+    },
+    {
+      "from": "me n'ensurto",
+      "to": [
+        "me'n surto"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44482
+    },
+    {
+      "from": "se n'ensortien",
+      "to": [
+        "se'n sortien"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44482
+    },
+    {
+      "from": "se n'ensurt",
+      "to": [
+        "se'n surt"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44482
+    },
+    {
+      "from": "us n'ensortíeu",
+      "to": [
+        "us en sortíeu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENSORTIR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44493
+    },
+    {
+      "from": "ens quals",
+      "to": [
+        "els quals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENS_EN",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43248
+    },
+    {
+      "from": "ens en entornarem",
+      "to": [
+        "ens en tornarem"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44518
+    },
+    {
+      "from": "ens en entornem",
+      "to": [
+        "ens en tornem"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44518
+    },
+    {
+      "from": "Me n'entorno",
+      "to": [
+        "Me'n torno"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44506
+    },
+    {
+      "from": "Se n'entorna",
+      "to": [
+        "Se'n torna"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44506
+    },
+    {
+      "from": "Se n'entornaven",
+      "to": [
+        "Se'n tornaven"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44506
+    },
+    {
+      "from": "Us entorneu",
+      "to": [
+        "Us en torneu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44565
+    },
+    {
+      "from": "us n'entorneu",
+      "to": [
+        "us en torneu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTORNAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44518
+    },
+    {
+      "from": "entre d'ells",
+      "to": [
+        "entre ells"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTRE_DELLS",
+      "name": "entre d'ells",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 51687
+    },
+    {
+      "from": "entre mig",
+      "to": [
+        "entremig"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ENTRE_MIG_ENTREMIG",
+      "name": "entre mig / entremig",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 52169
+    },
+    {
+      "from": "en directa",
+      "to": [
+        "en directe"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_DIRECTA",
+      "name": "en directa -> en directe",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 35792
+    },
+    {
+      "from": "en durant",
+      "to": [
+        "durant",
+        "en"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_DURANT",
+      "name": "en durant -> durant",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 36458
+    },
+    {
+      "from": "En el en el",
+      "to": [
+        "En el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_EL_EN_EL",
+      "name": "confusions 'el en'",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37883
+    },
+    {
+      "from": "En el en la",
+      "to": [
+        "En la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_EL_EN_EL",
+      "name": "confusions 'el en'",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37893
+    },
+    {
+      "from": "El en el",
+      "to": [
+        "En el",
+        "En",
+        "El"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_EL_EN_EL",
+      "name": "confusions 'el en'",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37915
+    },
+    {
+      "from": "En el en",
+      "to": [
+        "En el",
+        "En",
+        "El"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_EL_EN_EL",
+      "name": "confusions 'el en'",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37904
+    },
+    {
+      "from": "El en",
+      "to": [
+        "En el",
+        "En",
+        "El"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_EL_EN_EL",
+      "name": "confusions 'el en'",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37925
+    },
+    {
+      "from": "en front",
+      "to": [
+        "enfront"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_FRONT_ENFRONT",
+      "name": "*en front/enfront",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54453
+    },
+    {
+      "from": "en portat",
+      "to": [
+        "han portat",
+        "hem portat",
+        "en porta",
+        "en portà"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_PORTAT",
+      "name": "en portat/en porta",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 48186
+    },
+    {
+      "from": "en relació de",
+      "to": [
+        "en relació amb",
+        "en relació a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_RELACIO",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53993
+    },
+    {
+      "from": "en relació del",
+      "to": [
+        "en relació amb el",
+        "amb relació al"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_RELACIO",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53978
+    },
+    {
+      "from": "en relació",
+      "to": [
+        "en relació amb",
+        "en relació a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_RELACIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 53955
+    },
+    {
+      "from": "en vers",
+      "to": [
+        "envers",
+        "cap a",
+        "vers"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_VERS_ENVERS",
+      "name": "en vers -> envers",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 42858
+    },
+    {
+      "from": "En ves",
+      "to": [
+        "En comptes",
+        "Envers"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "EN_VES",
+      "name": "en ves/en comptes/envers",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49742
+    },
+    {
+      "from": "Quins espirals",
+      "to": [
+        "Quines espirals"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ESPIRAL",
+      "name": "espiral (nom femení)",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 51327
+    },
+    {
+      "from": "Un espiral",
+      "to": [
+        "Una espiral"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ESPIRAL",
+      "name": "espiral (nom femení)",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 51327
+    },
+    {
+      "from": "el corrent",
+      "to": [
+        "al corrent"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ESTAR_EL_CORRENT",
+      "name": "estar el corrent -> al corrent",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 35120
+    },
+    {
+      "from": "Estats Untis",
+      "to": [
+        "Estats Units"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ESTATS_UNITS",
+      "name": "Estats *Untis/Units",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45167
+    },
+    {
+      "from": "li estès",
+      "to": [
+        "li estigués"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ESTES_ESTIGUES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 44315
+    },
+    {
+      "from": "és adir",
+      "to": [
+        "és a dir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_ADIR",
+      "name": "és *adir / a dir",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54615
+    },
+    {
+      "from": "Es cas",
+      "to": [
+        "En cas"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_CAS",
+      "name": "es cas/en cas",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44202
+    },
+    {
+      "from": "es fos",
+      "to": [
+        "es fes"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_FOS",
+      "name": "es fos",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44762
+    },
+    {
+      "from": "es fos",
+      "to": [
+        "es fes",
+        "és fos"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_FOS",
+      "name": "es fos",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44770
+    },
+    {
+      "from": "es va càrrec",
+      "to": [
+        "es fa càrrec"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_VA_FA_CARREC",
+      "name": "es *va/fa càrrec",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53925
+    },
+    {
+      "from": "es volcà",
+      "to": [
+        "es bolcà",
+        "és un volcà"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ES_VOLCA",
+      "name": "és volcà/es bolcà",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42699
+    },
+    {
+      "from": "vaig torna",
+      "to": [
+        "vaig tornar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FACTURA_FACTURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 39702
+    },
+    {
+      "from": "fa ver",
+      "to": [
+        "va fer"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FA_VER",
+      "name": "fa ver/va fer",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45613
+    },
+    {
+      "from": "fent servit",
+      "to": [
+        "fent servir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FER_SERVIT",
+      "name": "fer *servit/servir",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49526
+    },
+    {
+      "from": "fina a",
+      "to": [
+        "fins a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FINA_FINS_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 48015
+    },
+    {
+      "from": "fina els",
+      "to": [
+        "fins als"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FINA_FINS_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48032
+    },
+    {
+      "from": "fins a les hores",
+      "to": [
+        "fins aleshores"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FINS_A_LES_HORES_ALESHORES",
+      "name": "fins a les hores / aleshores",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 52508
+    },
+    {
+      "from": "fins del",
+      "to": [
+        "fins al"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FINS_DEL_FINS_AL",
+      "name": "fins del -> fins al",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 58194
+    },
+    {
+      "from": "dins a",
+      "to": [
+        "fins a",
+        "dins",
+        "dins de",
+        "a dins a",
+        "dins, a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "FINS_DINS_A",
+      "name": "dins a/fins a",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 58206
+    },
+    {
+      "from": "gaire bé",
+      "to": [
+        "gairebé"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "GAIRE_BE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 51264
+    },
+    {
+      "from": "gir de 360",
+      "to": [
+        "gir de 180"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "GIR_DE_360",
+      "name": "gir de 360/180",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45806
+    },
+    {
+      "from": "gir de 360°",
+      "to": [
+        "gir de 180°"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "GIR_DE_360",
+      "name": "gir de 360/180",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45814
+    },
+    {
+      "from": "Gràcies això",
+      "to": [
+        "Gràcies a això"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "GRACIES_A",
+      "name": "gràcies això/gràcies a això",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 46603
+    },
+    {
+      "from": "Gràcies eixa",
+      "to": [
+        "Gràcies a eixa"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "GRACIES_A",
+      "name": "gràcies això/gràcies a això",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 46603
+    },
+    {
+      "from": "Ho ha ditl",
+      "to": [
+        "Ho ha dit"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42505
+    },
+    {
+      "from": "Ho ha escoles",
+      "to": [
+        "Hi ha escoles",
+        "Ho ha escolat",
+        "Ho ha escomès",
+        "Ho ha escomés",
+        "Ho ha esculat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42491
+    },
+    {
+      "from": "Ha deixa",
+      "to": [
+        "Ha deixat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42518
+    },
+    {
+      "from": "ha EUA",
+      "to": [
+        "a EUA",
+        "hi ha EUA"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42531
+    },
+    {
+      "from": "ha aposta",
+      "to": [
+        "ha apostat",
+        "ha aposat",
+        "a aposta",
+        "hi ha aposta"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42531
+    },
+    {
+      "from": "ha esta",
+      "to": [
+        "ha estat",
+        "a esta",
+        "hi ha esta"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42531
+    },
+    {
+      "from": "ha la",
+      "to": [
+        "a la",
+        "hi ha la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42531
+    },
+    {
+      "from": "ha responsabilitat",
+      "to": [
+        "ha responsabilitzat",
+        "a responsabilitat",
+        "hi ha responsabilitat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42531
+    },
+    {
+      "from": "Ha he",
+      "to": [
+        "Ja he",
+        "He",
+        "Ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_JA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 41911
+    },
+    {
+      "from": "ha mostra",
+      "to": [
+        "ha mostrat",
+        "ja mostra"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_JA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 41859
+    },
+    {
+      "from": "Ha jo",
+      "to": [
+        "Ja ho"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HA_JO_JA_HO",
+      "name": "ha jo -> ja ho",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 40266
+    },
+    {
+      "from": "Hem sento",
+      "to": [
+        "Em sento",
+        "Hem sentit"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HEM_EM",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44750
+    },
+    {
+      "from": "hem arriba",
+      "to": [
+        "hem arribat",
+        "m'arriba"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HEM_EM",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44741
+    },
+    {
+      "from": "hem motiva",
+      "to": [
+        "em motiva",
+        "hem motivat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HEM_EM",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44750
+    },
+    {
+      "from": "hem pregunto",
+      "to": [
+        "em pregunto",
+        "hem preguntat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HEM_EM",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44750
+    },
+    {
+      "from": "Li hes",
+      "to": [
+        "Li és"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HES_ES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 40939
+    },
+    {
+      "from": "He constat",
+      "to": [
+        "He constatat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HE_CONSTAT",
+      "name": "he constat -> he constatat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37276
+    },
+    {
+      "from": "Hi he",
+      "to": [
+        "Hi ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HI_HE_HI_HA",
+      "name": "hi he -> hi ha",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 36016
+    },
+    {
+      "from": "tot hi",
+      "to": [
+        "tot i"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HI_I",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44073
+    },
+    {
+      "from": "Ho sigui",
+      "to": [
+        "O sigui"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HO_O",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 43949
+    },
+    {
+      "from": "Ho sorpresa",
+      "to": [
+        "Oh, sorpresa"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HO_OH",
+      "name": "ho -> oh, sorpresa!",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34452
+    },
+    {
+      "from": "ho ser",
+      "to": [
+        "ho sé"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HO_SER_HO_SE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37011
+    },
+    {
+      "from": "ho ser",
+      "to": [
+        "ho sé",
+        "o ser"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "HO_SER_HO_SE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37035
+    },
+    {
+      "from": "H havia",
+      "to": [
+        "Hi havia"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "H_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42441
+    },
+    {
+      "from": "Ha ha",
+      "to": [
+        "Hi ha",
+        "Ha, ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "H_HA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42430
+    },
+    {
+      "from": "ho havia",
+      "to": [
+        "hi havia"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "H_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 42441
+    },
+    {
+      "from": "ia que",
+      "to": [
+        "ja que"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "IA_I_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 40748
+    },
+    {
+      "from": "i vaig",
+      "to": [
+        "hi vaig"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "I_HI",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49215
+    },
+    {
+      "from": "Ja és",
+      "to": [
+        "Ja sé",
+        "Ja, és"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "JA_ES_QUE",
+      "name": "ja és que -> ja sé que; ja, és que",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 34439
+    },
+    {
+      "from": "John Hopkins",
+      "to": [
+        "Johns Hopkins"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "JOHNS_HOPKINS",
+      "name": "Johns Hopkins",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 44818
+    },
+    {
+      "from": "Jo ho hem",
+      "to": [
+        "Ja ho hem",
+        "Jo ho he"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "JO_HEM_DIT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 38252
+    },
+    {
+      "from": "Jo hem",
+      "to": [
+        "Ho hem",
+        "Jo he"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "JO_HEM_DIT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 38239
+    },
+    {
+      "from": "L altre",
+      "to": [
+        "L'altre"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49984
+    },
+    {
+      "from": "L església",
+      "to": [
+        "L'església"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 49996
+    },
+    {
+      "from": "L han",
+      "to": [
+        "L'han"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 49895
+    },
+    {
+      "from": "e l",
+      "to": [
+        "el"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49934
+    },
+    {
+      "from": "l altra",
+      "to": [
+        "l'altra"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 49942
+    },
+    {
+      "from": "l catedral",
+      "to": [
+        "la catedral"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 49959
+    },
+    {
+      "from": "l ha",
+      "to": [
+        "l'ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "L",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 50015
+    },
+    {
+      "from": "La directiu",
+      "to": [
+        "La directriu",
+        "La directiva",
+        "El directiu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_DIRECTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 41230
+    },
+    {
+      "from": "Les directius",
+      "to": [
+        "Les directrius",
+        "Les directives",
+        "Els directius"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_DIRECTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 41242
+    },
+    {
+      "from": "la desaparèixer",
+      "to": [
+        "la de desaparèixer",
+        "al desaparèixer",
+        "va desaparèixer"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52809
+    },
+    {
+      "from": "la necessitar",
+      "to": [
+        "la necessita",
+        "la necessità",
+        "la necessitat",
+        "la de necessitar",
+        "al necessitar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52791
+    },
+    {
+      "from": "la partir",
+      "to": [
+        "la partí",
+        "la de partir",
+        "al partir",
+        "va partir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52778
+    },
+    {
+      "from": "la respondre",
+      "to": [
+        "la de respondre",
+        "al respondre",
+        "va respondre"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52765
+    },
+    {
+      "from": "la respondre",
+      "to": [
+        "la respondré",
+        "la de respondre",
+        "al respondre",
+        "va respondre"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_INFINITIU",
+      "name": "la + infinitiu*/nom: la necessitar/necessitat",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 52776
+    },
+    {
+      "from": "la se va",
+      "to": [
+        "la seva"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_SE_VA",
+      "name": "la se va/la seva",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44608
+    },
+    {
+      "from": "la vist",
+      "to": [
+        "l'ha vist",
+        "la vista"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LA_VIST",
+      "name": "la vist / l'ha vist / la vista",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 42729
+    },
+    {
+      "from": "L'ha deixa",
+      "to": [
+        "La deixa",
+        "L'ha deixat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LHA_LA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44980
+    },
+    {
+      "from": "L'ha fa",
+      "to": [
+        "La fa",
+        "L'ha fet"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LHA_LA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44980
+    },
+    {
+      "from": "de ls",
+      "to": [
+        "dels"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "LS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49790
+    },
+    {
+      "from": "mal donades",
+      "to": [
+        "mal dades"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MALDONADES_MAL_DADES",
+      "name": "mal donades / mal dades",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 52088
+    },
+    {
+      "from": "mal tracte",
+      "to": [
+        "maltractament"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MALTRACTAMENT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45334
+    },
+    {
+      "from": "mal bé",
+      "to": [
+        "malbé"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MAL_BE_MALBE",
+      "name": "fer mal bé -> fer malbé",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 38994
+    },
+    {
+      "from": "Mal grat",
+      "to": [
+        "Malgrat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MAL_GRAT_MALGRAT",
+      "name": "mal grat / malgrat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52530
+    },
+    {
+      "from": "meu posat",
+      "to": [
+        "m'heu posat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MEU_MHEU_MHO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 42662
+    },
+    {
+      "from": "M'he agrada",
+      "to": [
+        "M'agrada",
+        "M'he agradat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MHE_M_AGRADA",
+      "name": "m'he agrada -> m'agrada",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 37220
+    },
+    {
+      "from": "T'he abelleix",
+      "to": [
+        "T'abelleix"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MHE_M_AGRADA",
+      "name": "m'he agrada -> m'agrada",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 37220
+    },
+    {
+      "from": "monts de Déu",
+      "to": [
+        "mons de Déu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "MONTS_MONS_DE_DEU",
+      "name": "*monts/mons de Déu",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54107
+    },
+    {
+      "from": "fae na",
+      "to": [
+        "faena"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 50772
+    },
+    {
+      "from": "fei na",
+      "to": [
+        "feina"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 50772
+    },
+    {
+      "from": "u na",
+      "to": [
+        "una"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50764
+    },
+    {
+      "from": "ni no",
+      "to": [
+        "si no"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NI_NO_SI_NO",
+      "name": "*ni no/si no",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 46788
+    },
+    {
+      "from": "Noc al",
+      "to": [
+        "No cal"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NOC_AL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37285
+    },
+    {
+      "from": "Noc aldria",
+      "to": [
+        "No caldria"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NOC_AL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37294
+    },
+    {
+      "from": "Ortega i Gasset",
+      "to": [
+        "Ortega y Gasset"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NOMS_PERSONA_CASTELLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47979
+    },
+    {
+      "from": "Ramon i Cajal",
+      "to": [
+        "Ramón y Cajal"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NOMS_PERSONA_CASTELLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 47990
+    },
+    {
+      "from": "no jo",
+      "to": [
+        "no ho",
+        "jo no"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NO_JO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 40879
+    },
+    {
+      "from": "no jo",
+      "to": [
+        "jo no"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NO_JO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 40897
+    },
+    {
+      "from": "No més",
+      "to": [
+        "Només"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NO_MES_NOMES",
+      "name": "no més/només",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 48587
+    },
+    {
+      "from": "No semblava tant",
+      "to": [
+        "No semblava"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NO_TANT_COM_SINO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 39925
+    },
+    {
+      "from": "no tant",
+      "to": [
+        "no"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "NO_TANT_COM_SINO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 39925
+    },
+    {
+      "from": "Està crema't",
+      "to": [
+        "Està cremat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "OBLIDA_T_OBLIDAT",
+      "name": "ha *oblida't",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 44772
+    },
+    {
+      "from": "de crema't",
+      "to": [
+        "de cremat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "OBLIDA_T_OBLIDAT",
+      "name": "ha *oblida't",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 44772
+    },
+    {
+      "from": "ha oblida't",
+      "to": [
+        "ha oblidat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "OBLIDA_T_OBLIDAT",
+      "name": "ha *oblida't",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 44772
+    },
+    {
+      "from": "codis odontològics",
+      "to": [
+        "codis deontològics"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "ODONTOLOGIC",
+      "name": "codi *odontològic",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 44723
+    },
+    {
+      "from": "ol a",
+      "to": [
+        "o la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "OL_A",
+      "name": "ol a / o la",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 52498
+    },
+    {
+      "from": "País València",
+      "to": [
+        "País Valencià"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PAIS_VALENCIA",
+      "name": "País València/Valencià",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48386
+    },
+    {
+      "from": "A partit",
+      "to": [
+        "A partir",
+        "Ha partit"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PARTIT_PARTIR",
+      "name": "a *partit/partir de",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49113
+    },
+    {
+      "from": "Par a",
+      "to": [
+        "Per a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PAR_PER",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 48699
+    },
+    {
+      "from": "pel a",
+      "to": [
+        "per a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PEL_AL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 43112
+    },
+    {
+      "from": "pera a",
+      "to": [
+        "per a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PERA_PER_A",
+      "name": "pera / per a",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 47514
+    },
+    {
+      "from": "de perquè",
+      "to": [
+        "de per què"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PERQUE_PER_QUE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 52960
+    },
+    {
+      "from": "per a tendre",
+      "to": [
+        "per a atendre",
+        "per a tindre"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_A_TENDRE",
+      "name": "per a tendre",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45750
+    },
+    {
+      "from": "per capità",
+      "to": [
+        "per càpita"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_CAPITA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 37688
+    },
+    {
+      "from": "per cert",
+      "to": [
+        "per cent"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_CERT_PER_CENT",
+      "name": "set per cert -> set per cent",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 36246
+    },
+    {
+      "from": "per la a",
+      "to": [
+        "per a la"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_LA_A",
+      "name": "per la a/per a la",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 45577
+    },
+    {
+      "from": "Per que fa a",
+      "to": [
+        "Pel que fa a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_QUE_FA_A",
+      "name": "per que fa a -> pel que fa a",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46514
+    },
+    {
+      "from": "del per què",
+      "to": [
+        "del perquè",
+        "de per què"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_QUE_PERQUE",
+      "name": "*per què/perquè",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53363
+    },
+    {
+      "from": "el per què",
+      "to": [
+        "el perquè",
+        "per què"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_QUE_PERQUE",
+      "name": "*per què/perquè",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53352
+    },
+    {
+      "from": "per quès",
+      "to": [
+        "perquès"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_QUE_PERQUE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53366
+    },
+    {
+      "from": "per seu",
+      "to": [
+        "pel seu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_SEU_PEL_SEU",
+      "name": "per*/pel seu",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 45739
+    },
+    {
+      "from": "Per s",
+      "to": [
+        "Per a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_S_PER_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34266
+    },
+    {
+      "from": "per s",
+      "to": [
+        "per si"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_S_PER_A",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 34277
+    },
+    {
+      "from": "per s",
+      "to": [
+        "per a",
+        "Per a",
+        "per si"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PER_S_PER_A",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 34264
+    },
+    {
+      "from": "pocs després",
+      "to": [
+        "poc després"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "POCS_DESPRES",
+      "name": "pocs després/poc després",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47492
+    },
+    {
+      "from": "pocs temps",
+      "to": [
+        "poc temps"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "POCS_TEMPS",
+      "name": "pocs temps > poc temps",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 38224
+    },
+    {
+      "from": "porta si",
+      "to": [
+        "portes i"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PORTIC_SI_ALTRES",
+      "name": "pòrtic *si altres (error típic en la Viquipèdia)",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 46356
+    },
+    {
+      "from": "pòrtic si",
+      "to": [
+        "pòrtics i"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PORTIC_SI_ALTRES",
+      "name": "pòrtic *si altres (error típic en la Viquipèdia)",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 46356
+    },
+    {
+      "from": "poseu fer",
+      "to": [
+        "podeu fer",
+        "poseu a fer"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "POSAR_PODER",
+      "name": "posem/poseu/posen -> podem/podeu/poden",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 40853
+    },
+    {
+      "from": "Pots ser",
+      "to": [
+        "Potser"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "POTS_SER_POTSER",
+      "name": "pots ser no-> potser no",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 39017
+    },
+    {
+      "from": "pot ser",
+      "to": [
+        "potser"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "POT_SER_POTSER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 58278
+    },
+    {
+      "from": "Preguem disculpin",
+      "to": [
+        "Disculpeu",
+        "Preguem que disculpin"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PREGUEM_DISCULPIN",
+      "name": "preguem respectin/respecteu",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44342
+    },
+    {
+      "from": "Preguem respectin",
+      "to": [
+        "Respecteu",
+        "Preguem que respectin"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PREGUEM_DISCULPIN",
+      "name": "preguem respectin/respecteu",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44342
+    },
+    {
+      "from": "Preguem no tocar",
+      "to": [
+        "No toqueu",
+        "Si us plau, no toqueu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PREGUEM_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 44361
+    },
+    {
+      "from": "Preguem deixar",
+      "to": [
+        "Deixeu",
+        "Si us plau, deixeu"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PREGUEM_INFINITIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 44376
+    },
+    {
+      "from": "premis Óscar",
+      "to": [
+        "Premis Oscar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PREMIS_OSCAR",
+      "name": "Premis Oscar",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 46006
+    },
+    {
+      "from": "puguin a dinar",
+      "to": [
+        "puguin dinar",
+        "pugin a dinar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "PUGUIN_PUGIN",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 34632
+    },
+    {
+      "from": "A questes",
+      "to": [
+        "Aquestes"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "QUEST",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49687
+    },
+    {
+      "from": "A questos",
+      "to": [
+        "Aquestos"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "QUEST",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49687
+    },
+    {
+      "from": "A quests",
+      "to": [
+        "Aquests"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "QUEST",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 49687
+    },
+    {
+      "from": "que vist",
+      "to": [
+        "que he vist"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "QUE_VIST",
+      "name": "que vist > que he vist",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 41575
+    },
+    {
+      "from": "renta caps",
+      "to": [
+        "rentacaps"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RENTAPLATS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 50965
+    },
+    {
+      "from": "renta plats",
+      "to": [
+        "rentaplats"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RENTAPLATS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 50965
+    },
+    {
+      "from": "respecta a",
+      "to": [
+        "respecte a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RESPECTA_RESPECTE",
+      "name": "respecta/respecte",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 50455
+    },
+    {
+      "from": "respecte allò",
+      "to": [
+        "respecte a allò",
+        "respecte d'allò"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RESPECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 58047
+    },
+    {
+      "from": "respecte aquesta",
+      "to": [
+        "respecte a aquesta",
+        "respecte d'aquesta"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RESPECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 57992
+    },
+    {
+      "from": "respecte el",
+      "to": [
+        "respecte al",
+        "respecte del"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RESPECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 57992
+    },
+    {
+      "from": "respecte els",
+      "to": [
+        "respecte als",
+        "respecte dels"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RESPECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 57992
+    },
+    {
+      "from": "fe runa",
+      "to": [
+        "fer una"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "RUNA_UNA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 35566
+    },
+    {
+      "from": "sem ha",
+      "to": [
+        "se m'ha"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SEM_SE_M",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 39207
+    },
+    {
+      "from": "anar sen",
+      "to": [
+        "anar-se'n"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SEN",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 48084
+    },
+    {
+      "from": "sen adona",
+      "to": [
+        "se n'adona"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SEN",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 48098
+    },
+    {
+      "from": "sens presenta",
+      "to": [
+        "se'ns presenta"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENS_SENSE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 36372
+    },
+    {
+      "from": "les sentència",
+      "to": [
+        "les sentències"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENTENCIA_SENSE_ACCENT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 56764
+    },
+    {
+      "from": "les sentència",
+      "to": [
+        "les sentències",
+        "les sentencia"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENTENCIA_SENSE_ACCENT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 56771
+    },
+    {
+      "from": "Se li hi envà",
+      "to": [
+        "Se li'n va"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENVA_EN_VA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43153
+    },
+    {
+      "from": "S'el hi envà",
+      "to": [
+        "Se li'n va"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENVA_EN_VA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43153
+    },
+    {
+      "from": "Se l'hi envà",
+      "to": [
+        "Se li'n va"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENVA_EN_VA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43153
+    },
+    {
+      "from": "Se'ls hi envà",
+      "to": [
+        "Se'ls en va"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENVA_EN_VA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43142
+    },
+    {
+      "from": "S'els envà",
+      "to": [
+        "Se'ls en va"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SENVA_EN_VA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 43142
+    },
+    {
+      "from": "ser servir",
+      "to": [
+        "fer servir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SER_SERVIR",
+      "name": "ser/fer servir",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 45014
+    },
+    {
+      "from": "si bé que",
+      "to": [
+        "si bé",
+        "bé que"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SI_BE_QUE",
+      "name": "si bé que -> si bé / bé que",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34788
+    },
+    {
+      "from": "si es cau",
+      "to": [
+        "si escau",
+        "si cau"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SI_ES_CAU",
+      "name": "si es cau -> si es cau",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 40559
+    },
+    {
+      "from": "sobre tot",
+      "to": [
+        "sobretot"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "SOBRE_TOT_SOBRETOT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 54400
+    },
+    {
+      "from": "Stephen Hawkins",
+      "to": [
+        "Stephen Hawking"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "STEPEHN_HAWKING",
+      "name": "Stephen Hawkins -> Stephen Hawking",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34465
+    },
+    {
+      "from": "S agraeix",
+      "to": [
+        "S'agraeix"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "S_APOSTROF",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49822
+    },
+    {
+      "from": "S el",
+      "to": [
+        "Se'l"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "S_APOSTROF",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49847
+    },
+    {
+      "from": "S en",
+      "to": [
+        "Se'n"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "S_APOSTROF",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49847
+    },
+    {
+      "from": "S hi",
+      "to": [
+        "S'hi"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "S_APOSTROF",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49834
+    },
+    {
+      "from": "s enregistrà",
+      "to": [
+        "s'enregistrà"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "S_APOSTROF",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 49822
+    },
+    {
+      "from": "tal con",
+      "to": [
+        "tal com"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TAL_CON_TAL_COM",
+      "name": "tal con/tal com",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 58169
+    },
+    {
+      "from": "Tam com",
+      "to": [
+        "Tal com",
+        "Tant com"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TAM_COM",
+      "name": "tam com -> tal com",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37303
+    },
+    {
+      "from": "tants sols",
+      "to": [
+        "tan sols"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANTS_SOLS",
+      "name": "tants sols / tan sols",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50406
+    },
+    {
+      "from": "tant sol",
+      "to": [
+        "tan sol"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANT_SOL",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 46115
+    },
+    {
+      "from": "tant sol",
+      "to": [
+        "tan sols",
+        "tan sol",
+        "tant de sol"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANT_SOL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46126
+    },
+    {
+      "from": "tant sol",
+      "to": [
+        "tan sol",
+        "tan sols",
+        "tant de sol"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANT_SOL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 46124
+    },
+    {
+      "from": "Per tany",
+      "to": [
+        "Per tant",
+        "Pertany"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANY_TANT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37700
+    },
+    {
+      "from": "per- tany",
+      "to": [
+        "pertany"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TANY_TANT",
+      "name": "tany/tant",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37698
+    },
+    {
+      "from": "tan com",
+      "to": [
+        "tant com"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TAN_COM",
+      "name": "tan com -> tant com",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37311
+    },
+    {
+      "from": "tan sol",
+      "to": [
+        "tan sols"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TAN_SOL_TAN_SOLS",
+      "name": "tan sol/tan sols",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 46096
+    },
+    {
+      "from": "temps avenir",
+      "to": [
+        "temps a venir"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TEMPS_AVENIR",
+      "name": "temps avenir",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 37732
+    },
+    {
+      "from": "sentir te",
+      "to": [
+        "sentir-te"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TE_THE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 44901
+    },
+    {
+      "from": "think thanks",
+      "to": [
+        "think tanks"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "THINK_TANK",
+      "name": "think *thank/tank",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46791
+    },
+    {
+      "from": "Tos els",
+      "to": [
+        "Tots els"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOS_TOTS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 47911
+    },
+    {
+      "from": "Tos les",
+      "to": [
+        "Totes les",
+        "Tots els"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOS_TOTS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 47931
+    },
+    {
+      "from": "tots pegats",
+      "to": [
+        "tots plegats",
+        "tots apegats"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOTS_PEGATS",
+      "name": "tots pegats -> tots plegats",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 36650
+    },
+    {
+      "from": "Tot Sants",
+      "to": [
+        "Tots Sants"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOTS_SANTS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 36007
+    },
+    {
+      "from": "Tots Sant",
+      "to": [
+        "Tots Sants"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOTS_SANTS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 35998
+    },
+    {
+      "from": "tot que",
+      "to": [
+        "tot i que",
+        "encara que"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TOT_QUE",
+      "name": "tot que -> tot i que",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 35856
+    },
+    {
+      "from": "que trobat",
+      "to": [
+        "que he trobat",
+        "que ha trobat"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "TROBAT_HE_TROBAT",
+      "name": "que trobat -> que he trobat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 41281
+    },
+    {
+      "from": "Universitat de Harvard",
+      "to": [
+        "Universitat Harvard"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "UNIVERSITAT_HARVARD",
+      "name": "Universitat Harvard",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 50474
+    },
+    {
+      "from": "algun a",
+      "to": [
+        "alguna"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "UN_A",
+      "name": "*un a/una",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 54744
+    },
+    {
+      "from": "un abona",
+      "to": [
+        "una bona"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "UN_ABONA_UNA_BONA",
+      "name": "un abona/una bona",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 52156
+    },
+    {
+      "from": "un mitja",
+      "to": [
+        "una mitja",
+        "un mig"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "UN_MITJA",
+      "name": "un mitja/mitjà",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 44868
+    },
+    {
+      "from": "un mitja",
+      "to": [
+        "un mitjà",
+        "una mitja",
+        "un mig"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "UN_MITJA",
+      "name": "un mitja/mitjà",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 44877
+    },
+    {
+      "from": "u altra",
+      "to": [
+        "una altra",
+        "un altre"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "U_ALTRE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 36124
+    },
+    {
+      "from": "va càrrec",
+      "to": [
+        "va a càrrec"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VA_CARREC",
+      "name": "va *(a) càrrec",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 53937
+    },
+    {
+      "from": "Va de retro",
+      "to": [
+        "Vade retro"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VA_DE_RETRO",
+      "name": "va de retro -> vade retro",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 39158
+    },
+    {
+      "from": "va sa",
+      "to": [
+        "vas a"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VA_SA_VAS_A",
+      "name": "va sa -> vas a",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 36811
+    },
+    {
+      "from": "ven entès",
+      "to": [
+        "benentès"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VEN_BEN_VAN_VENT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 38565
+    },
+    {
+      "from": "ven estar",
+      "to": [
+        "benestar"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VEN_BEN_VAN_VENT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 38534
+    },
+    {
+      "from": "Vit i plau",
+      "to": [
+        "Vist i plau"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VIT_VIST",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46162
+    },
+    {
+      "from": "vit-i plau",
+      "to": [
+        "vistiplau"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VIT_VIST",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 46171
+    },
+    {
+      "from": "vuit mil",
+      "to": [
+        "vuitmil"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VUITMIL_VUIT_MIL",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 41499
+    },
+    {
+      "from": "vuit mils",
+      "to": [
+        "vuitmils"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VUITMIL_VUIT_MIL",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 41527
+    },
+    {
+      "from": "vuit mils",
+      "to": [
+        "vuit mil",
+        "vuitmils"
+      ],
+      "category": "CONFUSIONS",
+      "ltRule": "VUITMIL_VUIT_MIL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 41540
+    },
+    {
+      "from": "es consideres",
+      "to": [
+        "es consideren",
+        "ens consideres",
+        "et consideres",
+        "el consideres"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ACCENTUACIO_SUBJUNTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32942
+    },
+    {
+      "from": "es penses",
+      "to": [
+        "es pensen",
+        "ens penses",
+        "et penses",
+        "el penses"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ACCENTUACIO_SUBJUNTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32942
+    },
+    {
+      "from": "us costes",
+      "to": [
+        "us costen"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ACCENTUACIO_SUBJUNTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32958
+    },
+    {
+      "from": "us veies",
+      "to": [
+        "us veuen"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ACCENTUACIO_SUBJUNTIU",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32958
+    },
+    {
+      "from": "Així como",
+      "to": [
+        "Així com"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "AIXI_COMO_COM",
+      "name": "així como -> com",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32633
+    },
+    {
+      "from": "ADVER TIMENT",
+      "to": [
+        "ADVERTIMENT"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 33615
+    },
+    {
+      "from": "Compr ar",
+      "to": [
+        "Comprar"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 33615
+    },
+    {
+      "from": "Dese mbre",
+      "to": [
+        "Desembre"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 33615
+    },
+    {
+      "from": "Part ir",
+      "to": [
+        "Partir"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33681
+    },
+    {
+      "from": "Vana rribar",
+      "to": [
+        "Van arribar"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 33692
+    },
+    {
+      "from": "evangelitza ció",
+      "to": [
+        "evangelització"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CA_SPLIT_WORDS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33701
+    },
+    {
+      "from": "com veure'm",
+      "to": [
+        "com veurem"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "COM_VEUREM",
+      "name": "com veure'm/veurem",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 32822
+    },
+    {
+      "from": "per l es escales",
+      "to": [
+        "per les escales"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33514
+    },
+    {
+      "from": "al es escales",
+      "to": [
+        "a les escales"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33514
+    },
+    {
+      "from": "del es escales",
+      "to": [
+        "de les escales"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33514
+    },
+    {
+      "from": "l es idees",
+      "to": [
+        "les idees"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 33529
+    },
+    {
+      "from": "es estimaves",
+      "to": [
+        "ens estimaves",
+        "les estimaves",
+        "els estimaves"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33543
+    },
+    {
+      "from": "es idees",
+      "to": [
+        "les idees"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "CONFUSIO_ES_LES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 33529
+    },
+    {
+      "from": "de malgrat",
+      "to": [
+        "de mal grat"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "DE_MAL_GRAT",
+      "name": "de malgrat -> de mal grat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34141
+    },
+    {
+      "from": "de malgrat",
+      "to": [
+        "de mal grat",
+        "de Malgrat"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "DE_MAL_GRAT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34147
+    },
+    {
+      "from": "els eu",
+      "to": [
+        "el seu"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ELS_EU",
+      "name": "els eu -> el seu",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 34129
+    },
+    {
+      "from": "es mogues",
+      "to": [
+        "es mogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_MOGUES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 32978
+    },
+    {
+      "from": "Es nomes",
+      "to": [
+        "És només"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_NOMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32720
+    },
+    {
+      "from": "es obres",
+      "to": [
+        "les obres"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_OBRES",
+      "name": "es obres -> les obres",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33500
+    },
+    {
+      "from": "se li puges",
+      "to": [
+        "se li pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33082
+    },
+    {
+      "from": "se li puges",
+      "to": [
+        "se li pogués",
+        "se li pugés"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 33093
+    },
+    {
+      "from": "es puges",
+      "to": [
+        "es pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33059
+    },
+    {
+      "from": "es puges",
+      "to": [
+        "es pogués",
+        "es pugés"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 33067
+    },
+    {
+      "from": "s'hi puges",
+      "to": [
+        "s'hi pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33069
+    },
+    {
+      "from": "s'hi puges",
+      "to": [
+        "s'hi pogués",
+        "s'hi pugés"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 33080
+    },
+    {
+      "from": "se li pugues",
+      "to": [
+        "se li pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGUES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33041
+    },
+    {
+      "from": "es pugues",
+      "to": [
+        "es pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGUES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33019
+    },
+    {
+      "from": "s'hi pugues",
+      "to": [
+        "s'hi pogués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_PUGUES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33028
+    },
+    {
+      "from": "Es tracte",
+      "to": [
+        "Es tracta"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "ES_TRACTE",
+      "name": "es tracte/es tracta",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 34236
+    },
+    {
+      "from": "Se l",
+      "to": [
+        "Se'l"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "FALTA_APOSTROF_LS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 32365
+    },
+    {
+      "from": "Se ls",
+      "to": [
+        "Se'ls"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "FALTA_APOSTROF_LS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32354
+    },
+    {
+      "from": "haver hi",
+      "to": [
+        "haver-hi"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "GUIONET_HI",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 32789
+    },
+    {
+      "from": "Han se ser",
+      "to": [
+        "Han de ser"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HAN_SE_SER",
+      "name": "confusió: se ser -> de ser",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33815
+    },
+    {
+      "from": "Hi ha ha",
+      "to": [
+        "Hi ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32401
+    },
+    {
+      "from": "Hi ha havia",
+      "to": [
+        "Hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32422
+    },
+    {
+      "from": "Ha ha",
+      "to": [
+        "Hi ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32410
+    },
+    {
+      "from": "Ha ha",
+      "to": [
+        "Hi ha",
+        "hi ha",
+        "Ha, ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 32419
+    },
+    {
+      "from": "Ha havia",
+      "to": [
+        "Hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32458
+    },
+    {
+      "from": "Ha he",
+      "to": [
+        "Ja he",
+        "He",
+        "Hi he"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 32444
+    },
+    {
+      "from": "ha havia",
+      "to": [
+        "havia",
+        "hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 32431
+    },
+    {
+      "from": "ha havia",
+      "to": [
+        "ja havia",
+        "havia",
+        "hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 32444
+    },
+    {
+      "from": "ha havia",
+      "to": [
+        "havia",
+        "hi havia",
+        "ja havia",
+        "Hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 32442
+    },
+    {
+      "from": "Ha hi havia",
+      "to": [
+        "Ja hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HI",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33844
+    },
+    {
+      "from": "ha hi eren",
+      "to": [
+        "ja hi eren"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HI",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33832
+    },
+    {
+      "from": "ha hi",
+      "to": [
+        "hi ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HA_HI",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 33854
+    },
+    {
+      "from": "M'he esta",
+      "to": [
+        "M'està"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HE_ESTA_ESTA",
+      "name": "m'he esta -> m'està",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33867
+    },
+    {
+      "from": "S'ha esta",
+      "to": [
+        "S'està"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HE_ESTA_ESTA",
+      "name": "m'he esta -> m'està",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 33867
+    },
+    {
+      "from": "ho ja",
+      "to": [
+        "ho ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HO_JA_HA",
+      "name": "ho ja dit -> ho ha dit",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32902
+    },
+    {
+      "from": "ho treure",
+      "to": [
+        "ho trauré",
+        "o treure"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HO_VEURE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32666
+    },
+    {
+      "from": "ho veure",
+      "to": [
+        "ho veuré"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "HO_VEURE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 32664
+    },
+    {
+      "from": "H ihavia",
+      "to": [
+        "Hi havia"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "H_IHA",
+      "name": "h iha -> hi ha",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33558
+    },
+    {
+      "from": "h iha",
+      "to": [
+        "hi ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "H_IHA",
+      "name": "h iha -> hi ha",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33558
+    },
+    {
+      "from": "h ihagues",
+      "to": [
+        "hi hagués"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "H_IHA",
+      "name": "h iha -> hi ha",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33558
+    },
+    {
+      "from": "l'hes he",
+      "to": [
+        "les he"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "LHES_HE_LES_HE",
+      "name": "l'hes he -> les he",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32744
+    },
+    {
+      "from": "li ha",
+      "to": [
+        "l'ha"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "LI_MOTIVA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 32233
+    },
+    {
+      "from": "he nat",
+      "to": [
+        "he anat"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "NAT_ANAT",
+      "name": "nat > anat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34049
+    },
+    {
+      "from": "no no",
+      "to": [
+        "no ho",
+        "no",
+        "no, no"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "NO_NO_NO_HO",
+      "name": "",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 32900
+    },
+    {
+      "from": "establiment s",
+      "to": [
+        "establiments"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "PLURALS",
+      "name": "establiment s -> establiments",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 34225
+    },
+    {
+      "from": "Q uè",
+      "to": [
+        "Què"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "Q_UE",
+      "name": "q ue -> que",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 34121
+    },
+    {
+      "from": "Men fronte",
+      "to": [
+        "M'enfronte"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_FRONTA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 33128
+    },
+    {
+      "from": "S'en fronta",
+      "to": [
+        "S'enfronta"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_FRONTA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 33118
+    },
+    {
+      "from": "Se'n fronta",
+      "to": [
+        "S'enfronta"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_FRONTA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 33108
+    },
+    {
+      "from": "Sen fronta",
+      "to": [
+        "S'enfronta"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_FRONTA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 33128
+    },
+    {
+      "from": "Men porto",
+      "to": [
+        "M'emporto"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33208
+    },
+    {
+      "from": "Men rotllo",
+      "to": [
+        "M'enrotllo"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33166
+    },
+    {
+      "from": "S'en fanguen",
+      "to": [
+        "S'enfanguen"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33157
+    },
+    {
+      "from": "S'en porten",
+      "to": [
+        "S'emporten"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33193
+    },
+    {
+      "from": "Se'n portaven",
+      "to": [
+        "S'emportaven"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 33175
+    },
+    {
+      "from": "Se'n volaven",
+      "to": [
+        "S'envolaven"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33146
+    },
+    {
+      "from": "Sen porten",
+      "to": [
+        "S'emporten"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33208
+    },
+    {
+      "from": "Sen rotllen",
+      "to": [
+        "S'enrotllen"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33166
+    },
+    {
+      "from": "en pitjorant",
+      "to": [
+        "empitjorant"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "SEN_VOLA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 33218
+    },
+    {
+      "from": "Tal y como",
+      "to": [
+        "Tal com"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "TAL_COMO_COM",
+      "name": "així como -> com",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32643
+    },
+    {
+      "from": "Van hagut",
+      "to": [
+        "Han hagut"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "VAN_HAN",
+      "name": "van hagut > han hagut",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32705
+    },
+    {
+      "from": "va hagut",
+      "to": [
+        "ha hagut"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "VA_HA",
+      "name": "va hagut > ha hagut",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 32697
+    },
+    {
+      "from": "ho vega",
+      "to": [
+        "ho veja",
+        "ho bega"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "VEGUES_VEGES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32777
+    },
+    {
+      "from": "ho vegues",
+      "to": [
+        "ho veges",
+        "ho begues"
+      ],
+      "category": "CONFUSIONS2",
+      "ltRule": "VEGUES_VEGES",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 32767
+    },
+    {
+      "from": "Agafà amb dificultat la son",
+      "to": [
+        "Agafà amb dificultat el son"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AGAFAR_LA_SON",
+      "name": "agafar *la son",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 123324
+    },
+    {
+      "from": "Concilià amb dificultat la son",
+      "to": [
+        "Agafà amb dificultat el son"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AGAFAR_LA_SON",
+      "name": "agafar *la son",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 123324
+    },
+    {
+      "from": "Al paréixer",
+      "to": [
+        "Pel que sembla",
+        "Segons sembla",
+        "Segons pareix"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AL_PAREIXER",
+      "name": "al parèixer -> pel que sembla",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 118105
+    },
+    {
+      "from": "anada i volta",
+      "to": [
+        "anada i tornada"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ANADA_VOLTA",
+      "name": "anada i *volta/tornada",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 123681
+    },
+    {
+      "from": "En autos",
+      "to": [
+        "Coneixedor",
+        "Informat",
+        "Coneixedora",
+        "Informada"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AUTO_INCORRECTE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114107
+    },
+    {
+      "from": "en autos",
+      "to": [
+        "al corrent"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AUTO_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 114095
+    },
+    {
+      "from": "en autos",
+      "to": [
+        "al corrent",
+        "Coneixedor",
+        "Informat",
+        "Coneixedora",
+        "Informada"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AUTO_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 114104
+    },
+    {
+      "from": "grips aviars",
+      "to": [
+        "grips aviàries"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AVIAR",
+      "name": "aviar / aviari",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122818
+    },
+    {
+      "from": "pesta aviar",
+      "to": [
+        "pesta aviària"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "AVIAR",
+      "name": "aviar / aviari",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122818
+    },
+    {
+      "from": "A falta de",
+      "to": [
+        "Quan falten",
+        "Quan faltaven"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "A_FALTA_DE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 124366
+    },
+    {
+      "from": "A l'actualitat",
+      "to": [
+        "En l'actualitat",
+        "Actualment"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "A_L_ACTUALITAT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 124398
+    },
+    {
+      "from": "a mans",
+      "to": [
+        "en mans",
+        "a les mans",
+        "en poder"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "A_MANS_DE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 121401
+    },
+    {
+      "from": "a munt",
+      "to": [
+        "amunt"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "A_VALL",
+      "name": "a vall/avall",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 117279
+    },
+    {
+      "from": "a vall",
+      "to": [
+        "avall"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "A_VALL",
+      "name": "a vall/avall",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 117279
+    },
+    {
+      "from": "al bussó",
+      "to": [
+        "a la bústia"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "BUSSO_BUSTIA",
+      "name": "bussó / bústia",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 121284
+    },
+    {
+      "from": "de major calat",
+      "to": [
+        "de gran importància"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CALAT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 117702
+    },
+    {
+      "from": "d'enorme calat",
+      "to": [
+        "d'enorme importància"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CALAT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 117714
+    },
+    {
+      "from": "de calat",
+      "to": [
+        "de gran importància"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CALAT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 117702
+    },
+    {
+      "from": "camins trillats",
+      "to": [
+        "camins fressats",
+        "camins gastats",
+        "camins suats"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CAMI_TRILLAT",
+      "name": "*trillat/fressat/gastat",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 120775
+    },
+    {
+      "from": "al càrcer",
+      "to": [
+        "a la presó"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CARCER",
+      "name": "càrcer -> presó",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 116118
+    },
+    {
+      "from": "es van acomplir",
+      "to": [
+        "es van complir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "COMPLIR_ACOMPLIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 124575
+    },
+    {
+      "from": "va acomplir",
+      "to": [
+        "va complir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "COMPLIR_ACOMPLIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 124560
+    },
+    {
+      "from": "compta bancària",
+      "to": [
+        "compte bancari"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CONTE_COMPTE1",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 115789
+    },
+    {
+      "from": "conta bancària",
+      "to": [
+        "compte bancari"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CONTE_COMPTE1",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 115789
+    },
+    {
+      "from": "contes bancàries",
+      "to": [
+        "comptes bancaris"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CONTE_COMPTE1",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 115789
+    },
+    {
+      "from": "cridaré demà per telèfon",
+      "to": [
+        "trucaré demà per telèfon",
+        "telefonaré demà"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "CRIDAR_PER_TELEFON",
+      "name": "*cridar/trucar per telèfon",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 123298
+    },
+    {
+      "from": "a de més",
+      "to": [
+        "a més"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126307
+    },
+    {
+      "from": "tot el demès",
+      "to": [
+        "tota la resta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126225
+    },
+    {
+      "from": "Del demés",
+      "to": [
+        "De l'altre",
+        "De la resta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126255
+    },
+    {
+      "from": "a demés",
+      "to": [
+        "a més"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126298
+    },
+    {
+      "from": "el demés",
+      "to": [
+        "l'altre",
+        "la resta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126266
+    },
+    {
+      "from": "i demés",
+      "to": [
+        "i altres"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126289
+    },
+    {
+      "from": "la demés",
+      "to": [
+        "l'altra"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126246
+    },
+    {
+      "from": "pel demés",
+      "to": [
+        "fora d'això",
+        "a part d'això",
+        "d'altra banda"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DEMES",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126276
+    },
+    {
+      "from": "gran content",
+      "to": [
+        "gran goig",
+        "molt de goig",
+        "molta satisfacció"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DESCONTENT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 124897
+    },
+    {
+      "from": "multi disciplinar",
+      "to": [
+        "multidisciplinari",
+        "multidisciplinària"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DISCIPLINAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122847
+    },
+    {
+      "from": "multi- disciplinar",
+      "to": [
+        "multidisciplinari",
+        "multidisciplinària"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DISCIPLINAR",
+      "name": "disciplinar",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 122855
+    },
+    {
+      "from": "multi- disciplinars",
+      "to": [
+        "multidisciplinaris",
+        "multidisciplinàries"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DISCIPLINAR",
+      "name": "disciplinar",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 122867
+    },
+    {
+      "from": "Unes dolences terribles",
+      "to": [
+        "Unes malalties terribles",
+        "Unes xacres terribles",
+        "Uns mals terribles"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "DOLENCA",
+      "name": "dolença/malaltia",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 120592
+    },
+    {
+      "from": "un enteniment mutu",
+      "to": [
+        "una entesa mútua",
+        "un acord mutu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ENTENIMENT_ENTESA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 125849
+    },
+    {
+      "from": "un enteniment recíproc",
+      "to": [
+        "una entesa recíproca",
+        "un acord recíproc"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ENTENIMENT_ENTESA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 125849
+    },
+    {
+      "from": "mal enteniment",
+      "to": [
+        "mala entesa",
+        "confusió"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ENTENIMENT_ENTESA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125894
+    },
+    {
+      "from": "un enteniment",
+      "to": [
+        "una entesa",
+        "un acord"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ENTENIMENT_ENTESA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 125835
+    },
+    {
+      "from": "en cara",
+      "to": [
+        "encara"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_CARA",
+      "name": "en cara/encara",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 117724
+    },
+    {
+      "from": "en comtes d'",
+      "to": [
+        "en comptes d'",
+        "en compte d'"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_COMTES_DE",
+      "name": "en contes de",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 126185
+    },
+    {
+      "from": "en contes d'",
+      "to": [
+        "en comptes d'",
+        "en compte d'"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_CONTES_DE",
+      "name": "en contes de",
+      "risk": "safe",
+      "complexity": 1,
+      "sourceLine": 126169
+    },
+    {
+      "from": "en el seu cas",
+      "to": [
+        "si escau",
+        "si és procedent",
+        "si cal",
+        "si convé"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_EL_SEU_CAS",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 125757
+    },
+    {
+      "from": "en el seu cas",
+      "to": [
+        "si escau",
+        "si és procedent",
+        "si s'escau",
+        "si és el cas"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_EL_SEU_CAS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125778
+    },
+    {
+      "from": "en el seu cas",
+      "to": [
+        "si escau",
+        "si és procedent",
+        "si cal",
+        "si convé",
+        "si s'escau"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "EN_EL_SEU_CAS",
+      "name": "en el seu cas",
+      "risk": "safe",
+      "complexity": 2,
+      "sourceLine": 125774
+    },
+    {
+      "from": "Ho hem hagut d'escoltar",
+      "to": [
+        "Ho hem hagut de sentir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 120494
+    },
+    {
+      "from": "Acabe d'escoltar dir",
+      "to": [
+        "Acabe de sentir dir",
+        "Acabe de sentir a dir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 119350
+    },
+    {
+      "from": "Vaig haver d'escoltar",
+      "to": [
+        "Vaig haver de sentir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119742
+    },
+    {
+      "from": "he hagut d'escoltar",
+      "to": [
+        "he hagut de sentir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119405
+    },
+    {
+      "from": "li he escoltat",
+      "to": [
+        "li he sentit"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119365
+    },
+    {
+      "from": "Acabe d'escoltar",
+      "to": [
+        "Acabe de sentir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119365
+    },
+    {
+      "from": "Escoltava dir",
+      "to": [
+        "Sentia dir",
+        "Sentia a dir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 119350
+    },
+    {
+      "from": "He escoltat",
+      "to": [
+        "He sentit"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119405
+    },
+    {
+      "from": "Heu escoltat",
+      "to": [
+        "Heu sentit"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119365
+    },
+    {
+      "from": "S'escoltaven dir",
+      "to": [
+        "Se sentien dir",
+        "Se sentien a dir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 119350
+    },
+    {
+      "from": "Se m'escolta",
+      "to": [
+        "Se'm sent",
+        "Em sentiu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 120132
+    },
+    {
+      "from": "d'escoltar que",
+      "to": [
+        "de sentir que",
+        "de sentir a dir que"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 119528
+    },
+    {
+      "from": "pots escoltar",
+      "to": [
+        "pots sentir"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 119405
+    },
+    {
+      "from": "se t'escolta",
+      "to": [
+        "se't sent",
+        "et sentim",
+        "et sento"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 120145
+    },
+    {
+      "from": "us escolto",
+      "to": [
+        "us sento"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESCOLTAR_SENTIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 119756
+    },
+    {
+      "from": "molt esmerç",
+      "to": [
+        "molta cura",
+        "molt d'esment",
+        "molta atenció",
+        "molt de mirament"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESMERCAR_ESFORCAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 113849
+    },
+    {
+      "from": "la seva estela",
+      "to": [
+        "les seves petjades",
+        "el seu rastre"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ESTELA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 122640
+    },
+    {
+      "from": "els pareix",
+      "to": [
+        "els pareix bé",
+        "no troben"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126520
+    },
+    {
+      "from": "els pareix",
+      "to": [
+        "els pareix bé",
+        "troben"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126540
+    },
+    {
+      "from": "els pareix",
+      "to": [
+        "els pareix bé",
+        "no troben",
+        "troben"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "*et sembla? / et sembla bé?",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 126534
+    },
+    {
+      "from": "et sembla",
+      "to": [
+        "et sembla bé",
+        "no trobes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126520
+    },
+    {
+      "from": "et sembla",
+      "to": [
+        "et sembla bé",
+        "trobes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126540
+    },
+    {
+      "from": "et sembla",
+      "to": [
+        "et sembla bé",
+        "no trobes",
+        "trobes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "*et sembla? / et sembla bé?",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 126531
+    },
+    {
+      "from": "li pareix",
+      "to": [
+        "li pareix bé",
+        "no troba"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126520
+    },
+    {
+      "from": "li pareix",
+      "to": [
+        "li pareix bé",
+        "troba"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126540
+    },
+    {
+      "from": "li pareix",
+      "to": [
+        "li pareix bé",
+        "no troba",
+        "troba"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "*et sembla? / et sembla bé?",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 126533
+    },
+    {
+      "from": "us pareix",
+      "to": [
+        "us pareix bé",
+        "no trobeu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126520
+    },
+    {
+      "from": "us pareix",
+      "to": [
+        "us pareix bé",
+        "trobeu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126540
+    },
+    {
+      "from": "us pareix",
+      "to": [
+        "us pareix bé",
+        "no trobeu",
+        "trobeu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ET_SEMBLA",
+      "name": "*et sembla? / et sembla bé?",
+      "risk": "safe",
+      "complexity": 3,
+      "sourceLine": 126532
+    },
+    {
+      "from": "l fallo",
+      "to": [
+        "l'error",
+        "l'errada",
+        "la fallada"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "FALLO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114733
+    },
+    {
+      "from": "un fallo",
+      "to": [
+        "un error",
+        "una errada",
+        "una fallada"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "FALLO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114744
+    },
+    {
+      "from": "fondos voltor",
+      "to": [
+        "fons voltor"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "FONDO",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 124999
+    },
+    {
+      "from": "molta grassa",
+      "to": [
+        "molt de greix"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "GRASSA_GREIX",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114936
+    },
+    {
+      "from": "poca grassa",
+      "to": [
+        "poc greix"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "GRASSA_GREIX",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114945
+    },
+    {
+      "from": "Se n'ha lliurat",
+      "to": [
+        "S'ho ha estalviat",
+        "Se n'ha deslliurat",
+        "Se n'ha alliberat"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 122214
+    },
+    {
+      "from": "Se'n van lliurar",
+      "to": [
+        "S'ho van estalviar",
+        "Se'n van deslliurar",
+        "Se'n van alliberar"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 122228
+    },
+    {
+      "from": "Te'n lliures",
+      "to": [
+        "T'ho estalvies",
+        "Te'n deslliures",
+        "Te n'alliberes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 122201
+    },
+    {
+      "from": "lliurar-me de",
+      "to": [
+        "deslliurar-me de",
+        "alliberar-me de",
+        "estalviar-me"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 122169
+    },
+    {
+      "from": "lliurar-me dels",
+      "to": [
+        "deslliurar-me dels",
+        "alliberar-me dels",
+        "estalviar-me els"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 122119
+    },
+    {
+      "from": "lliuraren de",
+      "to": [
+        "deslliuraren de",
+        "alliberaren de",
+        "estalviaren"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122146
+    },
+    {
+      "from": "lliuraren del",
+      "to": [
+        "deslliuraren del",
+        "alliberaren del",
+        "estalviaren el"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122107
+    },
+    {
+      "from": "lliures de",
+      "to": [
+        "deslliures de",
+        "alliberes de",
+        "estalvies"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 122185
+    },
+    {
+      "from": "lliures del",
+      "to": [
+        "deslliures del",
+        "alliberes del",
+        "estalvies el"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LLIURAR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 122132
+    },
+    {
+      "from": "uns quants lunars",
+      "to": [
+        "unes quantes pigues"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LUNAR_PIGA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 113587
+    },
+    {
+      "from": "diversos lunars",
+      "to": [
+        "diverses pigues"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LUNAR_PIGA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 113587
+    },
+    {
+      "from": "un lunar",
+      "to": [
+        "una piga"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "LUNAR_PIGA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 113587
+    },
+    {
+      "from": "de la mateixa",
+      "to": [
+        "d'aquesta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MATEIX_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 124714
+    },
+    {
+      "from": "en la mateixa",
+      "to": [
+        "en aquesta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MATEIX_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 124730
+    },
+    {
+      "from": "entre les mateixes",
+      "to": [
+        "entre aquestes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MATEIX_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 124730
+    },
+    {
+      "from": "del mateix",
+      "to": [
+        "d'aquest"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MATEIX_INCORRECTE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 124714
+    },
+    {
+      "from": "mig ambient",
+      "to": [
+        "medi ambient"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MEDIS_MITJANS_MIG",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125689
+    },
+    {
+      "from": "més bé",
+      "to": [
+        "més aviat",
+        "més aïna"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MES_BE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 125448
+    },
+    {
+      "from": "mig dia",
+      "to": [
+        "migdia"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MIG_DIA_NIT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125287
+    },
+    {
+      "from": "bons modals",
+      "to": [
+        "bones maneres"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MODALS",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125241
+    },
+    {
+      "from": "molt de por",
+      "to": [
+        "molta por",
+        "molta de por"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MOLT_DE_POR_MOLTA_POR",
+      "name": "*molt de por/molta por",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126642
+    },
+    {
+      "from": "molt de son",
+      "to": [
+        "molta son",
+        "molta de son"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "MOLT_DE_POR_MOLTA_POR",
+      "name": "*molt de por/molta por",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126642
+    },
+    {
+      "from": "Aquests Nadals",
+      "to": [
+        "Aquest Nadal"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NADALS_NADAL",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 125108
+    },
+    {
+      "from": "Els Nadals",
+      "to": [
+        "Nadal"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NADALS_NADAL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125097
+    },
+    {
+      "from": "Pels Nadals",
+      "to": [
+        "Per Nadal"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NADALS_NADAL",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125085
+    },
+    {
+      "from": "Nit Bona",
+      "to": [
+        "nit de Nadal"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NIT_BONA",
+      "name": "*nit bona",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 115705
+    },
+    {
+      "from": "Nit Vella",
+      "to": [
+        "nit de Cap d'Any"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NIT_VELLA",
+      "name": "*nit vella",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 115697
+    },
+    {
+      "from": "no així",
+      "to": [
+        "però no",
+        "però no gens"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "NO_AIXI",
+      "name": "no així/però no",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 121510
+    },
+    {
+      "from": "obrir aquest meló",
+      "to": [
+        "encetar aquest meló",
+        "destapar la caixa dels trons"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "OBRIR_ENCETAR_EL_MELO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114439
+    },
+    {
+      "from": "de les ordres religioses més fanàtiques",
+      "to": [
+        "dels ordes religiosos més fanàtics"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 126044
+    },
+    {
+      "from": "els ordres majors",
+      "to": [
+        "els ordes majors"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 126044
+    },
+    {
+      "from": "les ordres religioses",
+      "to": [
+        "els ordes religiosos"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 126044
+    },
+    {
+      "from": "Les ordes",
+      "to": [
+        "Els ordes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 126096
+    },
+    {
+      "from": "l'orde franciscana",
+      "to": [
+        "l'orde franciscà"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 126079
+    },
+    {
+      "from": "l'ordre franciscana",
+      "to": [
+        "l'orde franciscà"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 126044
+    },
+    {
+      "from": "l'ordre franciscà",
+      "to": [
+        "l'orde franciscà"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 126044
+    },
+    {
+      "from": "ordes religioses",
+      "to": [
+        "ordes religiosos"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORDRE_ORDE",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 126079
+    },
+    {
+      "from": "d'origen immigrant",
+      "to": [
+        "d'origen estranger",
+        "amb condició d'immigrant",
+        "immigrants"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORIGEN_MIGRANT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114475
+    },
+    {
+      "from": "d'origen immigrant",
+      "to": [
+        "d'origen estranger",
+        "amb condició d'immigrant"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "ORIGEN_MIGRANT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114490
+    },
+    {
+      "from": "colps de pal",
+      "to": [
+        "bastonades",
+        "garrotades",
+        "colps de bastó"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAL_EN_CONTEXT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114345
+    },
+    {
+      "from": "cops de pal",
+      "to": [
+        "bastonades",
+        "garrotades",
+        "cops de bastó"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAL_EN_CONTEXT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 114345
+    },
+    {
+      "from": "molt de pal",
+      "to": [
+        "molta mandra",
+        "molta peresa"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAL_EN_CONTEXT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114286
+    },
+    {
+      "from": "Quin pal",
+      "to": [
+        "Quina murga",
+        "Quina llauna",
+        "Quin rotllo"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAL_EN_CONTEXT",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 114299
+    },
+    {
+      "from": "un pal",
+      "to": [
+        "una murga",
+        "una llauna",
+        "un rotllo"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAL_EN_CONTEXT",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 114332
+    },
+    {
+      "from": "una panda",
+      "to": [
+        "una colla",
+        "una banda",
+        "un grup"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PANDA",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 115530
+    },
+    {
+      "from": "En el seu parèixer",
+      "to": [
+        "A parer seu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAREIXER_PARER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 118173
+    },
+    {
+      "from": "A parèixer meu",
+      "to": [
+        "A parer meu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAREIXER_PARER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 118162
+    },
+    {
+      "from": "Al meu parèixer",
+      "to": [
+        "A parer meu"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PAREIXER_PARER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 118173
+    },
+    {
+      "from": "Pel general",
+      "to": [
+        "En general",
+        "Generalment"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PEL_GENERAL",
+      "name": "*pel general/en general",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 125136
+    },
+    {
+      "from": "pel moment",
+      "to": [
+        "de moment",
+        "per al moment"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PEL_MOMENT",
+      "name": "*pel moment",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125167
+    },
+    {
+      "from": "indústries petrolíferes",
+      "to": [
+        "indústries petrolieres"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PETROLIFER",
+      "name": "petrolífer/petrolier",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 121070
+    },
+    {
+      "from": "del planter orquestral",
+      "to": [
+        "de la plantilla orquestral"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PLANTER_PLANTILLA",
+      "name": "planter -> plantilla",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 115282
+    },
+    {
+      "from": "posat dues rentadores",
+      "to": [
+        "fet dues bugades",
+        "fet dues rentades",
+        "fet dues llavades"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "POSAR_RENTADORA",
+      "name": "posar rentadora -> fer bugada, rentada",
+      "risk": "contextual",
+      "complexity": 3,
+      "sourceLine": 115395
+    },
+    {
+      "from": "procedeix acordar",
+      "to": [
+        "és procedent acordar",
+        "escau acordar"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PROCEDIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 118347
+    },
+    {
+      "from": "procedisca acordar",
+      "to": [
+        "siga procedent acordar",
+        "escaiga acordar"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PROCEDIR",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 118356
+    },
+    {
+      "from": "Els putxeros",
+      "to": [
+        "Les olles",
+        "Les carns d'olla",
+        "Les olles de carn"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "PUTXERO",
+      "name": "putxero",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 118579
+    },
+    {
+      "from": "quasi bé",
+      "to": [
+        "quasi",
+        "gairebé"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "QUASI_BE",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126576
+    },
+    {
+      "from": "el rati",
+      "to": [
+        "la ràtio"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATI_RATIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126507
+    },
+    {
+      "from": "els ratis",
+      "to": [
+        "les ràtios"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATI_RATIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126507
+    },
+    {
+      "from": "la rati",
+      "to": [
+        "la ràtio"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATI_RATIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126507
+    },
+    {
+      "from": "les ratis",
+      "to": [
+        "les ràtios"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATI_RATIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126507
+    },
+    {
+      "from": "uns ratis",
+      "to": [
+        "unes ràtios"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATI_RATIO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 126498
+    },
+    {
+      "from": "Els bons ratets",
+      "to": [
+        "Les bones estonetes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117773
+    },
+    {
+      "from": "Els bons ratos",
+      "to": [
+        "Les bones estones"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117765
+    },
+    {
+      "from": "tot aquell rato",
+      "to": [
+        "tota aquella estona"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117752
+    },
+    {
+      "from": "tot el rato",
+      "to": [
+        "tota l'estona"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117752
+    },
+    {
+      "from": "El rato",
+      "to": [
+        "L'estona"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117752
+    },
+    {
+      "from": "Un ratet",
+      "to": [
+        "Una estoneta"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117773
+    },
+    {
+      "from": "Un rato",
+      "to": [
+        "Una estona"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RATO",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 5,
+      "sourceLine": 117752
+    },
+    {
+      "from": "la vostre recolzament",
+      "to": [
+        "el vostre suport",
+        "la vostra adhesió",
+        "el vostre acord"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAMENT",
+      "name": "recolzament",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 121786
+    },
+    {
+      "from": "recolzament popular",
+      "to": [
+        "suport popular",
+        "adhesió popular",
+        "acord popular"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAMENT",
+      "name": "recolzament",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 121786
+    },
+    {
+      "from": "recolzaments parlamentaris",
+      "to": [
+        "suports parlamentaris",
+        "adhesions parlamentàries",
+        "acords parlamentaris"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAMENT",
+      "name": "recolzament",
+      "risk": "contextual",
+      "complexity": 4,
+      "sourceLine": 121786
+    },
+    {
+      "from": "recolzat per un",
+      "to": [
+        "amb el suport d'un",
+        "defensat per un",
+        "sostingut per un",
+        "finançat per un",
+        "avalat per un"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAT_PER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 121866
+    },
+    {
+      "from": "recolzat pels",
+      "to": [
+        "amb el suport dels",
+        "defensat pels",
+        "sostingut pels",
+        "finançat pels",
+        "avalat pels"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAT_PER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 6,
+      "sourceLine": 121866
+    },
+    {
+      "from": "recolzat per",
+      "to": [
+        "amb el suport de",
+        "defensat per",
+        "sostingut per",
+        "finançat per",
+        "avalat per"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "RECOLZAT_PER",
+      "name": "",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 121885
+    },
+    {
+      "from": "Es reflexa",
+      "to": [
+        "Es reflecteix"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "REFLEXAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122975
+    },
+    {
+      "from": "Et reflexa",
+      "to": [
+        "Et reflecteix"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "REFLEXAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122984
+    },
+    {
+      "from": "Et reflexes",
+      "to": [
+        "Et reflecteixes"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "REFLEXAR",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 122993
+    },
+    {
+      "from": "Regletes numèriques",
+      "to": [
+        "Reglets numèrics"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "REGLETA_REGLET",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 113879
+    },
+    {
+      "from": "ni siquiera",
+      "to": [
+        "ni tan sols",
+        "ni tan solament"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "SIQUIERA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 117568
+    },
+    {
+      "from": "si procedeix",
+      "to": [
+        "si és procedent",
+        "si escau"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "SI_PROCEDEIX",
+      "name": "si procedeix",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 125819
+    },
+    {
+      "from": "si s'escau",
+      "to": [
+        "si escau",
+        "si és procedent",
+        "si cal",
+        "si convé"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "SI_SESCAU",
+      "name": "si s'escau/si escau",
+      "risk": "contextual",
+      "complexity": 2,
+      "sourceLine": 125799
+    },
+    {
+      "from": "la sorra",
+      "to": [
+        "l'arena"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "SORRA_ARENA",
+      "name": "",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 115947
+    },
+    {
+      "from": "Tendeixen la mà",
+      "to": [
+        "Allarguen la mà",
+        "Donen la mà",
+        "Ofereixen diàleg",
+        "Ofereixen consens"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "TENDIR_LA_MA",
+      "name": "tendir la mà/oferir diàleg",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 120622
+    },
+    {
+      "from": "tota vegada que",
+      "to": [
+        "ja que",
+        "sempre que",
+        "per tal com",
+        "puix que",
+        "atès que"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "TOTA_VEGADA_QUE",
+      "name": "tota vegada que",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 120538
+    },
+    {
+      "from": "un casual",
+      "to": [
+        "una casualitat"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "UN_CASUAL_UNA_CASUALITAT",
+      "name": "*un casual / una casualitat",
+      "risk": "safe",
+      "complexity": 0,
+      "sourceLine": 126212
+    },
+    {
+      "from": "vist i plau",
+      "to": [
+        "vistiplau"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "VISTIPLAU",
+      "name": "vistiplau",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 124344
+    },
+    {
+      "from": "vist-i plau",
+      "to": [
+        "vistiplau"
+      ],
+      "category": "INCORRECT_WORDS_IN_CONTEXT",
+      "ltRule": "VISTIPLAU",
+      "name": "vistiplau",
+      "risk": "contextual",
+      "complexity": 1,
+      "sourceLine": 124344
+    }
+  ]
+}
