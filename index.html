@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Corrector local de català per a Chrome, amb suport per a Google Docs i altres camps d'edició web.">
+  <meta name="description" content="Lletrium és una extensió gratuïta i de codi obert per corregir català, espanyol i anglès en temps real, amb processament local al navegador.">
   <meta name="theme-color" content="#f6f8fc">
-  <title>Corrector gramatical català</title>
+  <title>Lletrium! Corrector ortogràfic i gramatical</title>
   <style>
     :root { color-scheme: light; --ink:#17233b; --muted:#53627a; --blue:#2855c5; --line:#dce3ef; --paper:#fff; --wash:#f6f8fc; }
     * { box-sizing:border-box; }
@@ -35,28 +35,33 @@
 <body>
   <header>
     <div class="header-inner">
-      <div class="eyebrow">Escriptura en català</div>
-      <h1>Corrector gramatical català</h1>
-      <p class="lead">Correcció local al navegador per trobar errades i consultar suggeriments mentre escrius, també a Google Docs.</p>
+      <div class="eyebrow">Escriptura clara, en català i més llengües</div>
+      <h1>Lletrium! Corrector ortogràfic i gramatical</h1>
+      <p class="lead">Una iniciativa gratuïta i de codi obert per corregir text en temps real, amb una atenció especial al català. Vaig començar Lletrium perquè no trobava una extensió gratuïta que oferís aquest tipus de correcció del català mentre escrius dins dels editors web.</p>
       <span class="badge">Versió 1.0.0</span>
+      <div class="actions">
+        <a class="button" href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension">Veure l’extensió a GitHub</a>
+        <a class="button secondary" href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues">Reportar un error</a>
+      </div>
     </div>
   </header>
 
   <main>
     <section aria-labelledby="about">
-      <h2 id="about">Què fa</h2>
+      <h2 id="about">Sobre Lletrium</h2>
+      <p>Lletrium és i vull que continuï sent gratuït i de codi obert. La prioritat és oferir una bona correcció del català mentre escrius, i ampliar progressivament el suport a més idiomes.</p>
       <ul>
-        <li>Revisa text en català en camps editables compatibles de pàgines web.</li>
-        <li>Inclou una integració pròpia per llegir i situar avisos a Google Docs.</li>
-        <li>Processa el text i genera suggeriments localment al navegador; no utilitza un servei de correcció remot.</li>
-        <li>Conserva l'atribució i els avisos de les dades i del codi de tercers inclosos.</li>
+        <li>Inclou perfils de català central, valencià i balear, espanyol i anglès americà.</li>
+        <li>Revisa camps editables compatibles en pàgines web, amb adaptacions per a Google Docs i Google Slides.</li>
+        <li>Processa el text i genera suggeriments localment al navegador, sense enviar el text a un servei remot de correcció.</li>
       </ul>
+      <p>Estic molt agraït a les persones i als projectes de programari lliure que han creat els codis, diccionaris, regles i altres recursos que han fet possible Lletrium: especialment LanguageTool i Softcatalà, així com Morfologik, Apache OpenNLP i els seus contribuïdors. Lletrium no està afiliat ni està avalat per aquests projectes.</p>
     </section>
 
     <section aria-labelledby="install">
       <h2 id="install">Instal·lació</h2>
-      <p>La versió 1.0.0 es distribueix com a extensió de Chrome. Per instal·lar-la manualment, descarrega el ZIP de l'extensió, descomprimeix-lo en una carpeta permanent i carrega aquesta carpeta des de <code>chrome://extensions</code> amb el mode de desenvolupador activat.</p>
-      <p class="small">Els paquets encara no s'han publicat a GitHub Releases. Quan es publiquin, afegeix aquí els enllaços directes a l'extensió i al codi font corresponent.</p>
+      <p>El codi preparat per carregar al navegador és a la carpeta <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension"><code>build/extension</code> del repositori</a>. Descarrega el ZIP del repositori amb <strong>Code → Download ZIP</strong>, descomprimeix-lo i, a <code>chrome://extensions</code>, activa el mode de desenvolupador i carrega la carpeta <code>build/extension</code>, que conté el fitxer <code>manifest.json</code>.</p>
+      <p class="small">La compatibilitat depèn de l’editor i del navegador. L’extensió revisa els camps editables que pot llegir de manera compatible.</p>
     </section>
 
     <section aria-labelledby="privacy">
@@ -75,17 +80,18 @@
 
       <h3>Emmagatzematge i conservació</h3>
       <ul>
-        <li>Les preferències, com l'idioma i les opcions de visualització, es desen a <code>chrome.storage.sync</code>. Chrome pot sincronitzar-les entre dispositius si l'usuari té activada la sincronització.</li>
-        <li>Per accelerar Google Docs, <code>chrome.storage.local</code> conserva fins a 240 entrades durant un màxim de 21 dies. Cada entrada conté suggeriments, data i una clau compacta calculada a partir de la regla, el fragment marcat i fins a 80 caràcters de context a cada costat.</li>
-        <li>Aquesta clau no és anonimització criptogràfica: qui tingui accés a les dades locals podria provar fragments probables. La memòria cau no desa el document complet ni el fragment original com a text pla.</li>
+        <li>Les preferències i els llocs exclosos es desen a <code>chrome.storage.sync</code>. El navegador pot sincronitzar-les entre dispositius si la sincronització del compte està activada.</li>
+        <li>El diccionari personal es desa a <code>chrome.storage.local</code> i no es sincronitza pel corrector.</li>
+        <li>Per accelerar Google Docs, <code>chrome.storage.local</code> pot conservar fins a 240 entrades amb suggeriments. Cada entrada inclou els suggeriments, la data i una clau resumida calculada a partir de la regla, el fragment marcat i fins a 80 caràcters de context a cada costat. El text original no es desa com a text pla en aquesta memòria cau.</li>
+        <li>Les entrades de suggeriments es consideren caducades al cap de 21 dies; les dades antigues poden romandre a l’emmagatzematge local fins que se substitueixin o s’esborrin. La clau resumida no és anonimització criptogràfica.</li>
       </ul>
-      <p>L'usuari pot esborrar les dades de l'extensió des de la configuració de Chrome o desinstal·lant-la.</p>
+      <p>L’usuari pot esborrar les dades des de la configuració de Chrome o amb l’opció de reinici de fàbrica de l’extensió.</p>
 
       <h3>Compartició i finalitats</h3>
-      <p>El desenvolupador no rep ni comparteix el contingut llegit per l'extensió. Les preferències sincronitzades són gestionades per Chrome segons la configuració del compte de l'usuari. El contingut no s'utilitza per a publicitat, perfilatge ni entrenament de models.</p>
+      <p>El desenvolupador no rep ni comparteix el contingut llegit per l’extensió. Les preferències sincronitzades són gestionades pel navegador segons la configuració del compte de l’usuari. El contingut no s’utilitza per a publicitat, perfilatge ni entrenament de models. Les eines de diagnòstic avançat només s’executen quan l’usuari les inicia; si l’usuari copia i comparteix un registre, aquest pot sortir del navegador per l’acció que ha triat.</p>
 
       <h3>Permisos i abast</h3>
-      <p>L'extensió demana accés a pàgines web per poder revisar els camps editables compatibles on l'usuari la fa servir. Aquesta lectura és necessària per a la funció del corrector. La revisió s'activa en camps compatibles; les dades de les pàgines no es processen per a una finalitat independent de la correcció.</p>
+      <p>L’extensió demana accés a pàgines web per detectar i revisar camps editables compatibles. Aquesta lectura és necessària per al corrector. No totes les pàgines ni tots els editors són compatibles; el text es tracta per oferir la correcció sol·licitada i no per a una finalitat independent.</p>
 
       <h3>Seguretat i canvis</h3>
       <p>El processament lingüístic es fa localment al navegador. Aquesta política s'actualitzarà si canvia el tractament de dades, els permisos o les funcions de l'extensió. La versió vigent es publicarà en aquesta mateixa adreça.</p>
@@ -95,17 +101,12 @@
     </section>
 
     <section aria-labelledby="licenses">
-      <h2 id="licenses">Llicències i procedència</h2>
-      <p>El projecte inclou codi i recursos de LanguageTool, Softcatalà i Morfologik, cadascun amb els seus avisos i termes. Els components originals del projecte no tenen una llicència global assignada en aquesta versió.</p>
-      <p><a href="build/extension/licenses/THIRD_PARTY_NOTICES.md">Consulta l'inventari de components i llicències</a>. El paquet de codi font de la versió distribuïda s'ha de publicar al mateix temps i des d'un accés equivalent als binaris.</p>
-    </section>
-
-    <section class="notice" aria-labelledby="pending">
-      <h2 id="pending">Abans de distribuir</h2>
-      <p>Publica aquesta pàgina i la política de privacitat en una adreça permanent, afegeix els enllaços de descàrrega dels dos ZIP i comprova que la fitxa i els camps de privacitat de Chrome Web Store coincideixin amb els permisos i el tractament de dades descrits aquí.</p>
+      <h2 id="licenses">Codi obert i llicències</h2>
+      <p>El codi propi de Lletrium es distribueix sota <strong>GPL-3.0-or-later</strong>. Els components i recursos de tercers mantenen les seves pròpies llicències i avisos; la llicència del projecte no els substitueix.</p>
+      <p>Consulta el <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical">repositori i el codi font</a>, els <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/blob/main/build/extension/licenses/THIRD_PARTY_NOTICES.md">avisos de tercers</a> i la <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension/licenses">carpeta de llicències</a>. El paquet font GPL inclou també el text complet de la llicència del projecte.</p>
     </section>
   </main>
 
-  <footer>Lletrium · Versió 1.0.0 · <a href="#privacy">Privacitat</a></footer>
+  <footer>Lletrium! · Fet per Artur Guasch · Versió 1.0.0 · <a href="#privacy">Privacitat</a> · <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues">Reportar un error</a></footer>
 </body>
 </html>
