@@ -4,13 +4,19 @@
 
 Vaig començar Lletrium perquè no trobava una extensió gratuïta que oferís aquest tipus de correcció del català mentre escrius dins dels editors web. Vull que el projecte continuï sent gratuït i obert, i que sigui útil tant per al català com per a altres llengües.
 
+## Instal·lació
+
+### Automàtica (recomanada)
+
+Pots instal·lar **Lletrium!** directament des de la [Chrome Web Store](https://chromewebstore.google.com/detail/lletrium-corrector-ortogr/ecfanealnoplhjapaimncnhmogpijhkm?authuser=1&hl=es) amb un sol clic a **Afegir a Chrome**. Aquesta és l’opció recomanada per a la majoria d’usuaris.
+
+### Manual (des del codi font)
+
+Si vols provar o estudiar el codi font, descarrega el ZIP del repositori amb **Code → Download ZIP**, descomprimeix-lo i carrega la carpeta [`build/extension`](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension), que conté `manifest.json`, des de la pàgina d’extensions de Chrome amb el mode de desenvolupador activat.
+
 ## Llengües
 
 Actualment, Lletrium inclou perfils per al català central, valencià i balear, l’espanyol i l’anglès americà. La prioritat és continuar millorant la correcció del català i, progressivament, incorporar més idiomes.
-
-## Instal·lació
-
-El codi preparat per carregar al navegador és a [`build/extension`](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension). Descarrega el ZIP del repositori amb **Code → Download ZIP**, descomprimeix-lo i carrega la carpeta `build/extension`, que conté `manifest.json`, des de la pàgina d’extensions del navegador amb el mode de desenvolupador activat.
 
 Lletrium revisa el text localment al navegador. La compatibilitat depèn de l’editor; hi ha adaptacions per a Google Docs, Google Slides i altres editors web compatibles.
 
