@@ -28,11 +28,22 @@
     .button { display:inline-block; padding:9px 15px; border:1px solid var(--blue); border-radius:10px; color:#fff; background:var(--blue); font-weight:700; text-decoration:none; }
     .button.secondary { color:var(--blue); background:#fff; }
     .small { color:var(--muted); font-size:.91rem; }
+    [hidden]{display:none!important}
+    .language-shell{width:min(760px,100% - 32px);margin:36px auto 56px}
+    .language-shell h1{font-size:clamp(1.8rem,5vw,2.6rem)}
+    .language-card{margin:14px 0;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+    .language-row{display:grid;grid-template-columns:auto 44px minmax(0,1fr) auto;align-items:center;gap:12px}
+    .language-row input{width:20px;height:20px;accent-color:var(--blue)}
+    .language-row img{width:42px;height:42px;border-radius:50%;border:1px solid var(--line)}
+    .language-row small{display:block;color:var(--muted)}
+    .language-row button{border:1px solid #d99191;border-radius:9px;background:#fff7f7;color:#a33b40;padding:7px 11px;font:inherit;font-weight:700;cursor:pointer}
+    .language-status{min-height:25px;color:var(--muted)}.language-status[data-kind=error]{color:#b3261e}.language-status[data-kind=success]{color:#237a4b}
     footer { padding:0 0 32px; color:var(--muted); font-size:.9rem; }
     @media (max-width:560px) { header { padding-top:42px; } section { padding:20px; } }
   </style>
 </head>
 <body>
+  <div id="publicPage">
   <header>
     <div class="header-inner">
       <div class="eyebrow">Escriptura clara, en català i més llengües</div>
@@ -70,7 +81,7 @@
 
     <section aria-labelledby="privacy">
       <h2 id="privacy">Privacitat</h2>
-      <p class="small">Lletrium: Corrector ortogràfic i gramatical · Versió 1.0.0 · Política actualitzada el 30 d'octubre de 2026.</p>
+      <p class="small">Lletrium! Corrector ortogràfic i gramatical · Versió 1.0.0 · Política actualitzada el 3 de novembre de 2026.</p>
 
       <h3>Responsable</h3>
       <p>Responsable: <strong>Artur Guasch Capella</strong><br>Contacte per a consultes de privacitat: <a href="mailto:upfcalendarexporter@gmail.com">upfcalendarexporter@gmail.com</a>.</p>
@@ -80,25 +91,27 @@
 
       <h3>Ús de les dades</h3>
       <p>La correcció i la generació de suggeriments s'executen localment al navegador. L'extensió no envia el text revisat ni els suggeriments al desenvolupador ni a un servei extern de correcció.</p>
+      <p>En instal·lar l'extensió o quan l'usuari afegeix un idioma, Lletrium! descarrega del repositori públic de GitHub només els paquets lingüístics seleccionats. GitHub pot rebre les dades tècniques habituals d'una connexió web, com ara l'adreça IP i la petició del fitxer. L'extensió no inclou el text revisat, el contingut del document ni l'historial de navegació en aquestes peticions. Els paquets es desen a l'emmagatzematge local del navegador i funcionen sense connexió.</p>
       <p><strong>Ús limitat:</strong> el contingut de les pàgines s'utilitza únicament per oferir la correcció i els suggeriments que l'usuari demana dins l'editor. No es ven, no es transfereix a tercers ni s'utilitza per a publicitat, perfilatge o cap finalitat aliena a aquesta funció.</p>
 
       <h3>Emmagatzematge i conservació</h3>
       <ul>
         <li>Les preferències i els llocs exclosos es desen a <code>chrome.storage.sync</code>. El navegador pot sincronitzar-les entre dispositius si la sincronització del compte està activada.</li>
         <li>El diccionari personal es desa a <code>chrome.storage.local</code> i no es sincronitza pel corrector.</li>
+        <li>Els paquets d'idioma seleccionats es desen a IndexedDB dins de l'extensió. El reinici de fàbrica els elimina.</li>
         <li>Per accelerar Google Docs, <code>chrome.storage.local</code> pot conservar fins a 240 entrades amb suggeriments. Cada entrada inclou els suggeriments, la data i una clau resumida calculada a partir de la regla, el fragment marcat i fins a 80 caràcters de context a cada costat. El text original no es desa com a text pla en aquesta memòria cau.</li>
         <li>Les entrades de suggeriments es consideren caducades al cap de 21 dies; les dades antigues poden romandre a l’emmagatzematge local fins que se substitueixin o s’esborrin. La clau resumida no és anonimització criptogràfica.</li>
       </ul>
       <p>L’usuari pot esborrar les dades des de la configuració de Chrome o amb l’opció de reinici de fàbrica de l’extensió.</p>
 
       <h3>Compartició i finalitats</h3>
-      <p>El desenvolupador no rep ni comparteix el contingut llegit per l’extensió. Les preferències sincronitzades són gestionades pel navegador segons la configuració del compte de l’usuari. El contingut no s’utilitza per a publicitat, perfilatge ni entrenament de models. Les eines de diagnòstic avançat només s’executen quan l’usuari les inicia; si l’usuari copia i comparteix un registre, aquest pot sortir del navegador per l’acció que ha triat.</p>
+      <p>El desenvolupador no rep ni comparteix el contingut llegit per l'extensió. Les peticions a GitHub només serveixen per obtenir els paquets lingüístics seleccionats; GitHub les tracta segons la seva pròpia política de privacitat. Les preferències sincronitzades són gestionades pel navegador segons la configuració del compte de l'usuari. El contingut no s'utilitza per a publicitat, perfilatge ni entrenament de models. Les eines de diagnòstic avançat només s'executen quan l'usuari les inicia; si l'usuari copia i comparteix un registre, aquest pot sortir del navegador per l'acció que ha triat.</p>
 
       <h3>Permisos i abast</h3>
       <p>L’extensió demana accés a pàgines web per detectar i revisar camps editables compatibles. Aquesta lectura és necessària per al corrector. No totes les pàgines ni tots els editors són compatibles; el text es tracta per oferir la correcció sol·licitada i no per a una finalitat independent.</p>
 
       <h3>Seguretat i canvis</h3>
-      <p>El processament lingüístic es fa localment al navegador. Aquesta política s'actualitzarà si canvia el tractament de dades, els permisos o les funcions de l'extensió. La versió vigent es publicarà en aquesta mateixa adreça.</p>
+      <p>El processament lingüístic es fa localment al navegador; només la descàrrega inicial o l'afegit d'idiomes requereix connexió a GitHub. Aquesta política s'actualitzarà si canvia el tractament de dades, els permisos o les funcions de l'extensió. La versió vigent es publicarà en aquesta mateixa adreça.</p>
 
       <h3>Contacte i drets</h3>
       <p>Per a consultes, sol·licituds relacionades amb les dades o exercici de drets, escriu al contacte del responsable indicat en aquesta política.</p>
@@ -111,6 +124,29 @@
     </section>
   </main>
 
-  <footer>Lletrium! · Fet per Artur Guasch · Versió 1.0.0 · <a href="#privacy">Privacitat</a> · <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues">Reportar un error</a></footer>
+  <footer>Lletrium! · Fet per Artur Guasch · Versió 1.0.0 · <a href="#privacy">Privacitat</a> · <a href="#languages">Gestionar idiomes</a> · <a href="https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues">Reportar un error</a></footer>
+  </div>
+  <main id="languagePage" class="language-shell" hidden>
+    <a href="#privacy">← Tornar a Lletrium!</a>
+    <p class="eyebrow">Lletrium! · Preferències</p>
+    <h1>Idiomes de correcció</h1>
+    <p class="lead">Tria quins idiomes vols tenir disponibles a l’extensió. Un cop afegits, funcionen sense connexió.</p>
+    <div id="languageRows" aria-live="polite"></div>
+    <p id="languageStatus" class="language-status" role="status"></p>
+    <button id="applyLanguages" class="button" type="button">Afegir idiomes seleccionats</button>
+    <p class="small">La pàgina només envia la teva selecció a Lletrium!. L’extensió afegeix els paquets al navegador; el text que corregeixes no s’envia.</p>
+  </main>
+  <script>
+  (()=>{
+    const PAGE_ID="ecfanealnoplhjapaimncnhmogpijhkm", rows=document.getElementById("languageRows"), status=document.getElementById("languageStatus"), add=document.getElementById("applyLanguages");
+    const packs=[{id:"ca",name:"Català (central, valencià i balear)",size:"29,5 MB",flag:"🇦🇩"},{id:"es",name:"Español",size:"5,4 MB",flag:"🇪🇸"},{id:"en",name:"English (United States)",size:"11,2 MB",flag:"🇺🇸"}];
+    const ask=message=>new Promise((resolve,reject)=>{if(!globalThis.chrome?.runtime?.sendMessage)return reject(Error("Obre aquesta pàgina des de Chrome o Opera amb Lletrium! instal·lat."));chrome.runtime.sendMessage(PAGE_ID,message,response=>{const error=chrome.runtime.lastError;if(error)reject(Error(error.message));else if(!response?.ok)reject(Error(response?.error||"Lletrium! no ha pogut completar l’acció."));else resolve(response);});});
+    function paint(installed=[]){rows.replaceChildren(...packs.map(pack=>{const row=document.createElement("section");row.className="language-card";const label=document.createElement("label");label.className="language-row";const box=document.createElement("input");box.type="checkbox";box.value=pack.id;box.disabled=installed.includes(pack.id);const flag=document.createElement("span");flag.textContent=pack.flag;flag.setAttribute("aria-hidden","true");flag.style.cssText="font-size:32px;line-height:1";const text=document.createElement("span");const strong=document.createElement("strong");strong.textContent=pack.name;const small=document.createElement("small");small.textContent=installed.includes(pack.id)?"Afegit":pack.size;text.append(strong,small);label.append(box,flag,text);row.append(label);if(installed.includes(pack.id)){const remove=document.createElement("button");remove.type="button";remove.textContent="Eliminar";remove.addEventListener("click",()=>run({type:"REMOVE",ids:[pack.id]}));row.append(remove)}return row}));}
+    async function run(message){add.disabled=true;status.dataset.kind="";status.textContent="Actualitzant els idiomes…";try{const result=await ask(message);paint(result.installed||[]);status.dataset.kind="success";status.textContent=result.message||"Els idiomes estan actualitzats."}catch(error){status.dataset.kind="error";status.textContent=error.message}finally{add.disabled=false}}
+    add.addEventListener("click",()=>run({type:"ADD",ids:[...rows.querySelectorAll("input:checked")].map(input=>input.value)}));
+    async function route(){const isLanguages=location.hash==="#languages";document.getElementById("publicPage").hidden=isLanguages;document.getElementById("languagePage").hidden=!isLanguages;if(isLanguages)try{const result=await ask({type:"LIST"});paint(result.installed||[]);status.textContent=""}catch(error){status.dataset.kind="error";status.textContent=error.message}}
+    addEventListener("hashchange",route);route();
+  })();
+  </script>
 </body>
 </html>
