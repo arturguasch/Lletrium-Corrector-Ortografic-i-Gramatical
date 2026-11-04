@@ -1,0 +1,73 @@
+{
+  "catalogSchema": 1,
+  "generatedAt": "2026-11-04T22:35:02.611Z",
+  "channel": "stable",
+  "packs": [
+    {
+      "id": "ca",
+      "labels": {
+        "ca": "Català (central, valencià i balear)",
+        "es": "Catalán (central, valenciano y balear)",
+        "en": "Catalan (central, Valencian and Balearic)"
+      },
+      "flag": "ca",
+      "packVersion": "1.0.1",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.1",
+        "resourceApi": 1,
+        "resourceSetId": "ca-data-1",
+        "capabilities": []
+      },
+      "path": "packs/ca/1.0.1/ca-ES.pack",
+      "size": 29456630,
+      "sha256": "3f1ba598359ffb3944bdd63849a53957c608f1ce07085cef16b49724c2cd27fd",
+      "licensePath": "licenses/"
+    },
+    {
+      "id": "es",
+      "labels": {
+        "ca": "Espanyol",
+        "es": "Español",
+        "en": "Spanish"
+      },
+      "flag": "es",
+      "packVersion": "1.0.1",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.1",
+        "resourceApi": 1,
+        "resourceSetId": "es-data-1",
+        "capabilities": []
+      },
+      "path": "packs/es/1.0.1/es-ES.pack",
+      "size": 5354735,
+      "sha256": "0f9d3fa7e93ad53f157232b3f0d0a621d96ee3265c8568581ba562434635ed35",
+      "licensePath": "licenses/"
+    },
+    {
+      "id": "en",
+      "labels": {
+        "ca": "Anglès americà",
+        "es": "Inglés estadounidense",
+        "en": "American English"
+      },
+      "flag": "us",
+      "packVersion": "1.0.1",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.1",
+        "resourceApi": 1,
+        "resourceSetId": "en-us-data-1",
+        "capabilities": []
+      },
+      "path": "packs/en/1.0.1/en-US.pack",
+      "size": 11242436,
+      "sha256": "a63977a1e9a49e79cf0a47015fad5edda096487b618a72ba6abd1fa2fdf1a279",
+      "licensePath": "licenses/"
+    }
+  ]
+}

@@ -1,15 +1,7 @@
-# Lletrium! language data packs 1.0.0
+# Lletrium! language packs
 
-These files contain static, pre-compressed language resources used by Lletrium! 1.0.0. They contain no executable JavaScript, rule interpreter, or remotely supplied correction rules. The extension supplies the runtime and all correction logic.
+This proof set contains version 1.0.1 static language packs and a catalog for compatible Lletrium builds. It omits legacy root-level copies; do not use it to replace production contents until compatibility with older clients is checked.
 
-## Files
+The extension contains the language engine and correction logic. These packages contain static resources only. The extension verifies the pinned package hash, format, resource inventory, and per-resource hashes before storing a package locally. Installed packs work offline.
 
-- `ca-ES.pack`: shared Catalan lexical and morphology data for Central Catalan, Valencian, and Balearic profiles.
-- `es-ES.pack`: Spanish morphology data.
-- `en-US.pack`: American English tokenizer, tagger, chunker, spelling, and synthesis models.
-
-The extension verifies the package SHA-256 and each embedded resource hash before storing the package in IndexedDB. The source package builder records the exact resource paths and bytes.
-
-## Third-party notices
-
-The `licenses/` directory contains the applicable third-party notices and license texts. These data files retain their upstream licensing and attribution; the repository’s top-level project license does not replace those terms.
+Do not replace bytes at an existing versioned URL. Publish a new pack version and update the catalog and matching extension descriptor together. Third-party notices and license texts are in `licenses/`.
