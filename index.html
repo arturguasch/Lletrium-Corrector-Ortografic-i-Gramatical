@@ -189,14 +189,16 @@
         const range=info.managerProtocol;
         if(!range||!Number.isInteger(range.min)||!Number.isInteger(range.max)||range.min>MANAGER_PROTOCOL||range.max<MANAGER_PROTOCOL)throw Object.assign(Error(text[locale].protocolFailed),{code:"PROTOCOL_MISMATCH"});
         if(!Array.isArray(info.supportedPacks)||!Array.isArray(info.supportedPackSchemas))throw Object.assign(Error(text[locale].protocolFailed),{code:"PROTOCOL_MISMATCH"});
-        if(info.channel!=="stable"||info.supportedPacks.length>32)throw Object.assign(Error(text[locale].protocolFailed),{code:"PROTOCOL_MISMATCH"});
+        const legacyManagerInfo=!info.channel&&Array.isArray(info.capabilities)&&info.capabilities.includes("language-pack-manager-v1");
+        if((info.channel!=="stable"&&!legacyManagerInfo)||info.supportedPacks.length>32)throw Object.assign(Error(text[locale].protocolFailed),{code:"PROTOCOL_MISMATCH"});
         const merged=[];
         for(const support of info.supportedPacks){
-          if(!support||typeof support.id!=="string"||!/^[a-z0-9-]{1,32}$/.test(support.id)||!Array.isArray(support.schemas)||!Array.isArray(support.acceptedVersions)||support.channel!=="stable")continue;
+          if(!support||typeof support.id!=="string"||!/^[a-z0-9-]{1,32}$/.test(support.id)||!Array.isArray(support.schemas)||!Array.isArray(support.acceptedVersions)||(legacyManagerInfo?!LEGACY_SUPPORTED_PACK_IDS.has(support.id):support.channel!=="stable"))continue;
           const existing=packs.find(pack=>pack.id===support.id),schema=support.schemas.find(value=>info.supportedPackSchemas.includes(value));
           const version=(support.acceptedVersions||[]).find(value=>typeof value==="string"&&value.length<=32);
-          if(!schema||!version||!Number.isInteger(support.engineApiVersion)||typeof support.resourceSetId!=="string")continue;
-          const pack={...(existing||{}),id:support.id,flag:/^(ca|es|us)$/.test(support.flag||"")?support.flag:(existing?.flag||support.id.slice(0,2)),schema,version,engineApiVersion:support.engineApiVersion,resourceSetId:support.resourceSetId,labels:support.labels||existing?.labels||{}};
+          const resourceSetId=support.resourceSetId||(legacyManagerInfo?existing?.resourceSetId:"");
+          if(!schema||!version||!Number.isInteger(support.engineApiVersion)||typeof resourceSetId!=="string")continue;
+          const pack={...(existing||{}),id:support.id,flag:/^(ca|es|us)$/.test(support.flag||"")?support.flag:(existing?.flag||support.id.slice(0,2)),schema,version,engineApiVersion:support.engineApiVersion,resourceSetId,labels:support.labels||existing?.labels||{}};
           merged.push(pack);supported.add(pack.id);
         }
         for(const record of Array.isArray(info.installedPacks)?info.installedPacks:[]){if(record?.id&&/^[a-z0-9-]{1,32}$/.test(record.id)&&!merged.some(pack=>pack.id===record.id))merged.push({id:record.id,flag:record.id.slice(0,2),labels:{},schema:0,version:String(record.packVersion||""),engineApiVersion:Number(record.engineApiVersion)||0})}
