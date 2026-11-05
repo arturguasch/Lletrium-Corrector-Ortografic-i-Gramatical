@@ -1,6 +1,6 @@
 {
   "catalogSchema": 1,
-  "generatedAt": "2026-11-04T22:35:02.611Z",
+  "generatedAt": "2026-11-05T21:37:33.087Z",
   "channel": "stable",
   "packs": [
     {
@@ -68,6 +68,28 @@
       "size": 11242436,
       "sha256": "a63977a1e9a49e79cf0a47015fad5edda096487b618a72ba6abd1fa2fdf1a279",
       "licensePath": "licenses/"
+    },
+    {
+      "id": "fr",
+      "labels": {
+        "ca": "Francès",
+        "es": "Francés",
+        "en": "French"
+      },
+      "flag": "fr",
+      "packVersion": "1.0.1",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.1",
+        "resourceApi": 1,
+        "resourceSetId": "fr-static-1",
+        "capabilities": []
+      },
+      "path": "packs/fr/1.0.1/fr-FR.pack",
+      "size": 1884929,
+      "sha256": "4007b4ac43a400a9728e6c8f88daff2b8f2bd9c1e4aae0ba7760442c7dfd446a",
+      "licensePath": "licenses/french-data/"
     }
   ]
 }
