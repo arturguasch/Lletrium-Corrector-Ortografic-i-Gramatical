@@ -30,11 +30,32 @@
     if(feminine){const last=value.lastIndexOf('ili'),head=last<0?'':value.slice(0,last+3);let tail=last<0?value:value.slice(last+3);tail=tail.replace(/un(?!a)/gu,'una').replace(/dos/gu,'dues').replace(/cents/gu,'centes');value=head+tail;}
     return (negative?'menys ':'')+value;
   }
-  function distance(a,b){
-    const levenshtein=(a,b)=>{let prev=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){const next=[i];for(let j=1;j<=b.length;j++)next[j]=Math.min(next[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]!==b[j-1]));prev=next;}return prev[b.length];};
+  function distance(a,b,limit=2){
+    // The French/LanguageTool multitoken adapter rejects every per-token distance
+    // above 2. A banded Levenshtein calculation can therefore stop at limit+1
+    // without changing accepted candidates or their ranking.
+    const levenshtein=(left,right,max)=>{
+      if(Math.abs(left.length-right.length)>max)return max+1;
+      let prev=Array.from({length:right.length+1},(_,i)=>i);
+      for(let i=1;i<=left.length;i++){
+        const start=Math.max(1,i-max),end=Math.min(right.length,i+max),next=Array(right.length+1).fill(max+1);next[0]=i;
+        let rowMin=max+1;
+        for(let j=start;j<=end;j++){next[j]=Math.min(next[j-1]+1,(prev[j]??max+1)+1,(prev[j-1]??max+1)+(left[i-1]!==right[j-1]));if(next[j]<rowMin)rowMin=next[j];}
+        if(rowMin>max)return max+1;
+        prev=next;
+      }
+      return prev[right.length]??max+1;
+    };
     if(a.replaceAll(' ','')===b.replaceAll(' ',''))return 0;
-    const similar=s=>s.replaceAll('y','i').replaceAll('ko','co').replaceAll('ka','ca');let d=Math.min(levenshtein(a,b),levenshtein(similar(a),similar(b)));
-    const anagram=[...a].sort().join('')===[...b].sort().join('');return anagram&&d>0&&a.length===b.length?1:anagram&&d>1?d-1:d;
+    const similar=s=>s.replaceAll('y','i').replaceAll('ko','co').replaceAll('ka','ca');
+    const isAnagram=(left,right)=>{if(left.length!==right.length)return false;const counts=new Map();for(let i=0;i<left.length;i++)counts.set(left[i],(counts.get(left[i])||0)+1);for(let i=0;i<right.length;i++){const n=counts.get(right[i]);if(!n)return false;if(n===1)counts.delete(right[i]);else counts.set(right[i],n-1);}return counts.size===0;};
+    const anagram=isAnagram(a,b);
+    if(anagram){
+      let d=Math.min(levenshtein(a,b,Math.max(a.length,b.length)),levenshtein(similar(a),similar(b),Math.max(a.length,b.length)));
+      if(d>1)d--;
+      return d>0&&a.length===b.length?1:d;
+    }
+    return Math.min(levenshtein(a,b,limit+1),levenshtein(similar(a),similar(b),limit+1));
   }
   class Pronouns {
     constructor(rt){this.rt=rt;this.table=rt.filterResources.pronounTable;}
@@ -325,29 +346,61 @@
       const source=rt.filterResources.multiwords;if(!source)throw Error('Missing original multiword lexicon');
       const normalized=s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/-/gu,' '),word=original.replace(/[\s\p{Z}]+/gu,' ').replace(/- | -/gu,'-'),key=normalized(word),parts=key.split(' ').filter(Boolean);
       if(!rt.multitokenIndex){
-        const exact=new Map(),first=new Map();
-        for(const candidate of source){const ckey=normalized(candidate),record={candidate,key:ckey,parts:ckey.split(' ').filter(Boolean)},joined=ckey.replaceAll(' ','');(exact.get(joined)||exact.set(joined,[]).get(joined)).push(record);(first.get(ckey[0])||first.set(ckey[0],[]).get(ckey[0])).push(record);}
-        rt.multitokenIndex={exact,first};
+        const exact=new Map(),firstLength=new Map();let ordinal=0;
+        for(const candidate of source){const ckey=normalized(candidate),record={candidate,key:ckey,parts:ckey.split(' ').filter(Boolean),length:ckey.length,ordinal:ordinal++},joined=ckey.replaceAll(' ','');(exact.get(joined)||exact.set(joined,[]).get(joined)).push(record);let lengths=firstLength.get(ckey[0]);if(!lengths)firstLength.set(ckey[0],lengths=new Map());let bucket=lengths.get(record.length);if(!bucket)lengths.set(record.length,bucket=[]);bucket.push(record);}
+        rt.multitokenIndex={exact,firstLength,windowCache:new Map()};
       }
       if(parts.length===2&&!/^\p{Lu}/u.test(word.split(' ')[1]||'')){
         const [a,b]=word.split(' ');if(a&&b&&(known(a.slice(0,-1))&&known(a.slice(-1)+b)||known(a+b[0])&&known(b.slice(1))))return [];
+      }
+      const queryCache=rt.multitokenSuggestionCache??(rt.multitokenSuggestionCache=new Map());
+      const queryCacheKey=word;
+      if(queryCache.has(queryCacheKey)){
+        let values=[...queryCache.get(queryCacheKey)];
+        if(original.length>4&&original===original.toUpperCase())values=values.map(s=>s.toUpperCase());
+        else if(rows.slice(0,start).filter(r=>r.sentence===rows[start].sentence).every(r=>!/[\p{L}\p{N}]/u.test(r.token)))values=values.map(s=>s===s.toLowerCase()?s[0].toUpperCase()+s.slice(1):s);
+        return values.filter(s=>s!==original);
       }
       let weighted=[];
       for(const {candidate}of rt.multitokenIndex.exact.get(key.replaceAll(' ',''))||[]){
         if(candidate===original||candidate===candidate.toLowerCase()&&candidate.replace(/\b\p{L}/gu,s=>s.toUpperCase())===original)return [];
         weighted.push([candidate,0]);
       }
-      if(!weighted.length)for(const {candidate,key:ckey,parts:cp}of rt.multitokenIndex.first.get(key[0])||[]){
-        if(Math.abs(ckey.length-word.length)>3)continue;
+      if(!weighted.length){
+        const index=rt.multitokenIndex,windowKey=key[0]+'\0'+word.length;
+        let nearby=index.windowCache.get(windowKey);
+        if(!nearby){
+          const lengths=index.firstLength.get(key[0]);nearby=[];
+          for(let length=Math.max(0,word.length-3);length<=word.length+3;length++){const bucket=lengths?.get(length);if(bucket)for(const record of bucket)nearby.push(record);}
+          nearby.sort((a,b)=>a.ordinal-b.ordinal);
+          if(index.windowCache.size>=128)index.windowCache.delete(index.windowCache.keys().next().value);
+          index.windowCache.set(windowKey,nearby);
+        }
+        for(const {candidate,key:ckey,parts:cp}of nearby){
         if(candidate===original)return [];
-        const distances=cp.length===parts.length&&parts.length>1?cp.map((s,i)=>distance(s,parts[i])):[distance(ckey,key)];const total=distances.reduce((a,b)=>a+b,0);
-        if(total&&ckey.length<7||distances.some((d,i)=>d>(parts[i]?.length>5&&cp[i]?.length>4?2:1)))continue;
+        let distances,total=0,rejected=false;
+        if(cp.length===parts.length&&parts.length>1){
+          distances=[];
+          for(let i=0;i<parts.length;i++){
+            const maxDistance=parts[i].length>5&&cp[i].length>4?2:1;
+            if(Math.abs(cp[i].length-parts[i].length)>maxDistance){rejected=true;break;}
+            const d=distance(cp[i],parts[i],maxDistance);distances.push(d);total+=d;
+            if(d>maxDistance){rejected=true;break;}
+          }
+        }else{
+          const maxDistance=parts[0]?.length>5&&cp[0]?.length>4?2:1;
+          if(Math.abs(ckey.length-key.length)>maxDistance)continue;
+          const d=distance(ckey,key,maxDistance);distances=[d];total=d;
+        }
+        if(rejected||total&&ckey.length<7)continue;
         const correct=cp.length===parts.length&&parts.length>1?cp.reduce((n,s,i)=>n+(s===parts[i]?s.length:0),0):0;
         const charCost=(a,b)=>a===b||a==='i'&&b==='y'||a==='y'&&b==='i'?0:['sz','zs','bv','vb'].includes(a+b)?0.2:1;
         const initial=cp.length===2&&parts.length===2?cp.reduce((n,s,i)=>n+charCost(s[0],parts[i][0]),0):0,len=key.length-correct,max=Math.trunc(len<=7?2-initial:2+0.25*(len-7)-0.6*initial);
         if(total<=max)weighted.push([candidate,total]);
       }
-      if(!weighted.length)return [];const best=Math.min(...weighted.map(x=>x[1]));let values=uniq(weighted.filter(x=>x[1]===best).map(x=>x[0]));
+      }
+      if(!weighted.length){if(queryCache.size>=20000)queryCache.delete(queryCache.keys().next().value);queryCache.set(queryCacheKey,[]);return [];}const best=Math.min(...weighted.map(x=>x[1]));let values=uniq(weighted.filter(x=>x[1]===best).map(x=>x[0]));
+      if(queryCache.size>=20000)queryCache.delete(queryCache.keys().next().value);queryCache.set(queryCacheKey,[...values]);
       if(original.length>4&&original===original.toUpperCase())values=values.map(s=>s.toUpperCase());
       else if(rows.slice(0,start).filter(r=>r.sentence===rows[start].sentence).every(r=>!/[\p{L}\p{N}]/u.test(r.token)))values=values.map(s=>s===s.toLowerCase()?s[0].toUpperCase()+s.slice(1):s);
       return values.filter(s=>s!==original);

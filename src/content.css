@@ -241,6 +241,8 @@
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
   padding: 12px;
   font: 13px/1.4 Arial, Helvetica, sans-serif;
+  pointer-events: auto !important;
+  isolation: isolate !important;
 }
 .corrector-local-card-title {
   font-weight: 700;
@@ -259,6 +261,7 @@
   background: #f8fafd;
   color: #202124;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .corrector-local-suggestion:hover {
   background: #e8f0fe;
@@ -568,7 +571,18 @@
 }
 
 
-.corrector-local-hide-native-docs-ui {
+/* Google Docs native proofing UI: direct selectors also cover reused bubbles.
+   Compared with LanguageTool 11.5 content/styles/styles.css (gdocs tweaks).
+   Keep the policy scoped to this document's actual enabled state. */
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spell-bubble,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spellcheck-with-explanation-bubble,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-overlay-container,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-highlighted-overlay-non-critical,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-highlighted-overlay,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-hover-overlay-non-critical,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-hover-overlay,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .kix-spelling-error-hover-interceptor,
+html[data-corrector-local-gdocs-native-suppression="enabled"] .corrector-local-hide-native-docs-ui {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -622,7 +636,7 @@
 }
 .corrector-local-badge[data-placement="docs"] {
   /* Keep the page badge below Docs menus and dialogs. */
-  z-index: 10 !important;
+  z-index: 100 !important;
   width: 56px !important;
   height: 32px !important;
   min-width: 56px !important;
@@ -909,6 +923,29 @@ html[data-corrector-local-theme="light"] .corrector-local-floating { color: #496
 .corrector-local-support-title { margin: 0 !important; color: #4a300c !important; font: 700 10px/1.25 system-ui, sans-serif !important; }
 .corrector-local-support-text { margin: 2px 0 0 !important; color: #7a5620 !important; font: 10px/1.3 system-ui, sans-serif !important; }
 .corrector-local-support-link { display: inline-flex !important; align-items: center !important; justify-content: center !important; min-height: 27px !important; padding: 5px 8px !important; border: 1px solid #e0b800 !important; border-radius: 999px !important; color: #1f1608 !important; background: #ffdd00 !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.55) !important; font: 700 9px/1.2 system-ui, sans-serif !important; text-decoration: none !important; white-space: nowrap !important; }
+.corrector-local-rating-banner {
+  display: grid !important; grid-template-columns: 26px minmax(0,1fr) auto auto !important; gap: 6px !important;
+  align-items: center !important; margin: 7px 0 2px !important; padding: 7px 9px !important;
+  border: 1px solid #9ed8ad !important; border-radius: 12px !important;
+  color: #193d27 !important; background: linear-gradient(135deg,#effbf2 0%,#e3f7e9 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8) !important; box-sizing: border-box !important;
+}
+.corrector-local-rating-icon { display: block !important; width: 26px !important; height: 26px !important; max-width: 26px !important; max-height: 26px !important; object-fit: contain !important; border-radius: 6px !important; }
+.corrector-local-rating-copy { min-width: 0 !important; }
+.corrector-local-rating-copy > p { display: grid !important; gap: 1px !important; margin: 0 !important; color: #315b3c !important; font: 650 9px/1.22 system-ui,sans-serif !important; text-align: left !important; }
+.corrector-local-rating-copy > p > span { display: block !important; }
+.corrector-local-rating-actions { display: contents !important; }
+.corrector-local-rating-stars { color: #e5a900 !important; font: 700 13px/1 system-ui,sans-serif !important; letter-spacing: .5px !important; white-space: nowrap !important; }
+.corrector-local-rating-link { display: inline-flex !important; min-height: 26px !important; align-items: center !important; justify-content: center !important; padding: 4px 8px !important; border: 1px solid #188144 !important; border-radius: 8px !important; color: #fff !important; background: linear-gradient(180deg,#2eaa5b,#218d49) !important; box-shadow: 0 2px 5px #176a3433,inset 0 1px 0 #ffffff40 !important; font: 700 9px/1.2 system-ui,sans-serif !important; text-decoration: none !important; white-space: nowrap !important; }
+.corrector-local-rating-link:hover { filter: brightness(1.07) !important; }
+html[data-corrector-local-theme="dark"] .corrector-local-rating-banner { border-color: #39784c !important; color: #effff2 !important; background: linear-gradient(135deg,#1c3826 0%,#213d2b 100%) !important; box-shadow: none !important; }
+html[data-corrector-local-theme="dark"] .corrector-local-rating-copy > p { color: #d4eed9 !important; }
+html[data-corrector-local-theme="dark"] .corrector-local-rating-stars { color: #ffd45d !important; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-corrector-local-theme="light"]) .corrector-local-rating-banner { border-color: #39784c !important; color: #effff2 !important; background: linear-gradient(135deg,#1c3826 0%,#213d2b 100%) !important; box-shadow: none !important; }
+  html:not([data-corrector-local-theme="light"]) .corrector-local-rating-copy > p { color: #d4eed9 !important; }
+  html:not([data-corrector-local-theme="light"]) .corrector-local-rating-stars { color: #ffd45d !important; }
+}
 html[data-corrector-local-theme="dark"] .corrector-local-support-banner { border-color: #8a6a28 !important; color: #ffe7a8 !important; background: linear-gradient(135deg, #3a2c14 0%, #2a2112 100%) !important; box-shadow: none !important; }
 html[data-corrector-local-theme="dark"] .corrector-local-support-icon { border-color: #8a6a28 !important; background: rgba(255,255,255,.06) !important; }
 html[data-corrector-local-theme="dark"] .corrector-local-support-title { color: #ffe7a8 !important; }
@@ -1065,6 +1102,8 @@ html[data-corrector-local-theme="dark"] .corrector-local-panel {
 .corrector-local-panel .corrector-local-docs-popup-button svg { display: block !important; width: 18px !important; height: 18px !important; }
 .corrector-local-panel .corrector-local-docs-popup-button:hover { border-color: #bac6ef !important; background: #edf1ff !important; }
 .corrector-local-panel .corrector-local-docs-popup-button:focus-visible { outline: 2px solid #526bd6 !important; outline-offset: 1px !important; }
+.corrector-local-panel:not(:has([data-docs-detection-toggle])) > header > span:first-child { flex: 1 1 auto !important; min-width: 0 !important; }
+.corrector-local-panel .corrector-local-popup-settings-button { pointer-events: auto !important; }
 .corrector-local-docs-switch-label { display: inline-block !important; min-width: 34px !important; text-align: center !important; }
 .corrector-local-docs-switch-track {
   display: inline-block !important;
@@ -1192,10 +1231,31 @@ html[data-corrector-local-theme="dark"] .corrector-local-panel .corrector-local-
   background: var(--cl-option-hover) !important; border-color: #8299e6 !important;
 }
 .corrector-local-panel .corrector-local-panel-language [data-language-trigger]:active { background: var(--cl-option-pressed) !important; }
+.corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"] {
+  border-color: #d95760 !important; background: #fff0f1 !important; color: #b4232c !important;
+}
+.corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"]::after {
+  content: "" !important; width: 8px !important; height: 8px !important; flex: 0 0 8px !important;
+  margin-left: auto !important; border-top: 2px solid currentColor !important; border-right: 2px solid currentColor !important;
+  transform: rotate(45deg) !important; opacity: .9 !important;
+}
+.corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"]:hover { border-color: #c83d49 !important; background: #ffe3e5 !important; }
+.corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"]:active { background: #ffd5d8 !important; }
+html[data-corrector-local-theme="dark"] .corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"] {
+  border-color: #a34b55 !important; background: #3e272c !important; color: #ffb9bf !important;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-corrector-local-theme="light"]) .corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"] {
+    border-color: #a34b55 !important; background: #3e272c !important; color: #ffb9bf !important;
+  }
+  html:not([data-corrector-local-theme="light"]) .corrector-local-panel .corrector-local-panel-language [data-language-trigger][data-no-languages="true"]:hover { background: #503037 !important; }
+}
 .corrector-local-panel .corrector-local-panel-language .corrector-local-language-menu > button > *,
 .corrector-local-panel .corrector-local-panel-language [data-language-trigger] > * { pointer-events: none !important; }
 .corrector-local-panel .corrector-local-language-status { display: block; color: #d66565; font-size: 11px; }
 .corrector-local-panel .corrector-local-language-status:empty { display: none; }
+.corrector-local-panel .corrector-local-language-menu-divider { height: 1px !important; margin: 5px 7px !important; background: var(--cl-panel-border) !important; }
+.corrector-local-panel .corrector-local-manage-languages-icon { width: 22px !important; height: 22px !important; flex: 0 0 22px !important; color: var(--cl-panel-accent) !important; }
 .corrector-local-panel .corrector-local-panel-body {
   min-height: 0 !important; overflow-y: auto !important; overflow-x: hidden !important;
   padding: 12px !important; flex: 1 1 auto !important;
@@ -1256,4 +1316,47 @@ html[data-corrector-local-theme="dark"] .corrector-local-badge[data-state="error
    browser spellcheck attribute. Restore them when Lletrium is disabled. */
 html[data-corrector-local-slides-proofing-active] :is(.workspace-container, #workspace-container) :is(.sketchy-text-spelling-error-underline-overlay, .sketchy-text-spelling-error-highlight-overlay, .kix-spell-bubble) {
   display: none !important;
+}
+
+/* Screen overlays must never participate in print sizing or pagination.
+   Like LanguageTool's print-only highlighter exclusion, display:none removes
+   geometry as well as ink; visibility:hidden would still affect page layout. */
+@media print {
+  :root:root:root .corrector-local-root,
+  :root:root:root .corrector-local-paint-host,
+  :root:root:root [data-corrector-editor-host],
+  :root:root:root .corrector-local-measure,
+  :root:root:root .corrector-local-mark,
+  :root:root:root .corrector-local-gdocs-plane,
+  :root:root:root .corrector-local-badge,
+  :root:root:root .corrector-local-floating,
+  :root:root:root .corrector-local-panel,
+  :root:root:root .corrector-local-card,
+  :root:root:root .corrector-local-toast,
+  :root:root:root .corrector-local-lollipop,
+  :root:root:root .corrector-local-issue-flash,
+  :root:root:root .corrector-local-docs-toolbar-button,
+  :root:root:root .corrector-local-docs-toolbar-separator {
+    display: none !important;
+  }
+  ::highlight(corrector-local-blue-highlight),
+  ::highlight(corrector-local-blue-highlight-emphasized),
+  ::highlight(corrector-local-blue-highlight-selected),
+  ::highlight(corrector-local-recommendation-highlight),
+  ::highlight(corrector-local-recommendation-highlight-emphasized),
+  ::highlight(corrector-local-recommendation-highlight-selected),
+  ::highlight(corrector-local-recommendation-tease-highlight),
+  ::highlight(corrector-local-recommendation-tease-highlight-emphasized),
+  ::highlight(corrector-local-recommendation-tease-highlight-selected),
+  ::highlight(corrector-local-red-highlight),
+  ::highlight(corrector-local-red-highlight-emphasized),
+  ::highlight(corrector-local-red-highlight-selected),
+  ::highlight(corrector-local-yellow-highlight),
+  ::highlight(corrector-local-yellow-highlight-emphasized),
+  ::highlight(corrector-local-yellow-highlight-selected) {
+    text-decoration: none !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    text-shadow: none !important;
+  }
 }

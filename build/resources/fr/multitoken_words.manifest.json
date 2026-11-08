@@ -1,0 +1,30 @@
+{
+  "kind": "lletrium-french-multitoken-lexicon",
+  "status": "proof-only-not-activated",
+  "sourceSnapshotSha256": "59ba721dab736ae1681e00023ce61f2f228295cf337e67a0101e68ea56ada9e3",
+  "files": [
+    {
+      "name": "language-module",
+      "path": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/multiwords.txt",
+      "bytes": 109925,
+      "sha256": "8ab8c070d0eb2e139b62cce023e9bb619fe652cbad82b7c319c24fa77081a2e4"
+    },
+    {
+      "name": "shared-global",
+      "path": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-core/src/main/resources/org/languagetool/resource/spelling_global.txt",
+      "bytes": 472520,
+      "sha256": "98198e0ecbb5e14e32cbee42a4be8b6982c3bb34311bf9ea1f5c12fab4a65634"
+    },
+    {
+      "name": "french-hyphenated",
+      "path": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hyphenated_words.txt",
+      "bytes": 200016,
+      "sha256": "3624d33bc441483fe0ce2b8f2ac07f38d257c65474ae9a0fd3d0a3d317a5f3c3"
+    }
+  ],
+  "entryCount": 44768,
+  "uncompressedBytes": 703422,
+  "uncompressedSha256": "dfc0bc16dbb950ae54db4abffd344a623f52e12c3eb696b43f419efbfc381550",
+  "gzipBytes": 280135,
+  "gzipSha256": "a03905e63f0f7586dd23525f0ea006bcd0e45d503a5b3585184e55158e919d72"
+}

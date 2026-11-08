@@ -4,6 +4,7 @@
 
   const STATE = {
     settings: null,
+    installedLanguagePackIds: new Set(),
     engineErrorTestMode: false,
     engineUnavailable: false,
     uiLanguage: "ca",
@@ -347,6 +348,10 @@
   async function init() {
     STATE.settings = await getSettings();
     try {
+      const packState = await chrome.runtime.sendMessage({ type: "CL_GET_INSTALLED_LANGUAGE_PACKS" });
+      STATE.installedLanguagePackIds = new Set(Array.isArray(packState?.ids) ? packState.ids : []);
+    } catch (_) {}
+    try {
       const temporaryDismissals = await chrome.runtime.sendMessage({ type: "CL_GET_TEMPORARY_DISMISSALS" });
       for (const key of Array.isArray(temporaryDismissals?.keys) ? temporaryDismissals.keys : []) {
         if (typeof key === "string") {
@@ -400,7 +405,7 @@
         return false;
       }
       if (message?.type === "CL_UI_PREFERENCES_CHANGED") {
-        const nextUiLanguage = ["ca", "es", "en"].includes(message.uiLanguage) ? message.uiLanguage : STATE.uiLanguage;
+        const nextUiLanguage = ["ca", "es", "en", "fr"].includes(message.uiLanguage) ? message.uiLanguage : STATE.uiLanguage;
         const nextTheme = ["system", "light", "dark"].includes(message.theme) ? message.theme : STATE.theme;
         STATE.settings = { ...(STATE.settings || {}), uiLanguage: nextUiLanguage, theme: nextTheme };
         if (nextUiLanguage !== STATE.uiLanguage) setContentUiLanguage(nextUiLanguage);
@@ -559,12 +564,16 @@
       }
     });
     chrome.storage.onChanged?.addListener((changes, area) => {
+      if (area === "sync" && changes.enabledLanguageProfiles) {
+        STATE.settings = { ...(STATE.settings || {}), enabledLanguageProfiles: changes.enabledLanguageProfiles.newValue || {} };
+        updateReviewPanelLanguage();
+      }
       if (area === "sync") {
         // Apply presentation preferences from the change event immediately.
         // A service-worker read can finish after a newer popup choice and
         // otherwise leave an open page panel using the old presentation.
         if (changes.uiLanguage) {
-          const language = ["ca", "es", "en"].includes(changes.uiLanguage.newValue) ? changes.uiLanguage.newValue : "ca";
+          const language = ["ca", "es", "en", "fr"].includes(changes.uiLanguage.newValue) ? changes.uiLanguage.newValue : "ca";
           STATE.settings = { ...(STATE.settings || {}), uiLanguage: language };
           if (STATE.uiLanguage !== language) setContentUiLanguage(language);
         }
@@ -586,6 +595,9 @@
       if (area === "local" && changes.engineErrorTestMode) {
         STATE.engineErrorTestMode = changes.engineErrorTestMode.newValue === true;
         updateBadge(STATE.lastCount);
+      }
+      if (area === "local" && changes.installedLanguagePacksRevision) {
+        refreshInstalledLanguagePacks({ reloadActiveEngine: true });
       }
     });
 
@@ -1064,21 +1076,25 @@
       ...(Array.isArray(value?.["ca-ES-valencia"]) ? value["ca-ES-valencia"] : []),
       ...(Array.isArray(value?.["ca-ES-balear"]) ? value["ca-ES-balear"] : [])
     ];
-    return Object.fromEntries([["ca-ES", "ca"], ["ca-ES-valencia", "ca"], ["ca-ES-balear", "ca"], ["es-ES", "es"], ["en-US", "en"]].map(([profile, legacy]) => {
+    const frenchWords = ["fr", "fr-FR", "fr-CA", "fr-CH", "fr-BE"].flatMap(profile => Array.isArray(value?.[profile]) ? value[profile] : []);
+    const normalized = Object.fromEntries([["ca-ES", "ca"], ["ca-ES-valencia", "ca"], ["ca-ES-balear", "ca"], ["es-ES", "es"], ["en-US", "en"], ["fr-FR", "fr"]].map(([profile, legacy]) => {
       let words = profile.startsWith("ca-") ? sharedCatalan : (Array.isArray(value?.[profile]) ? value[profile] : []);
+      if (profile === "fr-FR") words = frenchWords;
       if (profile.startsWith("ca-") && !words.length) words = legacyCatalan;
       else if (!words.length && Array.isArray(value?.[legacy])) words = value[legacy];
-      const language = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : "ca";
+      const language = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile === "fr-FR" ? "fr" : "ca";
       const unique = new Map();
       for (const word of words.map(value => String(value || "").trim()).filter(word => word && word.length <= 80)) {
         unique.set(word.toLocaleLowerCase(language), word);
       }
       return [profile, [...unique.values()]];
     }));
+    return normalized;
   }
 
   function currentDictionaryProfile() {
     const language = STATE.settings?.language || "ca-ES";
+    if (["fr-FR", "fr-CA", "fr-CH", "fr-BE"].includes(language)) return "fr-FR";
     return ["ca-ES", "ca-ES-valencia", "ca-ES-balear", "es-ES", "en-US"].includes(language) ? language : "ca-ES";
   }
 
@@ -1103,15 +1119,21 @@
     return STATE.settings?.enabled !== false && !STATE.siteExcluded;
   }
 
+  function shouldSuppressGoogleDocsNativeUi() {
+    return STATE.isGoogleDocs && isExtensionEnabled() && !isEditorGroupDisabled(null)
+      && STATE.settings?.gdocsHideNative !== false;
+  }
+
   function syncGoogleDocsNativeMarkSuppression() {
     if (!STATE.isGoogleDocs) return;
     try {
-      const enabled = isExtensionEnabled()
-        && !isEditorGroupDisabled(null)
-        && STATE.settings?.gdocsHideNative !== false;
+      const enabled = shouldSuppressGoogleDocsNativeUi();
+      const previous = document.documentElement?.getAttribute("data-corrector-local-gdocs-native-suppression");
       // Persist the policy before posting: the fallback MAIN script may still
       // be loading and cannot receive messages sent before its listener exists.
       document.documentElement?.setAttribute("data-corrector-local-gdocs-native-suppression", enabled ? "enabled" : "disabled");
+      if (!enabled) restoreGoogleDocsNativeUi();
+      else if (previous !== "enabled") { STATE.gdocsLastNativeHide = 0; scheduleGoogleDocsNativeUiHide(); }
       window.postMessage({
         source: "corrector-local",
         type: "CL_GDOCS_NATIVE_MARK_SUPPRESSION",
@@ -1324,7 +1346,7 @@
   }
 
   function setContentUiLanguage(language) {
-    STATE.uiLanguage = ["ca", "es", "en"].includes(language) ? language : "ca";
+    STATE.uiLanguage = ["ca", "es", "en", "fr"].includes(language) ? language : "ca";
     STATE.uiMessages = globalThis.CorrectorLocalUiLocales?.[STATE.uiLanguage] || globalThis.CorrectorLocalUiLocales?.ca || {};
     document.documentElement.dataset.correctorLocalUiLanguage = STATE.uiLanguage;
     for (const mark of STATE.marks || []) {
@@ -1611,9 +1633,30 @@
   function reviewProofingProfiles() {
     return [
       ["ca-ES", "central"], ["ca-ES-valencia", "valencian"], ["ca-ES-balear", "balearic"],
-      ["es-ES", "spanish"], ["en-US", "english"]
-    ].map(([value, key]) => ({ value, label: ui(key) }))
+      ["es-ES", "spanish"], ["en-US", "english"],
+      ["fr-FR", "frenchFrance"], ["fr-CA", "frenchCanada"], ["fr-CH", "frenchSwitzerland"], ["fr-BE", "frenchBelgium"]
+    ].filter(([value]) => STATE.installedLanguagePackIds.has(String(value).startsWith("ca-") ? "ca" : value.startsWith("fr-") ? "fr" : value === "es-ES" ? "es" : "en"))
+      .filter(([value]) => { const id=value.startsWith("ca-")?"ca":value.startsWith("fr-")?"fr":value==="es-ES"?"es":"en"; const profiles=STATE.settings?.enabledLanguageProfiles?.[id]; const known=id==="ca"?["ca-ES","ca-ES-valencia","ca-ES-balear"]:id==="fr"?["fr-FR","fr-CA","fr-CH","fr-BE"]:[value]; const valid=Array.isArray(profiles)?profiles.filter(profile=>known.includes(profile)):[]; return !valid.length||valid.includes(value); })
+      .map(([value, key]) => ({ value, label: ui(key) }))
       .sort((a, b) => a.label.localeCompare(b.label, STATE.uiLanguage, { sensitivity: "base" }));
+  }
+
+  async function refreshInstalledLanguagePacks({ reloadActiveEngine = false } = {}) {
+    const previous = STATE.installedLanguagePackIds;
+    try {
+      const result = await chrome.runtime.sendMessage({ type: "CL_GET_INSTALLED_LANGUAGE_PACKS" });
+      if (!result?.ok || !Array.isArray(result.ids)) return;
+      const next = new Set(result.ids);
+      STATE.installedLanguagePackIds = next;
+      updateReviewPanelLanguage();
+      const profile = STATE.settings?.language || "ca-ES";
+      const packId = String(profile).startsWith("ca-") ? "ca" : String(profile).startsWith("fr-") ? "fr" : profile === "es-ES" ? "es" : "en";
+      if (reloadActiveEngine && next.has(packId) !== previous.has(packId)) {
+        try { window.CorrectorLocalEngine?.clearCache?.(); } catch (_) {}
+        window.__CL_DICTIONARY_READY = false;
+        handleLanguageProfileChange(profile);
+      }
+    } catch (_) {}
   }
 
   function reviewProfileFlag(profile = STATE.settings?.language || "ca-ES") {
@@ -1621,11 +1664,29 @@
   }
 
   function appendReviewSupportBanner(container) {
-    if (!container || container.querySelector(".corrector-local-support-banner")) return;
+    if (!container) return;
+    if (!container.querySelector(".corrector-local-support-banner")) {
+      const banner = document.createElement("aside");
+      banner.className = "corrector-local-support-banner";
+      banner.setAttribute("aria-label", ui("supportProject"));
+      banner.innerHTML = `<span class="corrector-local-support-icon" aria-hidden="true">☕</span><div class="corrector-local-support-copy"><p class="corrector-local-support-title">${escapeHtml(ui("supportBannerTitle"))}</p><p class="corrector-local-support-text">${escapeHtml(ui("supportBannerText"))}</p></div><a class="corrector-local-support-link" href="https://buymeacoffee.com/openextensions" target="_blank" rel="noopener noreferrer">${escapeHtml(ui("supportProjectLink"))}</a>`;
+      container.appendChild(banner);
+    }
+    if (STATE.isGoogleDocs) appendReviewRatingBanner(container);
+  }
+
+  function appendReviewRatingBanner(container) {
+    if (!container || container.querySelector(".corrector-local-rating-banner")) return;
     const banner = document.createElement("aside");
-    banner.className = "corrector-local-support-banner";
-    banner.setAttribute("aria-label", ui("supportProject"));
-    banner.innerHTML = `<span class="corrector-local-support-icon" aria-hidden="true">☕</span><div class="corrector-local-support-copy"><p class="corrector-local-support-title">${escapeHtml(ui("supportBannerTitle"))}</p><p class="corrector-local-support-text">${escapeHtml(ui("supportBannerText"))}</p></div><a class="corrector-local-support-link" href="https://buymeacoffee.com/openextensions" target="_blank" rel="noopener noreferrer">${escapeHtml(ui("supportProjectLink"))}</a>`;
+    banner.className = "corrector-local-rating-banner";
+    banner.setAttribute("aria-label", ui("ratingCardText"));
+    const logo = chrome.runtime.getURL("src/icons/chrome-extensions-logo.png");
+    const ratingLines = String(ui("ratingCardText")).split(/,\s*/, 2);
+    const ratingButton = STATE.uiLanguage === "en" ? "Rate" : ui("ratingCardButton");
+    const ratingCopy = ratingLines.length === 2
+      ? `<span>${escapeHtml(ratingLines[0])},</span><span>${escapeHtml(ratingLines[1])}</span>`
+      : `<span>${escapeHtml(ratingLines[0] || "")}</span>`;
+    banner.innerHTML = `<img class="corrector-local-rating-icon" src="${logo}" alt="" aria-hidden="true"><div class="corrector-local-rating-copy"><p>${ratingCopy}</p></div><div class="corrector-local-rating-actions"><span class="corrector-local-rating-stars" aria-hidden="true">★★★★★</span><a class="corrector-local-rating-link" href="https://chromewebstore.google.com/detail/ecfanealnoplhjapaimncnhmogpijhkm?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer">${escapeHtml(ratingButton)}</a></div></aside>`;
     container.appendChild(banner);
   }
 
@@ -1681,12 +1742,28 @@
     const trigger = preferences.querySelector("[data-language-trigger]");
     const menu = preferences.querySelector("[role='listbox']");
     trigger.addEventListener("pointerdown", event => event.preventDefault());
+    const openLanguageManager = async () => {
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      const status = preferences.querySelector(".corrector-local-language-status");
+      if (status) status.textContent = "";
+      try {
+        const result = await chrome.runtime.sendMessage({ type: "CL_OPEN_LANGUAGE_MANAGER" });
+        if (!result?.ok) throw new Error(result?.error || "Language manager unavailable");
+      } catch (_) { if (status) status.textContent = ui("settingsSaveFailed"); }
+    };
     trigger.addEventListener("click", event => {
+      if (trigger.dataset.noLanguages === "true") {
+        event.preventDefault();
+        event.stopPropagation();
+        openLanguageManager();
+        return;
+      }
       menu.hidden = !menu.hidden;
       trigger.setAttribute("aria-expanded", String(!menu.hidden));
       // Mouse opening should use hover feedback, without pinning a keyboard
       // focus ring to the selected row while the pointer moves elsewhere.
-      if (!menu.hidden && event.detail === 0) menu.querySelector('[aria-selected="true"]')?.focus({ preventScroll: true });
+      if (!menu.hidden && event.detail === 0) (menu.querySelector('[aria-selected="true"]') || menu.querySelector("button"))?.focus({ preventScroll: true });
     });
     menu.addEventListener("pointerdown", event => event.preventDefault());
     const moveOption = event => {
@@ -1702,6 +1779,11 @@
     trigger.addEventListener("keydown", moveOption);
     menu.addEventListener("keydown", moveOption);
     menu.addEventListener("click", async event => {
+      const manage = event.target.closest("[data-manage-languages]");
+      if (manage) {
+        await openLanguageManager();
+        return;
+      }
       const option = event.target.closest("[data-profile]");
       if (!option || trigger.disabled) return;
       const language = option.dataset.profile;
@@ -1819,6 +1901,7 @@
       if (!enabled) next.push(identity);
       await chrome.storage.sync.set({ disabledEditorGroups: next });
       STATE.settings = { ...(STATE.settings || {}), disabledEditorGroups: next };
+      syncGoogleDocsNativeMarkSuppression();
       STATE.settingsKey = settingsSignature(STATE.settings);
       updateGoogleDocsDetectionControls();
       scheduleReviewToolbarPosition();
@@ -1949,8 +2032,22 @@
     const profiles = reviewProofingProfiles();
     const language = STATE.settings?.language || "ca-ES";
     const current = profiles.find(profile => profile.value === language) || profiles[0];
+    const manageOption = `<button type="button" role="option" tabindex="-1" data-manage-languages aria-selected="false"><svg class="corrector-local-manage-languages-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>${escapeHtml(ui("manageLanguages"))}</span></button>`;
+    if (!current) {
+      trigger.disabled = false;
+      trigger.textContent = ui("noInstalledLanguages");
+      trigger.dataset.noLanguages = "true";
+      trigger.removeAttribute("aria-haspopup");
+      menu.innerHTML = manageOption;
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      return;
+    }
+    delete trigger.dataset.noLanguages;
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.disabled = false;
     trigger.innerHTML = `<span class="corrector-local-profile-flag">${reviewProfileFlag(current.value)}</span><span>${escapeHtml(current.label)}</span><svg class="corrector-local-language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>`;
-    menu.innerHTML = profiles.map(profile => `<button type="button" role="option" tabindex="-1" data-profile="${profile.value}" aria-selected="${profile.value === language}"><span class="corrector-local-profile-flag">${reviewProfileFlag(profile.value)}</span><span>${escapeHtml(profile.label)}</span><span class="corrector-local-option-check" aria-hidden="true">${profile.value === language ? "✓" : ""}</span></button>`).join("");
+    menu.innerHTML = profiles.map(profile => `<button type="button" role="option" tabindex="-1" data-profile="${profile.value}" aria-selected="${profile.value === current.value}"><span class="corrector-local-profile-flag">${reviewProfileFlag(profile.value)}</span><span>${escapeHtml(profile.label)}</span><span class="corrector-local-option-check" aria-hidden="true">${profile.value === current.value ? "✓" : ""}</span></button>`).join("") + `<div class="corrector-local-language-menu-divider" role="separator"></div>` + manageOption;
   }
 
   function scheduleReviewToolbarPosition() {
@@ -2779,8 +2876,15 @@
         adapter: summaryAdapterState?.id || "generic", anchor: "summary", result: "fallback", reason: "summary-anchor-hook-error"
       }].slice(-12) };
     });
-    const summaryAnchor = candidateSummaryAnchor?.isConnected ? candidateSummaryAnchor
-      : summaryEditor?.isConnected ? summaryEditor : button;
+    // For ordinary web editors, open the summary beside the visible review
+    // badge that the user clicked. Adapter summary anchors can be large
+    // composer/dialog containers, which makes the panel appear far from the
+    // badge (notably on X). Keep adapter anchors as a fallback for frame
+    // relays where the badge is intentionally rendered by the parent frame.
+    const badgeAnchor = !STATE.isGoogleDocs && button?.isConnected && !button.hidden
+      && button.__clOutsideFrameActive !== true ? button : null;
+    const summaryAnchor = badgeAnchor || (candidateSummaryAnchor?.isConnected ? candidateSummaryAnchor
+      : summaryEditor?.isConnected ? summaryEditor : button);
     const anchor = summaryAnchor.getBoundingClientRect();
     const width = Math.min(320, viewport.right - viewport.left - 20);
     panel.style.setProperty("width", `${width}px`, "important");
@@ -2791,10 +2895,34 @@
     panel.style.height = docked ? `${maxHeight}px` : "auto";
     const size = panel.getBoundingClientRect();
     const fitsLeft = anchor.left - width - 10 >= viewport.left + 8;
-    const x = docked ? viewport.left + 8 : fitsLeft ? anchor.left - width - 10 : anchor.right + 10;
+    const fitsRight = anchor.right + width + 10 <= viewport.right - 8;
+    let x;
+    let y;
+    if (docked) {
+      x = viewport.left + 8;
+      y = viewport.top + 8;
+    } else if (badgeAnchor) {
+      // Keep the panel visually attached to the badge. Prefer the side with
+      // more room, then place it below/above the badge when it fits; very
+      // short viewports fall back to a clamped top aligned with the badge.
+      const roomLeft = anchor.left - viewport.left;
+      const roomRight = viewport.right - anchor.right;
+      const openLeft = fitsLeft && (!fitsRight || roomLeft >= roomRight);
+      x = openLeft ? anchor.left - width - 10
+        : fitsRight ? anchor.right + 10
+          : Math.max(viewport.left + 8, Math.min(anchor.right - width, viewport.right - width - 8));
+      const fitsBelow = anchor.bottom + 10 + size.height <= viewport.bottom - 8;
+      const fitsAbove = anchor.top - 10 - size.height >= viewport.top + 8;
+      y = fitsBelow ? anchor.bottom + 10
+        : fitsAbove ? anchor.top - size.height - 10
+          : Math.max(viewport.top + 8, Math.min(anchor.top, viewport.bottom - size.height - 8));
+    } else {
+      x = fitsLeft ? anchor.left - width - 10 : anchor.right + 10;
+      y = Math.max(viewport.top + 8, Math.min(anchor.top, viewport.bottom - size.height - 8));
+    }
     panel.style.right = "auto"; panel.style.bottom = "auto";
     panel.style.left = `${Math.max(viewport.left + 8, Math.min(x, viewport.right - width - 8))}px`;
-    panel.style.top = `${docked ? viewport.top + 8 : Math.max(viewport.top + 8, Math.min(anchor.top, viewport.bottom - size.height - 8))}px`;
+    panel.style.top = `${Math.max(viewport.top + 8, Math.min(y, viewport.bottom - size.height - 8))}px`;
   }
 
   function releaseReviewDocsDock() {
@@ -2857,8 +2985,20 @@
     panel.className = "corrector-local-panel";
     panel.setAttribute("aria-label", ui("reviewSummary"));
     panel.innerHTML = `<header><span>${escapeHtml(ui("reviewSummary"))}</span><button type="button" data-close aria-label="${escapeHtml(ui("closeSummary"))}">×</button></header><div class="corrector-local-panel-body"></div>`;
+    const closeButton = panel.querySelector("[data-close]");
+    const popupButton = document.createElement("button");
+    popupButton.type = "button";
+    popupButton.className = "corrector-local-docs-popup-button corrector-local-popup-settings-button";
+    popupButton.dataset.openExtensionPopup = "";
+    popupButton.setAttribute("aria-label", ui("openExtensionPopup"));
+    popupButton.title = ui("openExtensionPopup");
+    popupButton.innerHTML = '<svg viewBox="0 -1.5 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5h4l.55 2.2c.5.17.96.44 1.4.74l2.14-.8 2 3.46-1.6 1.6c.06.52.06 1.06 0 1.58l1.6 1.6-2 3.46-2.14-.8c-.44.3-.9.57-1.4.74L14 18.5h-4l-.55-2.2c-.5-.17-.96-.44-1.4-.74l-2.14.8-2-3.46 1.6-1.6a6.8 6.8 0 0 1 0-1.58l-1.6-1.6 2-3.46 2.14.8c.44.3.9.57 1.4.74z"/><circle cx="12" cy="10.5" r="3.1"/></svg>';
+    popupButton.addEventListener("click", () => {
+      chrome.runtime.sendMessage({ type: "CL_OPEN_ACTION_POPUP" }).catch(() => {});
+    });
+    panel.querySelector("header").insertBefore(popupButton, closeButton);
     addReviewPanelControls(panel);
-    panel.querySelector("[data-close]").addEventListener("click", () => { panel.remove(); if (STATE.panel === panel) STATE.panel = null; });
+    closeButton.addEventListener("click", () => { panel.remove(); if (STATE.panel === panel) STATE.panel = null; });
     renderNormalReviewSummary(panel);
     document.documentElement.appendChild(panel); STATE.panel = panel;
     scheduleReviewToolbarPosition();
@@ -3014,28 +3154,29 @@
 
   function getIssueMessageForUi(issue) {
     const original = String(issue?.message || "");
+    if (String(issue?.language || "").startsWith("fr-")) return cleanIssueMessageMarkup(original);
     if (issue?.language === "en-US") {
       if (STATE.uiLanguage === "en") return cleanIssueMessageMarkup(original);
       const translatedEnglish = globalThis.CorrectorLocalEnglishExplanationTranslations?.translate?.(original, STATE.uiLanguage);
       if (translatedEnglish) return cleanIssueMessageMarkup(translatedEnglish);
       const translated = globalThis.CorrectorLocalUiLocales?.translateIssueMessage?.(original, STATE.uiLanguage, "en-US");
       if (translated) return translated;
-      return ui(isSpellingIssue(issue) ? "genericEnglishSpelling" : "genericEnglishGrammar");
+      return cleanIssueMessageMarkup(original);
     }
     if (issue?.language === "es-ES") {
       if (STATE.uiLanguage === "es") return cleanIssueMessageMarkup(original);
       const translated = globalThis.CorrectorLocalUiLocales?.translateIssueMessage?.(original, STATE.uiLanguage, "es-ES");
       if (translated) return translated;
-      return ui(isSpellingIssue(issue) ? "genericSpanishSpelling" : "genericSpanishGrammar");
+      return cleanIssueMessageMarkup(original);
     }
     if (STATE.uiLanguage === "ca") return cleanIssueMessageMarkup(original);
-    if (String(issue?.ruleId || "") === "CA_WORD_COHERENCY_VALENCIA") return ui("inconsistent");
-    const specific = ui(`issue_${String(issue?.ruleId || "")}`);
-    if (specific !== `issue_${String(issue?.ruleId || "")}`) return specific;
+    if (globalThis.CorrectorLocalUiLocales?.issueExplanationLanguages?.includes(STATE.uiLanguage)) {
+      const specific = ui(`issue_${String(issue?.ruleId || "")}`);
+      if (specific !== `issue_${String(issue?.ruleId || "")}`) return specific;
+    }
     const translated = globalThis.CorrectorLocalUiLocales?.translateIssueMessage?.(original, STATE.uiLanguage, issue?.language || "ca");
     if (translated) return translated;
-    if (String(issue?.ruleId || "") === "UPPERCASE_SENTENCE_START") return ui("capitalization");
-    return ui(isSpellingIssue(issue) ? "genericSpelling" : "genericGrammar");
+    return cleanIssueMessageMarkup(original);
   }
 
   function cleanIssueMessageMarkup(message) {
@@ -4997,7 +5138,7 @@
   }
 
   function normalizeDictionaryEntryForProfile(value, profile) {
-    const locale = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : "ca";
+    const locale = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile.startsWith("fr-") ? "fr" : "ca";
     return String(value || "").trim().toLocaleLowerCase(locale).replace(/\s+/gu, " ");
   }
 
@@ -7242,6 +7383,10 @@
     {
       id: "x-composer",
       matchesHost: host => host === "x.com" || host === "twitter.com",
+      // X paints its rich-text editor through layered React surfaces. The
+      // underline can be visible while its transparent hit button is covered,
+      // so route trusted clicks by the measured issue rectangle as on Canva.
+      useGeometricIssueHitTesting: () => true,
       isElementCompatible(editor) {
         return (editor?.matches?.(X_COMPOSER_EDITABLE_SELECTOR) || editor?.isContentEditable === true)
           && !!editor?.closest?.(X_COMPOSER_CONTEXT_SELECTOR);
@@ -7261,11 +7406,6 @@
           || editor?.closest?.('[data-testid$="RichTextInputContainer"]')
           || editor?.closest?.('[data-testid="GrokDrawer"]');
         return alignmentRoot ? getLanguageToolScrollPositioningAnchor(editor) || editor : editor;
-      },
-      getCardAlignmentElement(editor) {
-        return editor?.closest?.('[aria-modal="true"]')
-          || editor?.closest?.('[data-testid$="RichTextInputContainer"]')
-          || editor?.closest?.('[data-testid="GrokDrawer"]') || null;
       },
       getToolbarPlacement({ editor, anchor, rect, clip, rtl }) {
         const width = 52, size = 28, gap = 6;
@@ -9509,7 +9649,8 @@
   }
 
   function repaintGoogleDocsRetainedIssues() {
-    if (!STATE.isGoogleDocs || STATE.gdocsReplaceInProgress || !STATE.gdocsIssueRetention) return;
+    if (!STATE.isGoogleDocs || isEditorGroupDisabled(null) || !isExtensionEnabled()
+      || STATE.gdocsReplaceInProgress || !STATE.gdocsIssueRetention) return;
     const chunks = getGoogleDocsChunks();
     if (!chunks.length) return;
     const issues = remapGoogleDocsRetainedIssues(chunks);
@@ -12515,7 +12656,8 @@
   }
 
   function repaintGoogleDocsViewportFromCache(chunks, reason = "viewport-cache", meta = {}) {
-    if (!STATE.isGoogleDocs || !Array.isArray(chunks) || !chunks.length) return 0;
+    if (!STATE.isGoogleDocs || isEditorGroupDisabled(null) || !isExtensionEnabled()
+      || !Array.isArray(chunks) || !chunks.length) return 0;
     let painted = 0;
     const previousIssues = STATE.gdocsIssueRetention ? remapGoogleDocsRetainedIssues(chunks) : Array.isArray(STATE.gdocsLastVisibleIssues)
       ? STATE.gdocsLastVisibleIssues.map(issue => ({
@@ -13035,6 +13177,10 @@
   function repositionGoogleDocsMarks(options = {}) {
     // The replacement transaction commits the new text and ranges together.
     if (STATE.gdocsReplaceInProgress) return;
+    if (STATE.isGoogleDocs && (isEditorGroupDisabled(null) || !isExtensionEnabled())) {
+      if (STATE.marks.length || [...(STATE.gdocsPaintLayers?.values() || [])].some(layer => layer.tiles?.size)) clearMarks();
+      return;
+    }
     const duringScroll = !!options.duringScroll;
     const readTraceBaseline = duringScroll && STATE.gdocsReadRecording?.active ? {
       hidden: STATE.gdocsMarksHiddenTemporarilyDuringScroll,
@@ -13432,6 +13578,9 @@
 
   function updateRootSize() {
     if (!STATE.root) return;
+    // Print layout has different page geometry. Never retain its dimensions in
+    // the screen overlay; content.css removes that overlay from print layout.
+    if (window.matchMedia?.("print").matches) return;
     if (!STATE.isGoogleDocs) {
       if (STATE.lastRootWidth !== 0 || STATE.lastRootHeight !== 0) {
         STATE.lastRootWidth = 0;
@@ -13840,7 +13989,7 @@
       const b = document.createElement("button");
       b.className = "corrector-local-suggestion";
       b.textContent = suggestion;
-      keepGoogleDocsFocusOnControl(b);
+      keepGoogleDocsFocusOnControl(b, true);
       b.addEventListener("click", async event => {
         event.preventDefault();
         event.stopPropagation();
@@ -14275,14 +14424,14 @@
     }, 12000);
   }
 
-  function keepGoogleDocsFocusOnControl(el) {
-    if (!el || !STATE.isGoogleDocs) return;
+  function keepGoogleDocsFocusOnControl(el, preserveEditorFocus = STATE.isGoogleDocs) {
+    if (!el || !preserveEditorFocus) return;
     // En Google Docs, si el botó de la nostra UI rep el focus, Docs perd la
     // selecció interna. Llavors insertText pot retornar true però no substitueix res.
     // Evitem que els controls de la nostra extensió siguin focusables mentre
     // preservem igualment el click real de l'usuari.
     el.tabIndex = -1;
-    el.addEventListener("pointerdown", ev => {
+    if (STATE.isGoogleDocs) el.addEventListener("pointerdown", ev => {
       ev.preventDefault();
     }, { capture: true });
     el.addEventListener("mousedown", ev => {
@@ -14432,7 +14581,7 @@
     if (!STATE.isGoogleDocs || STATE.__gdocsNativeObserver) return;
 
     STATE.__gdocsNativeObserver = new MutationObserver(() => {
-      if (isExtensionEnabled() && STATE.settings?.gdocsHideNative !== false) {
+      if (shouldSuppressGoogleDocsNativeUi()) {
         scheduleGoogleDocsNativeUiHide();
       }
     });
@@ -14444,7 +14593,7 @@
     });
 
     STATE.gdocsNativeHideTimer = setInterval(() => {
-      if (isExtensionEnabled() && STATE.settings?.gdocsHideNative !== false) {
+      if (shouldSuppressGoogleDocsNativeUi()) {
         scheduleGoogleDocsNativeUiHide();
       }
     }, 4000);
@@ -14459,7 +14608,7 @@
   }
 
   function hideGoogleDocsNativeUi() {
-    if (!STATE.isGoogleDocs || !isExtensionEnabled() || STATE.settings?.gdocsHideNative === false) return;
+    if (!shouldSuppressGoogleDocsNativeUi()) return;
     const now = Date.now();
     if (now - STATE.gdocsLastNativeHide < 350) return;
     STATE.gdocsLastNativeHide = now;
@@ -14472,7 +14621,7 @@
     }
 
     const own = ".corrector-local-root,.corrector-local-paint-host,.corrector-local-card,.corrector-local-panel,.corrector-local-toast,.corrector-local-badge,.corrector-local-floating";
-    const candidates = Array.from(document.querySelectorAll("div[role='dialog'], div[role='tooltip'], div[role='menu'], div[aria-live], .docs-material, .goog-menu, .goog-tooltip, .jfk-bubble, .docs-bubble"));
+    const candidates = Array.from(document.querySelectorAll(".kix-spell-bubble, .kix-spellcheck-with-explanation-bubble, div[role='dialog'], div[role='tooltip'], div[role='menu'], div[aria-live], .docs-material, .goog-menu, .goog-tooltip, .jfk-bubble, .docs-bubble"));
 
     for (const el of candidates) {
       if (!el || el.closest(own)) continue;
@@ -15576,6 +15725,7 @@
       STATE.gdocsJobId += 1;
       STATE.gdocsCheckRunning = false;
       STATE.gdocsCheckQueued = false;
+      STATE.gdocsIssueRetention = null;
       clearGoogleDocsPanelLoadingTimer();
       clearMarks();
       STATE.gdocsLastVisibleIssues = [];
@@ -16641,7 +16791,8 @@
   }
 
   function tryPaintGoogleDocsCachedLineIssues(reason = "cache", chunksArg = null) {
-    if (!STATE.isGoogleDocs || (!STATE.gdocsLineIssueCache?.size && !STATE.gdocsStableLineIssueCache?.size)) return 0;
+    if (!STATE.isGoogleDocs || isEditorGroupDisabled(null) || !isExtensionEnabled()
+      || (!STATE.gdocsLineIssueCache?.size && !STATE.gdocsStableLineIssueCache?.size)) return 0;
     if (STATE.gdocsCanvasAwaitingFreshViewport) return 0;
     const chunks = chunksArg || (() => { try { return getGoogleDocsChunks(); } catch (_) { return []; } })();
     const language = STATE.settings?.language || "ca-ES";
@@ -18290,7 +18441,7 @@
   }
 
   function renderGoogleDocsMarks(chunks, issues, options = {}) {
-    if (!isExtensionEnabled()) return;
+    if (!isExtensionEnabled() || (STATE.isGoogleDocs && isEditorGroupDisabled(null))) return;
     const paintStartedAt = performance.now();
     const marksAtRequest = STATE.marks?.length || 0;
     recordGoogleDocsReadEvent("paint-request",{origin:options.origin||"unknown",append:!!options.append,issues:issues?.length||0,chunks:chunks?.length||0,marksBefore:marksAtRequest});
@@ -18886,6 +19037,10 @@
 
   function paintGoogleDocsLayers(selectedLayers = null, reason = "unspecified") {
     const layers = selectedLayers || [...(STATE.gdocsPaintLayers?.values() || [])];
+    if (STATE.isGoogleDocs && (isEditorGroupDisabled(null) || !isExtensionEnabled())) {
+      for (const layer of layers) layer.clear?.();
+      return;
+    }
     for (const layer of layers) {
       if (layer.destroyed) continue;
       const before = {

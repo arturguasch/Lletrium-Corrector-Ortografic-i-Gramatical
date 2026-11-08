@@ -1,155 +1,174 @@
 {
-    "manifest_version":  3,
-    "default_locale":  "ca",
-    "name":  "__MSG_extName__",
-    "description":  "__MSG_extDescription__",
-    "version":  "1.0.0",
-    "minimum_chrome_version":  "111",
-    "permissions":  [
-                        "activeTab",
-                        "clipboardWrite",
-                        "scripting",
-                        "storage",
-                        "offscreen"
-                    ],
-    "host_permissions":  [
-                             "\u003call_urls\u003e"
-                         ],
-    "background":  {
-                       "service_worker":  "src/background.js",
-                       "type":  "module"
-                   },
-    "action":  {
-                   "default_title":  "__MSG_actionTitle__",
-                   "default_popup":  "src/popup.html",
-                   "default_icon":  {
-                                        "16":  "src/icons/icon16.png",
-                                        "32":  "src/icons/icon32.png",
-                                        "48":  "src/icons/icon48.png",
-                                        "128":  "src/icons/icon128.png"
-                                    }
-               },
-    "content_scripts":  [
-                            {
-                                "matches":  [
-                                                "\u003call_urls\u003e"
-                                            ],
-                                "js":  [
-                                           "src/editor-main-world.js"
-                                       ],
-                                "run_at":  "document_start",
-                                "world":  "MAIN",
-                                "all_frames":  true,
-                                "match_about_blank":  true,
-                                "match_origin_as_fallback":  true
-                            },
-                            {
-                                "matches":  [
-                                                "*://docs.google.com/document/*"
-                                            ],
-                                "js":  [
-                                           "src/gdocs-main-world.js"
-                                       ],
-                                "run_at":  "document_start",
-                                "world":  "MAIN",
-                                "all_frames":  true
-                            },
-                            {
-                                "matches":  [
-                                                "*://docs.google.com/presentation/*"
-                                            ],
-                                "js":  [
-                                           "src/gslides-main-world.js"
-                                       ],
-                                "run_at":  "document_start",
-                                "world":  "MAIN",
-                                "all_frames":  true
-                            },
-                            {
-                                "matches":  [
-                                                "*://overleaf.com/*",
-                                                "*://*.overleaf.com/*"
-                                            ],
-                                "js":  [
-                                           "src/overleaf-main-world.js"
-                                       ],
-                                "run_at":  "document_start",
-                                "world":  "MAIN",
-                                "all_frames":  true
-                            },
-                            {
-                                "matches":  [
-                                                "*://docs.google.com/document/*"
-                                            ],
-                                "js":  [
-                                           "src/loader.js"
-                                       ],
-                                "css":  [
-                                            "src/content.css"
-                                        ],
-                                "run_at":  "document_start",
-                                "all_frames":  true
-                            },
-                            {
-                                "matches":  [
-                                                "\u003call_urls\u003e"
-                                            ],
-                                "exclude_matches":  [
-                                                        "*://docs.google.com/document/*"
-                                                    ],
-                                "all_frames":  true,
-                                "match_about_blank":  true,
-                                "match_origin_as_fallback":  true,
-                                "js":  [
-                                           "src/loader.js"
-                                       ],
-                                "css":  [
-                                            "src/content.css"
-                                        ],
-                                "run_at":  "document_idle"
-                            }
-                        ],
-    "web_accessible_resources":  [
-                                     {
-                                         "resources":  [
-                                                           "src/offscreen.js",
-                                                           "src/offscreen.html",
-                                                           "src/engine-worker.js",
-                                                           "src/engine-worker-client.js",
-                                                           "src/language-engine.js",
-                                                           "src/gdocs-main-world.js",
-                                                           "src/gslides-main-world.js",
-                                                           "src/executor.js",
-                                                           "src/injector.js",
-                                                           "src/content.js",
-                                                           "src/paint-runtime.js",
-                                                           "src/loader.js",
-                                                           "src/content.css",
-                                                           "src/ui-localization.js",
-                                                           "src/icons/icon32.png",
-                                                           "src/icons/flags/*.png",
-                                                           "src/en-explanation-translations.js",
-                                                           "src/en-explanation-translations-extra.js",
-                                                           "src/es-explanation-translations.js",
-                                                           "src/central-morphology.js",
-                                                           "src/lt-pattern-runtime.js",
-                                                           "src/lt-catalan-filters.js",
-                                                           "src/lt-speller.js",
-                                                           "build/resources/*",
-                                                           "build/resources/central/*",
-                                                           "build/resources/synthesis/*",
-                                                           "build/engine-build.json"
-                                                       ],
-                                         "matches":  [
-                                                         "\u003call_urls\u003e"
-                                                     ]
-                                     }
-                                 ],
-    "icons":  {
-                  "16":  "src/icons/icon16.png",
-                  "32":  "src/icons/icon32.png",
-                  "48":  "src/icons/icon48.png",
-                  "128":  "src/icons/icon128.png"
-              },
-    "short_name":  "__MSG_shortName__"
+  "manifest_version": 3,
+  "default_locale": "ca",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "1.0.1",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "activeTab",
+    "clipboardWrite",
+    "scripting",
+    "storage",
+    "unlimitedStorage",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "src/icons/icon16.png",
+      "32": "src/icons/icon32.png",
+      "48": "src/icons/icon48.png",
+      "128": "src/icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
+      ],
+      "js": [
+        "src/editor-main-world.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    },
+    {
+      "matches": [
+        "*://docs.google.com/document/*"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
+      ],
+      "js": [
+        "src/gdocs-main-world.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://docs.google.com/presentation/*"
+      ],
+      "js": [
+        "src/gslides-main-world.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://overleaf.com/*",
+        "*://*.overleaf.com/*"
+      ],
+      "js": [
+        "src/overleaf-main-world.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://docs.google.com/document/*"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
+      ],
+      "js": [
+        "src/loader.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*"
+      ],
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true,
+      "js": [
+        "src/loader.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/offscreen.js",
+        "src/offscreen.html",
+        "src/engine-worker.js",
+        "src/engine-worker-client.js",
+        "src/language-engine.js",
+        "src/language-pack-runtime.js",
+        "src/language-pack-descriptors.generated.js",
+        "src/gdocs-main-world.js",
+        "src/gslides-main-world.js",
+        "src/executor.js",
+        "src/injector.js",
+        "src/content.js",
+        "src/paint-runtime.js",
+        "src/loader.js",
+        "src/content.css",
+        "src/ui-localization.js",
+        "src/icons/icon32.png",
+        "src/icons/chrome-extensions-logo.png",
+        "src/icons/flags/*.png",
+        "src/en-explanation-translations.js",
+        "src/en-explanation-translations-extra.js",
+        "src/es-explanation-translations.js",
+        "src/lt-pattern-runtime.js",
+        "src/lt-catalan-filters.js",
+        "src/lt-speller.js",
+        "build/resources/*",
+        "build/resources/synthesis/*",
+        "build/engine-build.json"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "src/icons/icon16.png",
+    "32": "src/icons/icon32.png",
+    "48": "src/icons/icon48.png",
+    "128": "src/icons/icon128.png"
+  },
+  "short_name": "__MSG_shortName__",
+  "externally_connectable": {
+    "matches": [
+      "https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/*"
+    ]
+  }
 }

@@ -37,6 +37,13 @@
     label.field, .field { display: block; margin: 12px 0; font-size: 11px; font-weight: 650; }
     label.field > span, label.field > select, .field-caption { display: block; }
     .field-help { margin: 4px 0 0; font-size: 10px; font-weight: 400; line-height: 1.35; }
+    .language-manage-button { display: inline-flex; min-height: 26px; align-items: center; gap: 6px; margin: 2px 0 0 -2px; padding: 2px; border: 0; border-radius: 6px; background: transparent; color: #506bd3; text-align: left; font-size: 11px; font-weight: 650; cursor: pointer; }
+    .language-manage-button:hover { color: #304ba9; text-decoration: underline; }
+    .language-manage-button:active { transform: translateY(1px); }
+    .language-manage-button svg:first-child { width: 14px; height: 14px; flex: none; }
+    .language-manage-button svg:last-child { width: 12px; height: 12px; flex: none; }
+    :root[data-theme=dark] .language-manage-button { color: #b9c7ff; }
+    :root[data-theme=dark] .language-manage-button:hover { color: #d5ddff; }
     .language-select { position: relative; margin-top: 5px; }
     .language-picker-trigger { display: flex; width: 100%; min-height: 40px; align-items: center; gap: 10px; margin: 0; padding: 6px 11px; text-align: left; font-size: 12px; }
     .language-picker-trigger .language-name { flex: 1; }
@@ -45,7 +52,11 @@
     .language-badge img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .language-chevron { width: 15px; height: 15px; flex: none; transition: transform .15s ease; }
     .language-picker-trigger[aria-expanded="true"] .language-chevron { transform: rotate(180deg); }
-    .language-options { position: relative; z-index: 5; overflow: hidden; margin-top: 4px; padding: 4px; border: 1px solid #d9deea; border-radius: 10px; background: #fff; box-shadow: 0 8px 24px #17203326; }
+    .language-options { position: relative; z-index: 5; max-height: 240px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #aab2c0 transparent; margin-top: 4px; padding: 4px; border: 1px solid #d9deea; border-radius: 10px; background: #fff; box-shadow: 0 8px 24px #17203326; }
+    .language-options::-webkit-scrollbar { width: 7px; }
+    .language-options::-webkit-scrollbar-track { background: transparent; }
+    .language-options::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 99px; background: #aab2c0; background-clip: padding-box; }
+    .language-options::-webkit-scrollbar-thumb:hover { background: #7f8999; background-clip: padding-box; }
     .language-option { display: flex; width: 100%; min-height: 38px; align-items: center; gap: 10px; padding: 6px 9px; border: 0; border-radius: 7px; background: transparent; text-align: left; font-size: 12px; }
     .language-option:hover, .language-option[aria-selected="true"] { background: #eef2ff; }
     .language-option[aria-selected="true"]::after { content: "✓"; margin-left: auto; color: #405abd; font-weight: 750; }
@@ -93,6 +104,17 @@
     .support-banner-text { margin: 3px 0 0; color: #7a5620; font-size: 10px; line-height: 1.35; }
     .support-banner-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 7px 12px; border: 1px solid #e0b800; border-radius: 999px; background: #ffdd00; color: #1f1608; font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: inset 0 1px 0 rgba(255,255,255,.55); }
     .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+    .rating-card { display: grid; grid-template-columns: 38px minmax(0,1fr) auto; gap: 10px; align-items: center; margin: 8px 0 0; padding: 11px 12px; border: 1px solid #9ed8ad; border-radius: 13px; background: linear-gradient(135deg,#effbf2 0%,#e3f7e9 100%); color: #193d27; box-shadow: inset 0 1px 0 rgba(255,255,255,.8); }
+    .rating-card-icon { display: block; width: 38px; height: 38px; object-fit: contain; border-radius: 9px; }
+    .rating-card-copy { min-width: 0; }
+    .rating-card-text { margin: 0; color: #315b3c; font-size: 10px; font-weight: 650; line-height: 1.35; }
+    .rating-card-actions { display: flex; align-items: center; gap: 7px; }
+    .rating-stars { display: flex; width: max-content; align-items: center; gap: 1px; margin: 0; color: #e5a900; }
+    .rating-stars span { display: inline-grid; width: 14px; height: 15px; place-items: center; font-size: 14px; line-height: 1; }
+    .rating-link { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; padding: 7px 12px; border: 1px solid #188144; border-radius: 10px; background: linear-gradient(180deg,#2eaa5b,#218d49); color: #fff; font-size: 10px; font-weight: 750; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 5px #176a3433,inset 0 1px 0 #ffffff40; transition: transform .15s ease,filter .15s ease,box-shadow .15s ease; }
+    .rating-link:hover { filter: brightness(1.07); box-shadow: 0 3px 8px #176a3444,inset 0 1px 0 #ffffff40; transform: translateY(-1px); }
+    .popup-footer-privacy { display: grid; justify-items: center; gap: 4px; }
+    .popup-footer-privacy a { font-weight: 650; }
     button { min-height: 34px; padding: 6px 10px; border: 1px solid #d9deea; border-radius: 9px; background: #fff; cursor: pointer; font-size: 11px; font-weight: 620; }
     button:hover { background: #f4f6fb; }
     button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
@@ -101,6 +123,8 @@
     .view-header { padding-bottom: 9px; border-bottom: 1px solid #eceef3; }
     .back { width: 32px; min-width: 32px; padding: 0; font-size: 17px; }
     .view-header h1 { flex: 1; }
+    .settings-version { flex: 0 0 auto; margin-left: auto; color: #858c99; font-size: 10px; font-weight: 500; white-space: nowrap; }
+    :root[data-theme="dark"] .settings-version { color: #9299a8; }
     .add-form { display: flex; gap: 7px; }
     .add-form input { flex: 1; min-width: 0; margin: 0; }
     .search-row { display: flex; gap: 7px; margin-top: 9px; }
@@ -175,7 +199,9 @@
     :root[data-theme="dark"] .reset-confirm-actions .danger-button { color: #fff; background: #b3261e; border-color: #b3261e; }
     :root[data-theme="dark"] .site-state { color: #8bd1a0; }
     :root[data-theme="dark"] .site-state[data-state="disabled"] { color: #aab1c0; }
-    :root[data-theme="dark"] .language-options { background: #292c32; border-color: #444954; box-shadow: 0 8px 24px #0007; }
+    :root[data-theme="dark"] .language-options { background: #292c32; border-color: #444954; box-shadow: 0 8px 24px #0007; scrollbar-color: #747e9066 transparent; }
+    :root[data-theme="dark"] .language-options::-webkit-scrollbar-thumb { background: #747e9066; background-clip: padding-box; }
+    :root[data-theme="dark"] .language-options::-webkit-scrollbar-thumb:hover { background: #929bad; background-clip: padding-box; }
     :root[data-theme="dark"] .language-option:hover, :root[data-theme="dark"] .language-option[aria-selected="true"] { background: #343d55; }
     :root[data-theme="dark"] .support-banner { border-color: #8a6a28; background: linear-gradient(135deg, #3a2c14 0%, #2a2112 100%); color: #ffe7a8; box-shadow: none; }
     :root[data-theme="dark"] .support-banner-icon { border-color: #8a6a28; background: rgba(255,255,255,.06); }
@@ -183,6 +209,11 @@
     :root[data-theme="dark"] .support-banner-text { color: #d6b56a; }
     :root[data-theme="dark"] .support-banner-btn { border-color: #e0b800; background: #ffdd00; color: #1f1608; }
     :root[data-theme="dark"] .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+    :root[data-theme="dark"] .rating-card { border-color: #39784c; background: linear-gradient(135deg,#1c3826 0%,#213d2b 100%); color: #effff2; box-shadow: inset 0 1px 0 #ffffff0d; }
+    :root[data-theme="dark"] .rating-card-icon { border-color: #53685a; background: #f8fafc; }
+    :root[data-theme="dark"] .rating-card-text { color: #d4eed9; }
+    :root[data-theme="dark"] .rating-stars { color: #ffd45d; }
+    :root[data-theme="dark"] .rating-link { border-color: #35b866; background: linear-gradient(180deg,#32b766,#20934b); color: #fff; }
     :root[data-theme="dark"] select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23b8c0d0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
     :root[data-theme="dark"] button:hover { background-color: #343944; }
     :root[data-theme="dark"] button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
@@ -218,6 +249,11 @@
       :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-text { color: #d6b56a; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-btn { border-color: #e0b800; background: #ffdd00; color: #1f1608; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) .support-banner-btn:hover { border-color: #d4ad00; background: #ffe84d; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .rating-card { border-color: #39784c; background: linear-gradient(135deg,#1c3826 0%,#213d2b 100%); color: #effff2; box-shadow: inset 0 1px 0 #ffffff0d; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .rating-card-icon { border-color: #53685a; background: #f8fafc; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .rating-card-text { color: #d4eed9; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .rating-stars { color: #ffd45d; }
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .rating-link { border-color: #35b866; background: linear-gradient(180deg,#32b766,#20934b); color: #fff; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) .engine-failure-help { color: #ff8a80; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) button:hover { background-color: #343944; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) button.primary { color: #fff; background: #506bd3; border-color: #506bd3; }
@@ -237,14 +273,15 @@
       :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle-row:has(#enabled:checked) { background: #20382c; border-color: #3d7853; }
       :root:not([data-theme="light"]):not([data-theme="dark"]) .toggle-row:has(#enabled:not(:checked)) { background: #3d2529; border-color: #8c484f; }
     }
+    #uiLanguagePicker .interface-language-icon{width:25px;height:25px;flex:0 0 25px;color:var(--accent, #6079e2)}
   </style>
 </head>
 <body>
   <main id="homeView" class="view" data-view="home">
     <header class="brand"><div class="brand-copy"><img class="brand-icon" src="icons/icon48.png" alt="" aria-hidden="true"><div><h1 data-i18n="appTitle">Lletrium!</h1><div id="versionInfo" class="version"></div></div></div><button id="openSettings" class="settings-icon" type="button" aria-label="Configuració" title="Configuració" data-i18n-aria="settings" data-i18n-title="settings"><svg viewBox="0 -1.5 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5h4l.55 2.2c.5.17.96.44 1.4.74l2.14-.8 2 3.46-1.6 1.6c.06.52.06 1.06 0 1.58l1.6 1.6-2 3.46-2.14-.8c-.44.3-.9.57-1.4.74L14 18.5h-4l-.55-2.2c-.5-.17-.96-.44-1.4-.74l-2.14.8-2-3.46 1.6-1.6a6.8 6.8 0 0 1 0-1.58l-1.6-1.6 2-3.46 2.14.8c.44-.3.9-.57 1.4-.74z"/><circle cx="12" cy="10.5" r="3.1"/></svg></button></header>
     <section class="toggle-row" aria-label="Estat del corrector" data-i18n-aria="enabled"><div class="toggle-label" data-i18n="enabled">Corrector activat</div><input id="enabled" class="switch" type="checkbox" role="switch" aria-label="Corrector activat" data-i18n-aria="enabled"></section>
-    <div class="field"><span id="proofingLanguageLabel" class="field-caption" data-i18n="proofingLanguage">Llengua del text que vols corregir</span><div class="language-select"><button id="languagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="languageOptions" aria-labelledby="proofingLanguageLabel languagePickerLabel"><span id="languageBadge" class="language-badge" aria-hidden="true"></span><span id="languagePickerLabel" class="language-name">Català central</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="languageOptions" class="language-options" role="listbox" aria-labelledby="proofingLanguageLabel" hidden></div><select id="language" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="central">Català central</option><option value="ca-ES-valencia" data-i18n="valencian">Català valencià</option><option value="ca-ES-balear" data-i18n="balearic">Català balear</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option><option value="gl-ES" data-i18n="galicianSoon" disabled>Gallec — pròximament</option><option value="eu-ES" data-i18n="basqueSoon" disabled>Euskera — pròximament</option></select></div><p class="field-help" data-i18n="proofingLanguageHelp">Tria l’idioma en què està escrit el text.</p></div>
-    <div class="field"><span id="interfaceLanguageLabel" class="field-caption" data-i18n="interfaceLanguage">Idioma dels menús i les explicacions</span><div id="uiLanguagePicker" class="language-select"><button id="uiLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="uiLanguageOptions" aria-labelledby="interfaceLanguageLabel uiLanguagePickerLabel"><span id="uiLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="uiLanguageOptions" class="language-options" role="listbox" aria-labelledby="interfaceLanguageLabel" hidden></div><select id="uiLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca" data-i18n="catalan">Català</option><option value="es" data-i18n="spanishInterface">Español</option><option value="en" data-i18n="englishInterface">English</option></select></div><p class="field-help" data-i18n="interfaceLanguageHelp">Només canvia l’idioma dels menús i missatges de l’extensió.</p></div>
+    <div class="field"><span id="proofingLanguageLabel" class="field-caption" data-i18n="proofingLanguage">Llengua del text que vols corregir</span><div class="language-select"><button id="languagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="languageOptions" aria-labelledby="proofingLanguageLabel languagePickerLabel"><span id="languageBadge" class="language-badge" aria-hidden="true"></span><span id="languagePickerLabel" class="language-name">Català central</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="languageOptions" class="language-options" role="listbox" aria-labelledby="proofingLanguageLabel" hidden></div><select id="language" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="central">Català central</option><option value="ca-ES-valencia" data-i18n="valencian">Català valencià</option><option value="ca-ES-balear" data-i18n="balearic">Català balear</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option><option value="fr-FR" data-i18n="french">Francès</option><option value="gl-ES" data-i18n="galicianSoon" disabled>Gallec — pròximament</option><option value="eu-ES" data-i18n="basqueSoon" disabled>Euskera — pròximament</option></select></div><p class="field-help" data-i18n="proofingLanguageHelp">Tria l’idioma en què està escrit el text.</p><button id="manageLanguages" class="language-manage-button" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7 12h10"/></svg><span data-i18n="manageLanguages">Modificar idiomas</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
+    <div class="field"><span id="interfaceLanguageLabel" class="field-caption" data-i18n="interfaceLanguage">Idioma dels menús i les explicacions</span><div id="uiLanguagePicker" class="language-select"><button id="uiLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="uiLanguageOptions" aria-labelledby="interfaceLanguageLabel uiLanguagePickerLabel"><svg class="interface-language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1m14 20-5-11-5 11M14 18h6"/></svg><span id="uiLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="uiLanguageOptions" class="language-options" role="listbox" aria-labelledby="interfaceLanguageLabel" hidden></div><select id="uiLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca" data-i18n="catalan">Català</option><option value="es" data-i18n="spanishInterface">Español</option><option value="en" data-i18n="englishInterface">English</option><option value="fr" data-i18n="frenchInterface">Français</option></select></div><p class="field-help" data-i18n="interfaceLanguageHelp">Només canvia l’idioma dels menús i missatges de l’extensió.</p></div>
     <div id="engineStatus" class="status" data-state="loading" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="engineStatusWarning" class="engine-status-warning" aria-hidden="true" hidden>⚠️</span><span id="engineMessage">Carregant el motor…</span></div>
     <p id="engineFailureHelp" class="engine-failure-help" role="alert" hidden><span data-i18n="engineFailureHelp">Si després de recarregar la pàgina continua igual, envia un missatge a</span> <a href="mailto:upfcalendarexporter@gmail.com">upfcalendarexporter@gmail.com</a>.</p>
     <p id="unsupportedSiteNotice" class="site-support-warning" role="status" aria-live="polite" hidden></p>
@@ -252,12 +289,13 @@
     <p id="reportIssueNotice" class="report-issue-notice muted" role="status" aria-live="polite" hidden data-i18n="reportIssueComingSoon">L’enllaç per reportar errors arribarà més endavant.</p>
     <nav class="nav-grid" aria-label="Accions del corrector" data-i18n-aria="actions"><button type="button" data-open-view="dictionary" data-i18n="dictionary">Diccionari personal</button><button type="button" data-open-view="sites" data-i18n="manageSites">Webs desactivades</button></nav>
     <aside class="support-banner" aria-label="Suport al projecte" data-i18n-aria="supportProject"><span class="support-banner-icon" aria-hidden="true">☕</span><div class="support-banner-copy"><p class="support-banner-title" data-i18n="supportBannerTitle">Aquesta extensió és gratuïta</p><p class="support-banner-text" data-i18n="supportBannerText">Si t’ha estalviat temps, qualsevol suport ajuda a cobrir les despeses de manteniment.</p></div><a class="support-banner-btn" href="https://buymeacoffee.com/openextensions" target="_blank" rel="noopener noreferrer" data-i18n="supportProjectLink">Donar suport</a></aside>
-    <footer class="popup-footer"><p class="popup-footer-author" data-i18n="popupAuthor">Fet per: Artur Guasch</p><p><span data-i18n="popupPrivacyNote">La revisió es fa localment; el text no s’envia a cap servidor.</span> <a id="privacyPolicyLink" aria-disabled="true" tabindex="-1" data-i18n="privacyPolicyLink">Política de privacitat</a></p></footer>
+    <aside class="rating-card" aria-label="Valora Lletrium!" data-i18n-aria="ratingCardText"><img class="rating-card-icon" src="icons/chrome-extensions-logo.png" alt="" aria-hidden="true"><div class="rating-card-copy"><p class="rating-card-text" data-i18n="ratingCardText">Si Lletrium! t’és útil, deixa una valoració.</p></div><div class="rating-card-actions"><div class="rating-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><a class="rating-link" href="https://chromewebstore.google.com/detail/ecfanealnoplhjapaimncnhmogpijhkm?utm_source=item-share-cb" target="_blank" rel="noopener noreferrer" data-i18n="ratingCardButton" data-i18n-aria="ratingCardButton">Valorar</a></div></aside>
+    <footer class="popup-footer"><p class="popup-footer-author" data-i18n="popupAuthor">Fet per: Artur Guasch</p><p class="popup-footer-privacy"><span data-i18n="popupPrivacyNote">La correcció es fa al navegador. El text no s’envia a cap servidor.</span><a id="privacyPolicyLink" aria-disabled="true" tabindex="-1" data-i18n="privacyPolicyLink">Política de privacitat</a></p></footer>
   </main>
 
   <section id="dictionaryView" class="view" data-view="dictionary" hidden>
     <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="dictionary">Diccionari personal</h1></header>
-    <div class="field"><span id="dictionaryLanguageLabel" class="field-caption" data-i18n="dictionaryLanguage">Idioma del diccionari</span><div class="language-select"><button id="dictionaryLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="dictionaryLanguageOptions" aria-labelledby="dictionaryLanguageLabel dictionaryLanguagePickerLabel"><span id="dictionaryLanguageBadge" class="language-badge" aria-hidden="true"></span><span id="dictionaryLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="dictionaryLanguageOptions" class="language-options" role="listbox" aria-labelledby="dictionaryLanguageLabel" hidden></div><select id="dictionaryLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="catalan">Català</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option></select></div></div>
+    <div class="field"><span id="dictionaryLanguageLabel" class="field-caption" data-i18n="dictionaryLanguage">Idioma del diccionari</span><div class="language-select"><button id="dictionaryLanguagePickerButton" class="language-picker-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="dictionaryLanguageOptions" aria-labelledby="dictionaryLanguageLabel dictionaryLanguagePickerLabel"><span id="dictionaryLanguageBadge" class="language-badge" aria-hidden="true"></span><span id="dictionaryLanguagePickerLabel" class="language-name">Català</span><svg class="language-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="dictionaryLanguageOptions" class="language-options" role="listbox" aria-labelledby="dictionaryLanguageLabel" hidden></div><select id="dictionaryLanguage" class="sr-only" aria-hidden="true" tabindex="-1"><option value="ca-ES" data-i18n="catalan">Català</option><option value="es-ES" data-i18n="spanish">Español</option><option value="en-US" data-i18n="english">Anglès americà</option><option value="fr-FR" data-i18n="french">Francès</option></select></div></div>
     <p id="dictionaryProfileNote" class="muted" data-i18n="dictionaryForProfile">Diccionari del perfil actual</p><p class="muted" data-i18n="dictionaryHelp">Les paraules afegides deixen d’aparèixer com a errors d’ortografia. Es desen només en aquest dispositiu.</p>
     <form id="addWordForm" class="add-form"><label class="sr-only" for="newWord" data-i18n="newWord">Paraula nova</label><input id="newWord" type="text" maxlength="80" autocomplete="off" placeholder="Paraula o sigla" data-i18n-placeholder="wordPlaceholder" required><button class="primary" type="submit" data-i18n="add">Afegir</button></form>
     <div class="search-row"><input id="wordSearch" type="text" placeholder="Cerca al diccionari" aria-label="Cerca al diccionari" data-i18n-placeholder="searchDictionary" data-i18n-aria="searchDictionary"><button id="exportDictionary" type="button" data-i18n="export">Exportar</button><button id="importDictionary" type="button" data-i18n="import">Importar</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
@@ -269,7 +307,7 @@
   </section>
 
   <section id="settingsView" class="view" data-view="settings" hidden>
-    <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="settings">Configuració</h1></header>
+    <header class="view-header"><button class="back" type="button" data-back aria-label="Torna" data-i18n-aria="back">‹</button><h1 data-i18n="settings">Configuració</h1><span id="settingsVersion" class="settings-version" aria-label="Versió"></span></header>
     <div id="settingsNotice" class="notice" role="status" aria-live="polite"></div>
     <section class="section"><h2 data-i18n="preferences">Preferències</h2><div class="setting-row"><div class="setting-row-copy"><strong data-i18n="darkMode">Mode fosc</strong><p data-i18n="darkModeHelp">Canvia l’aparença del corrector.</p></div><input id="darkMode" class="switch" type="checkbox" role="switch" aria-label="Mode fosc" data-i18n-aria="darkMode"></div></section>
     <section class="section"><h2 data-i18n="reviewButtonSection">Botó de resum</h2><label class="setting-row" for="showReviewButton"><span class="setting-row-copy"><strong data-i18n="showReviewButton">Mostrar el botón lateral</strong><p data-i18n="showReviewButtonHelp">Puedes ocultar el botón; los errores seguirán subrayados y podrás corregirlos.</p></span><input id="showReviewButton" class="switch" type="checkbox" role="switch" aria-label="Mostrar el botón lateral" data-i18n-aria="showReviewButton"></label></section>
@@ -317,6 +355,8 @@
     </details>
   </section>
   <script src="ui-localization.js"></script>
+  <script src="language-pack-descriptors.generated.js"></script>
+<script src="language-pack-runtime.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

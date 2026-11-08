@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "profile": "en-US",
+  "source": "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+  "posDictionary": {
+    "file": "en-US-pos-cfsa2.bin.gz",
+    "format": "CFSA2",
+    "entries": 259353,
+    "rawBytes": 625361,
+    "compressedBytes": 520546,
+    "rawSha256": "f2a0ea88cff225d1073321ad8ad795c9aa8eb08613f1d74a88895bfe9b992142",
+    "compressedSha256": "266b5ffa5372189d84e5a9d3585b621e0f990ddf2f4f34834b791027884b51d4",
+    "sourceJar": "english-pos-dict-0.6.jar",
+    "sourceJarSha256": "2a3e96b49854e5275f8eb7a1bb5b3b85b82f687fed272f3043882ccc0b1634b1",
+    "separator": "+",
+    "encoding": "utf-8",
+    "encoder": "SUFFIX"
+  },
+  "manualTags": {
+    "file": "en-manual-tags.json",
+    "sha256": "650f6d8cfeac554d644749885f524df60fe201bb432fe4c1b767e3f509fac387",
+    "additions": 442,
+    "removals": 27,
+    "sourceHashes": {
+      "added.txt": "ac48758904839439ff46c2b893cd7c6e80237d6a5bf073f591ab6c175835a7a2",
+      "added_custom.txt": "30c7602fe9a69730e194dbe5f5b332fba6adf00f49af85d8c5358055c17d339b",
+      "removed.txt": "d34555d63c6a7c97cce1e48feef71e960acd2cf003d2863460c78a3d9da75b0c",
+      "removed_custom.txt": "b840a31465a40eaf6401e4262db9d9980cd81246e7ef23357cbc54bb6e8da31c"
+    }
+  }
+}

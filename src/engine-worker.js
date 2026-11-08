@@ -83,7 +83,7 @@
             if (typeof existingRuntime.getManifest === "function") {
               try { return existingRuntime.getManifest(); } catch (_) {}
             }
-            return { version: "1.0.0", version_name: "1.0.0", manifest_version: 3, name: "Lletrium!" };
+            return { version: "1.0.1", version_name: "1.0.1", manifest_version: 3, name: "Lletrium!" };
           }
         }
       };
@@ -118,7 +118,7 @@
       setStatus({ phase: "loading-script", ready: false, lastError: "" });
       STATE.loadPromise = Promise.resolve().then(() => {
         installWorkerEngineShims();
-        importScripts("language-engine.js");
+        importScripts("language-pack-descriptors.generated.js", "language-pack-runtime.js", "language-engine.js", "french-lexical-runtime.js", "french-word-tokenizer.js", "french-find-suggestions-filter.js", "lt-catalan-filters.js", "french-postponed-adjective-filter.js", "lt-pattern-runtime.js", "french-sentence-tokenizer.js", "french-whitespace-rule.js", "french-comma-whitespace-rule.js", "french-core-punctuation-rule.js", "french-unpaired-brackets-rule.js", "french-long-sentence-rule.js", "french-long-paragraph-rule.js", "french-uppercase-sentence-rule.js", "french-repeated-words-rule.js", "french-compounds-rule.js", "french-simple-replace-rule.js", "french-pattern-pipeline.js");
         const engine = getEngine();
         setStatus({ phase: "engine-ready", ready: true, lastError: "" });
         return engine;

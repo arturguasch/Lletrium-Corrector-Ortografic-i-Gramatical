@@ -1,4 +1,8 @@
 (() => {
+  // The Docs print/export renderer is not an editor. Avoid touching its canvas
+  // APIs or adding extension bridge state so printed page geometry stays native.
+  if (location.hostname === "docs.google.com"
+    && /\/document\/.*\/(?:print|export)(?:\/|$)/u.test(location.pathname)) return;
   if (window.__correctorLocalGDocsV10Loaded) return;
   window.__correctorLocalGDocsV10Loaded = true;
   const perfProbeStartedAt = Date.now();
@@ -66,6 +70,10 @@
   // Suppress from the first Docs draw, before asynchronous settings arrive.
   // Read the persistent policy as well, in case content initialized first.
   let suppressGoogleNativeMarks = document.documentElement?.getAttribute("data-corrector-local-gdocs-native-suppression") !== "disabled";
+  function shouldSuppressGoogleNativeMarks() {
+    const policy = document.documentElement?.getAttribute("data-corrector-local-gdocs-native-suppression");
+    return policy === "enabled" ? true : policy === "disabled" ? false : suppressGoogleNativeMarks;
+  }
   let annotatedTextPending = null;
   let annotatedTextCache = null;
 
@@ -253,7 +261,7 @@
         const start = LAST_MOVE_TO.get(this);
         LAST_MOVE_TO.set(this, { x, y });
         const stroke = String(this.strokeStyle || "").toLowerCase();
-        if (suppressGoogleNativeMarks && GOOGLE_NATIVE_LINE_COLORS.has(stroke)) return;
+        if (GOOGLE_NATIVE_LINE_COLORS.has(stroke) && shouldSuppressGoogleNativeMarks()) return;
         if (start && start.y === y && LT_TRANSPARENT_UNDERLINE_COLOR.test(String(this.strokeStyle || ""))) {
           const rect = getCanvasLineRect(this, start.x, start.y, x, y);
           if (rect) {
@@ -281,7 +289,7 @@
     if (typeof originalFillRect === "function") {
       proto.fillRect = function patchedFillRect() {
         const fill = String(this.fillStyle || "").toLowerCase();
-        if (suppressGoogleNativeMarks && GOOGLE_NATIVE_FILL_COLORS.has(fill)) return;
+        if (GOOGLE_NATIVE_FILL_COLORS.has(fill) && shouldSuppressGoogleNativeMarks()) return;
         return originalFillRect.apply(this, arguments);
       };
     }
@@ -309,7 +317,7 @@
     if (typeof originalStroke === "function") {
       proto.stroke = function patchedStroke(path) {
         const stroke = String(this.strokeStyle || "").toLowerCase();
-        if (suppressGoogleNativeMarks && path && GOOGLE_NATIVE_LINE_COLORS.has(stroke)) return;
+        if (path && GOOGLE_NATIVE_LINE_COLORS.has(stroke) && shouldSuppressGoogleNativeMarks()) return;
         return originalStroke.apply(this, arguments);
       };
     }

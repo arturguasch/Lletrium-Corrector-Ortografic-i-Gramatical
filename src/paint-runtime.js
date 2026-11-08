@@ -37,7 +37,8 @@
         button{position:absolute!important;display:block!important;box-sizing:border-box!important;border:0!important;
           padding:0!important;margin:0!important;background:transparent!important;box-shadow:none!important;
           border-radius:0!important;min-width:0!important;min-height:0!important;pointer-events:auto!important;cursor:pointer!important}
-        .scrolling button{pointer-events:none!important} button svg{display:none!important}`;
+        .scrolling button{pointer-events:none!important} button svg{display:none!important}
+        @media print { :host { display:none!important } }`;
       this.viewport = this.document.createElement("div");
       this.viewport.className = "viewport";
       this.content = this.document.createElement("div");

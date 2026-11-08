@@ -2,6 +2,10 @@
   const isGoogleDocs =
     location.hostname === "docs.google.com" &&
     location.pathname.startsWith("/document/");
+  // Never initialize editor bridges or overlays in Docs' print/export views.
+  // They are rendered as documents for printing, not interactive editors.
+  const isGoogleDocsPrintOrExport = isGoogleDocs && /\/(?:print|export)(?:\/|$)/u.test(location.pathname);
+  if (isGoogleDocsPrintOrExport) return;
   const isGoogleSlides =
     location.hostname === "docs.google.com" &&
     location.pathname.startsWith("/presentation/");

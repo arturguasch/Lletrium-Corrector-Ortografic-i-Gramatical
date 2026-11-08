@@ -1,3 +1,251 @@
+/* Source: engine-src/modules/ca-cfsa2-dictionary.js */
+/*
+ * Compact CFSA2 reader for the Morfologik 2.2.0 dictionary subset shipped
+ * with Softcatalà catalan-pos-dict 3.3. Traversal is implemented locally
+ * against the documented on-disk format; see licenses/morfologik/COPYING.txt
+ * for the format/runtime provenance and license notice.
+ */
+(() => {
+  "use strict";
+
+  const MAGIC = [0x5c, 0x66, 0x73, 0x61]; // "\\fsa"
+  const VERSION_CFSA2 = 0xc6;
+  const SUPPORTED_FLAGS = 0x0007; // FLEXIBLE | STOPBIT | NEXTBIT
+  const BIT_TARGET_NEXT = 0x80;
+  const BIT_LAST_ARC = 0x40;
+  const BIT_FINAL_ARC = 0x20;
+  const LABEL_MASK = 0x1f;
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+
+  function fail(message) {
+    throw new Error(`CFSA2: ${message}`);
+  }
+
+  class CatalanCfsa2Dictionary {
+    constructor(input, { separator = "_", encoding = "utf-8", encoderType = "SUFFIX" } = {}) {
+      const bytes = input instanceof Uint8Array
+        ? input
+        : input instanceof ArrayBuffer
+          ? new Uint8Array(input)
+          : ArrayBuffer.isView(input)
+            ? new Uint8Array(input.buffer, input.byteOffset, input.byteLength)
+            : null;
+      if (!bytes) throw new TypeError("El diccionari CFSA2 ha de ser un buffer binari.");
+      if (bytes.length < 9) fail("fitxer massa curt.");
+      for (let i = 0; i < MAGIC.length; i++) if (bytes[i] !== MAGIC[i]) fail("signatura incorrecta.");
+      if (bytes[4] !== VERSION_CFSA2) fail(`versió no compatible (0x${bytes[4].toString(16)}).`);
+      if (encoding.toLowerCase() !== "utf-8" || encoderType !== "SUFFIX") fail("només s'admeten UTF-8 i SUFFIX.");
+      const separatorBytes = encoder.encode(separator);
+      if (separatorBytes.length !== 1) fail("el separador ha de ser un byte UTF-8.");
+
+      this.bytes = bytes;
+      this.flags = (bytes[5] << 8) | bytes[6];
+      if (this.flags !== SUPPORTED_FLAGS) fail(`flags no compatibles (0x${this.flags.toString(16)}).`);
+      const labelsLength = bytes[7];
+      this.arcsStart = 8 + labelsLength;
+      if (labelsLength < 2 || this.arcsStart >= bytes.length) fail("taula de labels invàlida o sense arcs.");
+      this.labels = bytes.subarray(8, this.arcsStart);
+      this.arcs = bytes.subarray(this.arcsStart);
+      this.separator = separatorBytes[0];
+      this.root = this.destinationNode(this.firstArc(0));
+      if (this.root <= 0 || this.root >= this.arcs.length) fail("node arrel fora dels límits.");
+    }
+
+    firstArc(node) {
+      if (!Number.isInteger(node) || node < 0 || node >= this.arcs.length) fail("node fora dels límits.");
+      return node;
+    }
+
+    arcHeader(arc) {
+      if (!Number.isInteger(arc) || arc < 0 || arc >= this.arcs.length) fail("arc fora dels límits.");
+      return this.arcs[arc];
+    }
+
+    nextArc(arc) {
+      const header = this.arcHeader(arc);
+      if (header & BIT_LAST_ARC) return 0;
+      let cursor = arc + 1;
+      if ((header & LABEL_MASK) === 0) cursor++;
+      if (!(header & BIT_TARGET_NEXT)) cursor = this.skipVInt(cursor);
+      if (cursor <= arc || cursor >= this.arcs.length) fail("següent arc fora dels límits.");
+      return cursor;
+    }
+
+    arcLabel(arc) {
+      const header = this.arcHeader(arc);
+      const labelIndex = header & LABEL_MASK;
+      if (labelIndex === 0) {
+        if (arc + 1 >= this.arcs.length) fail("label estès truncat.");
+        return this.arcs[arc + 1];
+      }
+      if (labelIndex >= this.labels.length) fail("índex de label fora dels límits.");
+      return this.labels[labelIndex];
+    }
+
+    destinationNode(arc) {
+      let header = this.arcHeader(arc);
+      if (header & BIT_TARGET_NEXT) {
+        let last = arc;
+        while (!(this.arcHeader(last) & BIT_LAST_ARC)) last = this.nextArc(last);
+        return this.skipArc(last);
+      }
+      const target = this.readVInt(arc + 1 + ((header & LABEL_MASK) === 0 ? 1 : 0));
+      if (target < 0 || target >= this.arcs.length) fail("node de destinació fora dels límits.");
+      return target;
+    }
+
+    isFinal(arc) {
+      return Boolean(this.arcHeader(arc) & BIT_FINAL_ARC);
+    }
+
+    isTerminal(arc) {
+      return this.destinationNode(arc) === 0;
+    }
+
+    findArc(node, label) {
+      for (let arc = this.firstArc(node); arc !== 0; arc = this.nextArc(arc)) {
+        const current = this.arcLabel(arc);
+        if (current === label) return arc;
+      }
+      return 0;
+    }
+
+    match(bytes) {
+      let node = this.root;
+      let lastArc = 0;
+      for (const label of bytes) {
+        lastArc = this.findArc(node, label);
+        if (!lastArc) return null;
+        if (this.isTerminal(lastArc)) {
+          if (label !== bytes[bytes.length - 1]) return null;
+          node = 0;
+        } else {
+          node = this.destinationNode(lastArc);
+        }
+      }
+      return { node, lastArc };
+    }
+
+    *sequencesFrom(node) {
+      const stack = [{ arc: this.firstArc(node), depth: 0 }];
+      const path = [];
+      while (stack.length) {
+        const frame = stack[stack.length - 1];
+        if (frame.arc === 0) {
+          stack.pop();
+          continue;
+        }
+        const arc = frame.arc;
+        frame.arc = this.nextArc(arc);
+        const depth = frame.depth;
+        path[depth] = this.arcLabel(arc);
+        if (!this.isTerminal(arc)) stack.push({ arc: this.firstArc(this.destinationNode(arc)), depth: depth + 1 });
+        if (this.isFinal(arc)) yield Uint8Array.from(path.slice(0, depth + 1));
+      }
+    }
+
+    *lookupBytes(keyBytes) {
+      if (!(keyBytes instanceof Uint8Array)) throw new TypeError("La clau ha de ser Uint8Array.");
+      if (!keyBytes.length) return;
+      const matched = this.match(keyBytes);
+      // Morfologik's DictionaryLookup requires a complete key path whose last
+      // arc is not final, then follows the separator arc to its output suffixes.
+      if (!matched || !matched.node || this.isFinal(matched.lastArc)) return;
+      const separatorArc = this.findArc(matched.node, this.separator);
+      if (!separatorArc || this.isFinal(separatorArc) || this.isTerminal(separatorArc)) return;
+      const suffixNode = this.destinationNode(separatorArc);
+      for (const encoded of this.sequencesFrom(suffixNode)) {
+        let delimiter = 1;
+        while (delimiter < encoded.length && encoded[delimiter] !== this.separator) delimiter++;
+        const hasTag = delimiter < encoded.length;
+        if (!hasTag) delimiter = encoded.length;
+        const trim = this.suffixTrim(encoded[0], keyBytes.length);
+        if (trim < 0 || trim > keyBytes.length) fail("longitud SUFFIX invàlida.");
+        const lemma = new Uint8Array(keyBytes.length - trim + delimiter - 1);
+        lemma.set(keyBytes.subarray(0, keyBytes.length - trim), 0);
+        lemma.set(encoded.subarray(1, delimiter), keyBytes.length - trim);
+        const tag = hasTag ? encoded.subarray(delimiter + 1) : new Uint8Array(0);
+        yield { lemma: decoder.decode(lemma), tag: decoder.decode(tag) };
+      }
+    }
+
+    lookup(value) {
+      const key = encoder.encode(String(value));
+      return Array.from(this.lookupBytes(key), reading => ({ form: String(value), ...reading }));
+    }
+
+    *entries() {
+      for (const keyBytes of this.sequencesFrom(this.root)) {
+        // The physical dictionary stores form + separator + encoded output;
+        // enumerating here is intentionally a generator to keep memory bounded.
+        let separator = 0;
+        while (separator < keyBytes.length && keyBytes[separator] !== this.separator) separator++;
+        if (separator === keyBytes.length) continue;
+        const formBytes = keyBytes.subarray(0, separator);
+        const outputBytes = keyBytes.subarray(separator + 1);
+        if (!outputBytes.length) continue;
+        let delimiter = 1;
+        while (delimiter < outputBytes.length && outputBytes[delimiter] !== this.separator) delimiter++;
+        const hasTag = delimiter < outputBytes.length;
+        if (!hasTag) delimiter = outputBytes.length;
+        const trim = this.suffixTrim(outputBytes[0], formBytes.length);
+        if (trim < 0 || trim > formBytes.length) fail("longitud SUFFIX invàlida en l'entrada.");
+        const lemmaBytes = new Uint8Array(formBytes.length - trim + delimiter - 1);
+        lemmaBytes.set(formBytes.subarray(0, formBytes.length - trim), 0);
+        lemmaBytes.set(outputBytes.subarray(1, delimiter), formBytes.length - trim);
+        yield { form: decoder.decode(formBytes), lemma: decoder.decode(lemmaBytes), tag: hasTag ? decoder.decode(outputBytes.subarray(delimiter + 1)) : "" };
+      }
+    }
+
+    suffixTrim(marker, keyLength) {
+      // Morfologik computes (signedByte - 'A') & 0xff. 255 is its sentinel
+      // meaning “trim the entire lookup key”, not an invalid trim length.
+      let trim = (marker - 0x41) & 0xff;
+      if (trim === 0xff) trim = keyLength;
+      if (trim > keyLength) fail("longitud SUFFIX invàlida.");
+      return trim;
+    }
+
+    skipArc(arc) {
+      const header = this.arcHeader(arc);
+      let cursor = arc + 1 + ((header & LABEL_MASK) === 0 ? 1 : 0);
+      if (!(header & BIT_TARGET_NEXT)) cursor = this.skipVInt(cursor);
+      if (cursor > this.arcs.length) fail("arc truncat.");
+      return cursor;
+    }
+
+    skipVInt(cursor) {
+      let count = 0;
+      while (cursor < this.arcs.length && (this.arcs[cursor++] & 0x80)) {
+        if (++count > 4) fail("VInt massa llarg.");
+      }
+      if (cursor > this.arcs.length || (cursor === this.arcs.length && (this.arcs[cursor - 1] & 0x80))) fail("VInt truncat.");
+      return cursor;
+    }
+
+    readVInt(cursor) {
+      let value = 0;
+      let shift = 0;
+      let count = 0;
+      while (cursor < this.arcs.length) {
+        const byte = this.arcs[cursor++];
+        value += (byte & 0x7f) * (2 ** shift);
+        if (!(byte & 0x80)) return value;
+        shift += 7;
+        if (++count > 4) break;
+      }
+      fail("VInt de destinació invàlid o truncat.");
+    }
+
+    getStats() {
+      return { format: "CFSA2", flags: this.flags, rawBytes: this.bytes.byteLength, rootNode: this.root };
+    }
+  }
+
+  globalThis.CorrectorCatalanCfsa2Dictionary = CatalanCfsa2Dictionary;
+})();
+
 /* Source: engine-src/modules/en-morphology.js */
 /* Independent en-US lookup over LanguageTool's pinned EnglishTagger dictionary. */
 (() => {
@@ -5,14 +253,13 @@
   const normalize = value => String(value ?? "").normalize("NFC");
 
   class EnglishMorphology {
-    constructor(entries, manifest, manualTags) {
-      if (!entries || typeof entries !== "object" || Array.isArray(entries)
-          || manifest?.schemaVersion !== 1 || manifest.profile !== "en-US"
+    constructor(dictionary, manifest, manualTags) {
+      if (!dictionary || manifest?.schemaVersion !== 1 || manifest.profile !== "en-US"
           || manualTags?.schemaVersion !== 1 || manualTags.profile !== "en-US"
           || manualTags.source !== "LanguageTool 6.9-SNAPSHOT English BaseTagger manual additions/removals") {
         throw new Error("English POS entries do not belong to the independent en-US profile.");
       }
-      this.entries = new Map(Object.entries(entries));
+      this.dictionary = dictionary;
       this.manualAdditions = new Map();
       this.manualRemovals = new Map();
       for (const [rows, target] of [[manualTags.additions, this.manualAdditions], [manualTags.removals, this.manualRemovals]]) {
@@ -29,12 +276,13 @@
 
     lookup(form, { lowercaseFallback = true } = {}) {
       const value = normalize(form);
-      const exact = this.entries.get(value) || [];
-      const selected = exact.length || !lowercaseFallback ? exact : this.entries.get(value.toLocaleLowerCase("en")) || [];
+      const exact = this.dictionary.lookup(value);
+      const selected = exact.length || !lowercaseFallback ? exact : this.dictionary.lookup(value.toLocaleLowerCase("en"));
       const additions = this.manualAdditions.get(value) || [];
       const removals = new Set((this.manualRemovals.get(value) || []).map(([lemma, tag]) => `${lemma}\0${tag}`));
       const output = [];
-      for (const [lemma, tag] of [...additions, ...selected]) {
+      for (const reading of [...additions.map(([lemma, tag]) => ({ lemma, tag })), ...selected]) {
+        const { lemma, tag } = reading;
         const key = `${lemma}\0${tag}`;
         if (removals.has(key) || output.some(reading => `${reading.lemma}\0${reading.tag}` === key)) continue;
         output.push({ form: value, lemma, tag });
@@ -42,11 +290,12 @@
       return output;
     }
 
-    hasForm(form) { return (this.entries.get(normalize(form)) || []).length > 0; }
+    hasForm(form) { return this.dictionary.lookup(normalize(form)).length > 0; }
 
     getStats() {
-      return { forms: this.manifest.posIndex.forms, readings: this.manifest.posIndex.entries,
-        compressedBytes: this.manifest.posIndex.compressedBytes, profile: "en-US", storage: "LanguageTool English POS dictionary" };
+      return { forms: this.manifest.posDictionary.forms ?? this.manifest.posDictionary.entries,
+        readings: this.manifest.posDictionary.entries, compressedBytes: this.manifest.posDictionary.compressedBytes,
+        profile: "en-US", storage: "LanguageTool English POS dictionary (CFSA2)" };
     }
 
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
@@ -56,25 +305,32 @@
       if (!manifestResponse.ok) throw new Error(`Could not load the en-US resource manifest (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "en-US" || manifest.source !== "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6") throw new Error("The resources are not the pinned independent en-US profile.");
-      const resource = manifest.posIndex, manualResource = manifest.manualTags;
+      const resource = manifest.posDictionary, manualResource = manifest.manualTags;
       const response = await fetcher(new URL(resource.file, base));
       const manualResponse = await fetcher(new URL(manualResource?.file || "en-manual-tags.json", base));
       if (!response.ok || !manualResponse.ok || typeof DecompressionStream !== "function" || !globalThis.crypto?.subtle) throw new Error("Could not load or verify the local en-US POS entries.");
-      const [bytes, manualBytes] = await Promise.all([
-        new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer(), manualResponse.arrayBuffer()
+      const [compressedBytes, manualBytes] = await Promise.all([
+        response.arrayBuffer(), manualResponse.arrayBuffer()
       ]);
-      const posBytes = new Uint8Array(bytes), overlayBytes = new Uint8Array(manualBytes);
-      if (posBytes.byteLength !== resource.rawBytes) throw new Error("The en-US POS resource has an invalid length.");
-      const [posDigest, manualDigest] = await Promise.all([
-        globalThis.crypto.subtle.digest("SHA-256", posBytes), globalThis.crypto.subtle.digest("SHA-256", overlayBytes)
+      const overlayBytes = new Uint8Array(manualBytes);
+      const posBytes = new Uint8Array(await new Response(new Blob([compressedBytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+      if (resource?.format !== "CFSA2" || posBytes.byteLength !== resource.rawBytes) throw new Error("The en-US POS CFSA2 resource has an invalid format or length.");
+      const [posDigest, compressedDigest, manualDigest] = await Promise.all([
+        globalThis.crypto.subtle.digest("SHA-256", posBytes),
+        globalThis.crypto.subtle.digest("SHA-256", compressedBytes),
+        globalThis.crypto.subtle.digest("SHA-256", overlayBytes)
       ]);
       const hex = digest => Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-      if (hex(posDigest) !== resource.rawSha256 || hex(manualDigest) !== manualResource?.sha256) throw new Error("The en-US POS resources do not match their manifest hashes.");
-      const entries = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(posBytes));
+      if (hex(posDigest) !== resource.rawSha256 || hex(compressedDigest) !== resource.compressedSha256
+          || hex(manualDigest) !== manualResource?.sha256) throw new Error("The en-US POS resources do not match their manifest hashes.");
+      if (typeof globalThis.CorrectorCatalanCfsa2Dictionary !== "function") throw new Error("The CFSA2 dictionary reader is unavailable.");
+      const dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(posBytes, {
+        separator: resource.separator, encoding: resource.encoding, encoderType: resource.encoder
+      });
       const manualTags = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(overlayBytes));
       if (manualTags.additions?.length !== manualResource.additions || manualTags.removals?.length !== manualResource.removals
           || JSON.stringify(manualTags.sourceHashes) !== JSON.stringify(manualResource.sourceHashes)) throw new Error("The en-US manual POS overlay differs from its manifest.");
-      return new EnglishMorphology(entries, manifest, manualTags);
+      return new EnglishMorphology(dictionary, manifest, manualTags);
     }
   }
   globalThis.CorrectorEnglishMorphology = EnglishMorphology;
@@ -142,9 +398,9 @@
   }
 
   class EnglishSynthesizer {
-    constructor(entries, tags, articleA, articleAn, manifest, numberProgram = null, romanProgram = null) {
-      if (!entries || typeof entries !== "object" || !Array.isArray(tags) || manifest?.profile !== "en-US") throw new Error("English synthesis resources are invalid.");
-      this.entries = new Map(Object.entries(entries));
+    constructor(dictionary, tags, articleA, articleAn, manifest, numberProgram = null, romanProgram = null) {
+      if (!dictionary || !Array.isArray(tags) || manifest?.profile !== "en-US") throw new Error("English synthesis resources are invalid.");
+      this.dictionary = dictionary;
       this.tags = tags;
       this.articleA = articleA;
       this.articleAn = articleAn;
@@ -196,7 +452,7 @@
       }) : [tag];
       const values = [], seen = new Set();
       for (const currentTag of tags) {
-        for (const form of this.entries.get(`${lemma}|${currentTag}`) || []) {
+        for (const { lemma: form } of this.dictionary.lookup(`${lemma}|${currentTag}`)) {
           if (form.startsWith("'") || EXCEPTIONS.has(form) || seen.has(form)) continue;
           seen.add(form); values.push(`${determiner}${form}`);
         }
@@ -220,7 +476,9 @@
       if (manifest?.profile !== "en-US") throw new Error("Synthesis resources are not en-US.");
       if (manifest.soros?.file !== "en-US-en.sor" || manifest.soros?.sha256 !== "ad78ab088ceb4a5b1858020facd818ac1df5433cead09e784833047691333d11"
           || manifest.soros?.romanFile !== "Roman.sor" || manifest.soros?.romanSha256 !== "11002fdb8c7039c1a71a5ba8f3a2b405548e993f8668066363d6e1fea58ca4b1") throw new Error("The en-US number synthesizers are not the pinned LanguageTool resources.");
-      const files = [manifest.synthesisIndex.file, "en-US-english_tags.txt", "en-US-det_a.txt", "en-US-det_an.txt", manifest.soros.file, manifest.soros.romanFile];
+      const resource = manifest.synthesisDictionary;
+      if (resource?.format !== "CFSA2") throw new Error("The English synthesis dictionary format is unsupported.");
+      const files = [resource.file, "en-US-english_tags.txt", "en-US-det_a.txt", "en-US-det_an.txt", manifest.soros.file, manifest.soros.romanFile];
       const responses = await Promise.all(files.map(path => fetcher(new URL(path, base))));
       if (responses.some(response => !response.ok)) throw new Error("Could not load all local en-US synthesis resources.");
       const [compressed, tagsText, aText, anText, sorosBytes, romanBytes] = await Promise.all([responses[0].arrayBuffer(), responses[1].text(), responses[2].text(), responses[3].text(), responses[4].arrayBuffer(), responses[5].arrayBuffer()]);
@@ -233,13 +491,17 @@
       const numberProgram = new globalThis.CorrectorSorosRuntime.SorosProgram(new TextDecoder("utf-8", {fatal: true}).decode(sorosBytes), "en-US", "en-US");
       const romanProgram = new globalThis.CorrectorSorosRuntime.SorosProgram(new TextDecoder("utf-8", {fatal: true}).decode(romanBytes), "Roman");
       const payload = new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
-      if (payload.byteLength !== manifest.synthesisIndex.rawBytes) throw new Error("English synthesis data has an invalid length.");
-      const digest = await crypto.subtle.digest("SHA-256", payload);
+      if (payload.byteLength !== resource.rawBytes) throw new Error("English synthesis CFSA2 data has an invalid length.");
+      const [digest, compressedDigest] = await Promise.all([crypto.subtle.digest("SHA-256", payload), crypto.subtle.digest("SHA-256", compressed)]);
       const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-      if (hash !== manifest.synthesisIndex.rawSha256) throw new Error("English synthesis data hash mismatch.");
-      const entries = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(payload));
+      const compressedHash = Array.from(new Uint8Array(compressedDigest), byte => byte.toString(16).padStart(2, "0")).join("");
+      if (hash !== resource.rawSha256 || compressedHash !== resource.compressedSha256) throw new Error("English synthesis CFSA2 data hash mismatch.");
+      if (typeof globalThis.CorrectorCatalanCfsa2Dictionary !== "function") throw new Error("The CFSA2 dictionary reader is unavailable.");
+      const dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(payload, {
+        separator: resource.separator, encoding: resource.encoding, encoderType: resource.encoder
+      });
       const tags = tagsText.split(/\r?\n/u).map(value => value.trim()).filter(Boolean);
-      return new EnglishSynthesizer(entries, tags, parseWordList(aText), parseWordList(anText), manifest, numberProgram, romanProgram);
+      return new EnglishSynthesizer(dictionary, tags, parseWordList(aText), parseWordList(anText), manifest, numberProgram, romanProgram);
     }
   }
   globalThis.CorrectorEnglishSynthesizer = EnglishSynthesizer;
@@ -363,9 +625,98 @@
   "use strict";
   const decoder = new TextDecoder("utf-8", { fatal: true });
 
+  function parseBinaryGis(buffer) {
+    const view = new DataView(buffer), bytes = new Uint8Array(buffer); let offset = 0;
+    const need = size => { if (!Number.isInteger(size) || size < 0 || offset + size > buffer.byteLength) throw new Error("Truncated OpenNLP GIS model."); };
+    const readUint16 = () => { need(2); const value = view.getUint16(offset, false); offset += 2; return value; };
+    const readInt32 = () => { need(4); const value = view.getInt32(offset, false); offset += 4; return value; };
+    const readDouble = () => { need(8); const value = view.getFloat64(offset, false); offset += 8; return value; };
+    const readUtf = () => {
+      const length = readUint16(); need(length); const end = offset + length, units = [];
+      while (offset < end) {
+        const first = bytes[offset++];
+        if ((first & 0x80) === 0) units.push(first);
+        else if ((first & 0xe0) === 0xc0) {
+          if (offset >= end) throw new Error("Malformed OpenNLP modified UTF-8 string.");
+          const second = bytes[offset++];
+          if ((second & 0xc0) !== 0x80) throw new Error("Malformed OpenNLP modified UTF-8 continuation.");
+          units.push(((first & 0x1f) << 6) | (second & 0x3f));
+        } else if ((first & 0xf0) === 0xe0) {
+          if (offset + 1 >= end) throw new Error("Malformed OpenNLP modified UTF-8 string.");
+          const second = bytes[offset++], third = bytes[offset++];
+          if ((second & 0xc0) !== 0x80 || (third & 0xc0) !== 0x80) throw new Error("Malformed OpenNLP modified UTF-8 continuation.");
+          units.push(((first & 0x0f) << 12) | ((second & 0x3f) << 6) | (third & 0x3f));
+        } else throw new Error("Malformed OpenNLP modified UTF-8 lead byte.");
+      }
+      let value = "";
+      for (let index = 0; index < units.length; index += 8192) value += String.fromCharCode(...units.slice(index, index + 8192));
+      return value;
+    };
+    const checkedCount = (value, limit, label) => {
+      if (value < 0 || value > limit) throw new Error(`Invalid OpenNLP ${label}: ${value}`);
+      return value;
+    };
+    if (readUtf() !== "GIS") throw new Error("Unsupported OpenNLP binary model type.");
+    const correctionConstant = readInt32(), correctionParameter = readDouble();
+    if (correctionConstant < 1 || !Number.isFinite(correctionParameter)) throw new Error("Invalid OpenNLP GIS correction parameters.");
+    const outcomeCount = checkedCount(readInt32(), 256, "outcome count");
+    const outcomes = Array.from({ length: outcomeCount }, readUtf);
+    const patternCount = checkedCount(readInt32(), 2_000_000, "outcome-pattern count");
+    const patterns = Array.from({ length: patternCount }, () => {
+      const values = readUtf().trim().split(/\s+/u).map(Number);
+      if (values.length < 2 || !Number.isInteger(values[0]) || values[0] < 1
+          || values.slice(1).some(value => !Number.isInteger(value) || value < 0 || value >= outcomeCount)) {
+        throw new Error("Invalid OpenNLP GIS outcome pattern.");
+      }
+      return values;
+    });
+    const featureCount = checkedCount(readInt32(), 2_000_000, "predicate count");
+    const names = Array.from({ length: featureCount }, readUtf);
+    let totalWeights = 0;
+    for (const pattern of patterns) totalWeights += pattern[0] * (pattern.length - 1);
+    if (totalWeights > 50_000_000) throw new Error("OpenNLP GIS weight table exceeds safe limits.");
+    const unsortedStarts = new Uint32Array(featureCount + 1), unsortedOutcomes = new Uint16Array(totalWeights), unsortedWeights = new Float64Array(totalWeights);
+    let featureIndex = 0, weightIndex = 0;
+    for (const pattern of patterns) {
+      const count = pattern[0], outcomeIndexes = pattern.slice(1);
+      for (let row = 0; row < count; row++) {
+        if (featureIndex >= featureCount) throw new Error("OpenNLP GIS outcome patterns exceed predicate count.");
+        unsortedStarts[featureIndex] = weightIndex;
+        for (const outcome of outcomeIndexes) {
+          const weight = readDouble();
+          if (!Number.isFinite(weight)) throw new Error("Invalid OpenNLP GIS predicate weight.");
+          unsortedOutcomes[weightIndex] = outcome; unsortedWeights[weightIndex] = weight; weightIndex++;
+        }
+        featureIndex++;
+      }
+    }
+    if (featureIndex !== featureCount || offset !== buffer.byteLength) throw new Error("OpenNLP GIS model dimensions or trailing bytes are invalid.");
+    unsortedStarts[featureCount] = weightIndex;
+    const order = Array.from({ length: featureCount }, (_unused, index) => index).sort((left, right) => names[left] < names[right] ? -1 : names[left] > names[right] ? 1 : 0);
+    const featureNames = new Array(featureCount), featureStarts = new Uint32Array(featureCount + 1);
+    const weightOutcomes = new Uint16Array(totalWeights), weightValues = new Float64Array(totalWeights);
+    let sortedWeightIndex = 0;
+    for (let index = 0; index < featureCount; index++) {
+      const originalIndex = order[index], start = unsortedStarts[originalIndex], end = unsortedStarts[originalIndex + 1];
+      featureNames[index] = names[originalIndex]; featureStarts[index] = sortedWeightIndex;
+      weightOutcomes.set(unsortedOutcomes.subarray(start, end), sortedWeightIndex);
+      weightValues.set(unsortedWeights.subarray(start, end), sortedWeightIndex);
+      sortedWeightIndex += end - start;
+    }
+    featureStarts[featureCount] = sortedWeightIndex;
+    return { outcomes, featureNames, featureStarts, weightOutcomes, weightValues, correctionConstant, correctionParameter };
+  }
+
   class MaxentModel {
     constructor(buffer, expectedKind) {
       if (!(buffer instanceof ArrayBuffer)) throw new TypeError("OpenNLP model data must be an ArrayBuffer.");
+      if (buffer.byteLength >= 5 && new Uint8Array(buffer, 0, 5).join(",") === "0,3,71,73,83") {
+        const parsed = parseBinaryGis(buffer);
+        this.kind = expectedKind; this.modelType = "Maxent"; this.outcomes = parsed.outcomes;
+        this.featureNames = parsed.featureNames; this.featureStarts = parsed.featureStarts;
+        this.weightOutcomes = parsed.weightOutcomes; this.weightValues = parsed.weightValues;
+        return;
+      }
       const view = new DataView(buffer); let offset = 0;
       const readBytes = length => { if (length < 0 || offset + length > buffer.byteLength) throw new Error("Truncated OpenNLP model resource."); const bytes = new Uint8Array(buffer, offset, length); offset += length; return bytes; };
       const readUtf = () => { const length = view.getInt32(offset, false); offset += 4; return decoder.decode(readBytes(length)); };
@@ -681,7 +1032,7 @@
       const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load en-US manifest (${response.status}).`);
       const manifest = await response.json();
-      if (manifest.profile !== "en-US" || manifest.openNlp?.format !== "ONLPX1") throw new Error("OpenNLP model manifest does not belong to en-US.");
+      if (manifest.profile !== "en-US" || !["ONLPX1", "GIS1"].includes(manifest.openNlp?.format)) throw new Error("OpenNLP model manifest does not belong to en-US.");
       const models = Object.create(null);
       await Promise.all(Object.entries(manifest.openNlp.models).map(async ([kind, info]) => {
         const modelResponse = await fetcher(new URL(info.file, base));
@@ -1909,15 +2260,35 @@
   const encoder = new TextEncoder(), decoder = new TextDecoder("utf-8", { fatal: true });
   const codepointLength = first => first < 0x80 ? 1 : first >= 0xc2 && first < 0xe0 ? 2 : first < 0xf0 ? 3 : 4;
 
+  function isMorfologikMixedCase(value, locale) {
+    const chars = [...value], letters = chars.filter(char => /\p{L}/u.test(char));
+    const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(locale));
+    const notAllLower = letters.some(char => char !== char.toLocaleLowerCase(locale));
+    const capitalized = /\p{Lu}/u.test(chars[0] || "")
+      && chars.slice(1).every(char => !/\p{L}/u.test(char) || char === char.toLocaleLowerCase(locale));
+    return !allUpper && !capitalized && notAllLower;
+  }
+
   class EnglishSpeller {
     constructor(buffer, manifest) {
-      if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || manifest?.format !== "CFAS1"
-          || manifest?.profile !== "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6"
+      if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || !["CFAS1", "CFSA2"].includes(manifest?.format)
+          || !["en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6", "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7"].includes(manifest?.profile)
           || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not belong to the pinned English dictionaries.");
-      const view = new DataView(buffer);
-      if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
-      this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
-      this.manifest = manifest; this.cache = new Map(); this.characterCache = new Map(); this.frequencyCache = new Map();
+      this.cfsa2 = null;
+      if (manifest.format === "CFSA2") {
+        if (manifest.encoding !== "utf-8" || manifest.sequenceEncoder !== "SUFFIX"
+            || !globalThis.CorrectorCatalanCfsa2Dictionary) throw new Error("The English CFSA2 spelling reader is unavailable or incompatible.");
+        this.cfsa2 = new globalThis.CorrectorCatalanCfsa2Dictionary(buffer, {
+          separator: String.fromCodePoint(manifest.separator), encoding: manifest.encoding, encoderType: manifest.sequenceEncoder
+        });
+        this.root = this.cfsa2.root;
+      } else {
+        const view = new DataView(buffer);
+        if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
+        this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
+        this.root = 0;
+      }
+      this.manifest = manifest; this.locale = manifest.locale === "en_US" ? "en" : manifest.locale || "en"; this.cache = new Map(); this.characterCache = new Map(); this.frequencyCache = new Map();
       this.one = new Map(); this.two = new Map(); this.rest = new Map();
       for (const [source, targets] of Object.entries(manifest.replacementPairs || {})) for (const target of targets) {
         if (target.length <= 2) {
@@ -1927,13 +2298,22 @@
       }
     }
 
-    getArc(node, label) { for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) if (this.graph.arcs[arc * 3] === label) return arc; return -1; }
-    next(arc) { return this.graph.arcs[arc * 3 + 2]; }
-    terminal(arc) { return Boolean(this.graph.arcs[arc * 3 + 1] & 2); }
-    final(arc) { return Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
+    *outgoing(node) {
+      if (this.cfsa2) { for (let arc = this.cfsa2.firstArc(node); arc !== 0; arc = this.cfsa2.nextArc(arc)) yield arc; return; }
+      for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) yield arc;
+    }
+    label(arc) { return this.cfsa2 ? this.cfsa2.arcLabel(arc) : this.graph.arcs[arc * 3]; }
+    getArc(node, label) {
+      if (this.cfsa2) { const arc = this.cfsa2.findArc(node, label); return arc === 0 ? -1 : arc; }
+      for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) if (this.label(arc) === label) return arc;
+      return -1;
+    }
+    next(arc) { return this.cfsa2 ? (this.cfsa2.isTerminal(arc) ? -1 : this.cfsa2.destinationNode(arc)) : this.graph.arcs[arc * 3 + 2]; }
+    terminal(arc) { return this.cfsa2 ? this.cfsa2.isTerminal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 2); }
+    final(arc) { return this.cfsa2 ? this.cfsa2.isFinal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
 
     exact(word) {
-      let node = 0; const bytes = encoder.encode(String(word));
+      let node = this.root; const bytes = encoder.encode(String(word));
       let lastArc = -1;
       for (let index = 0; index < bytes.length; index++) {
         const arc = this.getArc(node, bytes[index]);
@@ -1944,24 +2324,30 @@
       }
       // Morfologik can encode a final word as a terminal final character arc,
       // or as a separator arc followed by its frequency payload. Accept both.
-      return lastArc >= 0 && (this.final(lastArc) || node >= 0 && this.getArc(node, this.manifest.separator) >= 0);
+      if (lastArc < 0) return false;
+      // English en_US CFSA2 entries always store a word followed by its
+      // separator and frequency payload. An FSA final arc can mark a longer
+      // encoded key, so it is not sufficient evidence that the word is valid.
+      return this.cfsa2
+        ? node >= 0 && this.getArc(node, this.manifest.separator) >= 0
+        : this.final(lastArc) || node >= 0 && this.getArc(node, this.manifest.separator) >= 0;
     }
 
     isMisspelled(word, { personalWords = null } = {}) {
       const value = String(word ?? "").normalize("NFC"), flags = this.manifest.spellerFlags;
-      if (!value || personalWords?.has(value.toLocaleLowerCase("en"))) return false;
+      if (!value || personalWords?.has(value.toLocaleLowerCase(this.locale))) return false;
       const letters = [...value].filter(char => /[\p{L}\p{Nl}]/u.test(char));
       const alphabetic = [...value].length !== 1 || letters.length > 0;
       if (flags.ignorePunctuation && !alphabetic) return false;
       if (flags.ignoreNumbers && /\p{Nd}/u.test(value)) return false;
-      const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase("en"));
-      const mixed = globalThis.CorrectorEnglishTagger.isMixedCase(value);
+      const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(this.locale));
+      const mixed = this.locale === "en" ? globalThis.CorrectorEnglishTagger.isMixedCase(value) : isMorfologikMixedCase(value, this.locale);
       if (flags.ignoreAllUppercase && alphabetic && allUpper) return false;
       if (this.exact(value)) return false;
       if (!flags.convertCase || mixed) return true;
-      if (this.exact(value.toLocaleLowerCase("en"))) return false;
+      if (this.exact(value.toLocaleLowerCase(this.locale))) return false;
       const chars = [...value];
-      if (allUpper && this.exact(chars[0] + chars.slice(1).join("").toLocaleLowerCase("en"))) return false;
+      if (allUpper && this.exact(chars[0] + chars.slice(1).join("").toLocaleLowerCase(this.locale))) return false;
       return true;
     }
 
@@ -1972,9 +2358,10 @@
       if (separatorArc < 0 || this.final(separatorArc) || this.terminal(separatorArc)) { this.frequencyCache.set(node, 0); return 0; }
       let current = this.next(separatorArc);
       let result = 0;
-      while (current >= 0 && this.graph.offsets[current] < this.graph.offsets[current + 1]) {
-        const arc = this.graph.offsets[current];
-        if (this.final(arc)) { result = Math.max(0, this.graph.arcs[arc * 3] - 65); break; }
+      while (current >= 0) {
+        const arc = this.outgoing(current).next().value;
+        if (arc == null) break;
+        if (this.final(arc)) { result = Math.max(0, this.label(arc) - 65); break; }
         if (this.terminal(arc)) break;
         current = this.next(arc);
       }
@@ -1985,8 +2372,8 @@
       if (this.characterCache.has(startNode)) return this.characterCache.get(startNode);
       const transitions = [];
       const walk = (node, bytes, firstArc) => {
-        for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) {
-          const label = this.graph.arcs[arc * 3];
+        for (const arc of this.outgoing(node)) {
+          const label = this.label(arc);
           if (!bytes.length && label === this.manifest.separator) continue;
           const sequence = [...bytes, label], length = codepointLength(sequence[0]);
           if (sequence.length < length) {
@@ -1997,7 +2384,9 @@
           try {
             const char = decoder.decode(new Uint8Array(sequence));
             const target = this.terminal(arc) ? -1 : this.next(arc);
-            transitions.push({ char, target, terminal: this.terminal(arc), final: this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
+            transitions.push({ char, target, terminal: this.terminal(arc), final: this.cfsa2
+              ? target >= 0 && this.getArc(target, this.manifest.separator) >= 0
+              : this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
               frequency: target >= 0 ? this.frequency(target) : 0 });
           } catch { /* invalid UTF-8 arc sequences cannot be dictionary characters */ }
         }
@@ -2036,8 +2425,9 @@
       let processed = "", candidate = [], distance = max;
       const equivalent = (left, right) => {
         if (left === right || this.manifest.equivalentChars?.[left]?.includes(right)) return true;
+        if (this.locale !== "en" && this.manifest.spellerFlags?.ignoreDiacritics === false) return false;
         const a = left.normalize("NFD")[0], b = right.normalize("NFD")[0];
-        return a === b || /\p{L}/u.test(a) && a.toLocaleLowerCase("en") === b.toLocaleLowerCase("en");
+        return a === b || /\p{L}/u.test(a) && a.toLocaleLowerCase(this.locale) === b.toLocaleLowerCase(this.locale);
       };
       const edit = (i, j, wi, ci) => {
         let value;
@@ -2082,29 +2472,29 @@
       const queries = this.rest.size && word.length > 1 ? this.replaceVariants(word) : [word];
       if (word.length > 0 && word.length < 120) {
         if (this.rest.size && word.length > 1) for (const query of queries) {
-          const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase("en"), query.toLocaleUpperCase("en"), query.length > 1 ? query[0].toLocaleUpperCase("en") + query.slice(1).toLocaleLowerCase("en") : ""];
+          const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase(this.locale), query.toLocaleUpperCase(this.locale), query.length > 1 ? query[0].toLocaleUpperCase(this.locale) + query.slice(1).toLocaleLowerCase(this.locale) : ""];
           for (const form of forms) if (form && this.exact(form)) {
-            let state = 0; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
+            let state = this.root; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
             if (state >= 0) results.push({word: form, distance: 0, score: 25 - this.frequency(state)});
           }
         }
         let index = 1;
-        for (const query of queries) { index++; if (index > 15 || query.length < 4 && index > 2) break; processed = query; candidate = []; distance = query.length <= 1 ? query.length - 1 : max; walk(0, 0, 0, 0); }
+        for (const query of queries) { index++; if (index > 15 || query.length < 4 && index > 2) break; processed = query; candidate = []; distance = query.length <= 1 ? query.length - 1 : max; walk(this.root, 0, 0, 0); }
       }
       if (this.manifest.spellerFlags.supportRunOnWords && (!word || !this.exact(word))) for (let split = 1; split < word.length; split++) {
         const prefix = word.slice(0, split), suffix = word.slice(split);
-        const prefixTitle = /^\p{Lu}/u.test(prefix) && this.exact(prefix.toLocaleLowerCase("en"));
-        const suffixTitle = /^\p{Lu}/u.test(suffix) && this.exact(suffix.toLocaleLowerCase("en"));
+        const prefixTitle = /^\p{Lu}/u.test(prefix) && this.exact(prefix.toLocaleLowerCase(this.locale));
+        const suffixTitle = /^\p{Lu}/u.test(suffix) && this.exact(suffix.toLocaleLowerCase(this.locale));
         if ((this.exact(suffix) || suffixTitle) && (this.exact(prefix) || prefixTitle)) results.push({word: `${prefix} ${suffix}`, distance: 1, score: 51});
       }
       results.sort((a, b) => a.score - b.score);
       const seen = new Set(), output = [];
       for (const item of results) {
         let form = item.word;
-        const letters = [...word].filter(char => /\p{L}/u.test(char)), allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase("en"));
-        const mixed = globalThis.CorrectorEnglishTagger.isMixedCase(form);
-        if (this.manifest.spellerFlags.convertCase && allUpper && !mixed) form = form.toLocaleUpperCase("en");
-        else if (this.manifest.spellerFlags.convertCase && /^\p{Lu}/u.test(word) && !mixed) form = form[0].toLocaleUpperCase("en") + form.slice(1);
+        const letters = [...word].filter(char => /\p{L}/u.test(char)), allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(this.locale));
+        const mixed = this.locale === "en" ? globalThis.CorrectorEnglishTagger.isMixedCase(form) : isMorfologikMixedCase(form, this.locale);
+        if (this.manifest.spellerFlags.convertCase && allUpper && !mixed) form = form.toLocaleUpperCase(this.locale);
+        else if (this.manifest.spellerFlags.convertCase && /^\p{Lu}/u.test(word) && !mixed) form = form[0].toLocaleUpperCase(this.locale) + form.slice(1);
         if (form !== word && !seen.has(form)) { seen.add(form); output.push({word: form, distance: item.distance, weight: item.score}); }
       }
       this.cache.set(cacheKey, output);
@@ -2167,7 +2557,7 @@
 (() => {
   "use strict";
 
-  const RESOURCE_PATH = "build/resources/en-US/en-pattern-rule-candidates.json";
+  const RESOURCE_PATH = "build/resources/en-US/en-pattern-rule-candidates.json.gz";
   const EXPECTED_GRAMMAR_HASH = "525966679e4dac23d70b5f7c09092b67b9aa20fcfbe70327b858e3fd06b63974";
   const ADVERB_MAP_HASH = "d1b53f4cd0d8fc91413d866a6a4dd3c7aa96682e43cc1a18256801685d42ae78";
   let rules = [];
@@ -2224,6 +2614,15 @@
   let heldOutFilterCount = 0;
   let heldOutNumberCount = 0;
   let adverbToAdjective = Object.create(null);
+
+  async function parsePatternResource(response, url) {
+    if (!String(url).endsWith(".gz")) return response.json();
+    if (typeof DecompressionStream !== "function" || !response.body) {
+      throw new Error("This runtime cannot decompress the local en-US PatternRule resource.");
+    }
+    const stream = response.body.pipeThrough(new DecompressionStream("gzip"));
+    return new Response(stream).json();
+  }
 
   function compilePosRegex(source) {
     if (compiledPosRegexes.has(source)) return compiledPosRegexes.get(source);
@@ -2412,7 +2811,9 @@
         if (!response.ok) throw new Error(`Could not load the local en-US PatternRule resource (${response.status}).`);
         if (!repeatedResponse.ok) throw new Error(`Could not load the local en-US repeated-pattern resource (${repeatedResponse.status}).`);
         if (!adverbMapResponse.ok) throw new Error(`Could not load the local en-US AdverbFilter map (${adverbMapResponse.status}).`);
-        const [resource, repeatedResource, adverbMapResource] = await Promise.all([response.json(), repeatedResponse.json(), adverbMapResponse.json()]);
+        const [resource, repeatedResource, adverbMapResource] = await Promise.all([
+          parsePatternResource(response, resourceUrl), repeatedResponse.json(), adverbMapResponse.json()
+        ]);
         if (resource?.schemaVersion !== 1 || resource.language !== "en-US"
             || resource.grammarXmlSha256 !== EXPECTED_GRAMMAR_HASH
             || !Number.isInteger(resource.activeRuleCount) || !Array.isArray(resource.rules)
@@ -6376,7 +6777,7 @@
       this.patternRules.configureSynthesizer(this.synthesizer);
       this.patternRules.configureMultitokenSpeller({ schemaVersion: 1, profile: "en-US", entries: multiwordChunker.multitokenSpellerEntries });
       this.profile = "en-US";
-      this.stages = ["en-US-SRX", "en-US-EnglishWordTokenizer", "english-pos-dictionary", "english-synthesis-dictionary", "en-US-LanguageTool-Soros-number-synthesis", "en-US-Morfologik-spelling", "OpenNLP-1.9.5-models-local", "OpenNLP-tokenizer-ONLPX1", "OpenNLP-POS-sequence-ONLPX1", "OpenNLP-chunker-sequence-ONLPX1", "EnglishChunkFilter", "LanguageTool-spelling_global-multiwords", "LanguageTool-en-multiwords", "en-US-LanguageTool-XML-disambiguation", "en-US-LanguageTool-PatternRule-portable", "en-US-EnglishSpecificCaseRule-local-table", "en-US-AvsAnRule-local-exception-tables", "en-US-SimpleReplaceRule-tables", "en-US-English-WordCoherency-document-rule", "en-US-LanguageTool-WordRepeat-and-WordRepeatBeginning-rules", "en-US-LanguageTool-RepeatedWords-PICKY-with-local-synonyms", "en-US-LanguageTool-CompoundRule-8908-source-entries", "en-US-EnglishWrongWordInContext-11-local-context-pairs", "en-US-ContractionSpellingRule-table", "en-US-EnglishDashRule-PICKY-compounds-table", "en-US-LanguageTool-punctuation-brackets-quotes-and-paragraph-end"];
+      this.stages = ["en-US-SRX", "en-US-EnglishWordTokenizer", "english-pos-dictionary", "english-synthesis-dictionary", "en-US-LanguageTool-Soros-number-synthesis", "en-US-Morfologik-spelling", "OpenNLP-1.9.5-models-local", "OpenNLP-tokenizer-GIS1", "OpenNLP-POS-sequence-GIS1", "OpenNLP-chunker-sequence-GIS1", "EnglishChunkFilter", "LanguageTool-spelling_global-multiwords", "LanguageTool-en-multiwords", "en-US-LanguageTool-XML-disambiguation", "en-US-LanguageTool-PatternRule-portable", "en-US-EnglishSpecificCaseRule-local-table", "en-US-AvsAnRule-local-exception-tables", "en-US-SimpleReplaceRule-tables", "en-US-English-WordCoherency-document-rule", "en-US-LanguageTool-WordRepeat-and-WordRepeatBeginning-rules", "en-US-LanguageTool-RepeatedWords-PICKY-with-local-synonyms", "en-US-LanguageTool-CompoundRule-8908-source-entries", "en-US-EnglishWrongWordInContext-11-local-context-pairs", "en-US-ContractionSpellingRule-table", "en-US-EnglishDashRule-PICKY-compounds-table", "en-US-LanguageTool-punctuation-brackets-quotes-and-paragraph-end"];
     }
 
     analyzeText(text, options = {}) {
@@ -6609,7 +7010,7 @@
 
     getDiagnostics() {
       return { profile: this.profile, activeStages: [...this.stages], morphology: this.morphology.getStats(),
-        synthesisEntries: this.synthesizer.manifest.synthesisIndex.entries,
+        synthesisEntries: this.synthesizer.manifest.synthesisDictionary.entries,
         numberSynthesis: { source: this.synthesizer.manifest.soros.file, sourceSha256: this.synthesizer.manifest.soros.sha256,
           executableRules: this.synthesizer.numberProgram?.rules.length || 0,
           romanSource: this.synthesizer.manifest.soros.romanFile, romanSourceSha256: this.synthesizer.manifest.soros.romanSha256,
@@ -6639,7 +7040,7 @@
         globalThis.CorrectorEnglishOpenNlp.load(fetchOptions),
         globalThis.CorrectorEnglishXmlDisambiguator.load({ url: new URL("en-disambiguation-rules.json", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishMultiwordChunker.load(fetchOptions),
-        globalThis.CorrectorEnglishPatternRuleMatcher.load({ url: new URL("en-pattern-rule-candidates.json", baseUrl), fetcher: fetchOptions.fetcher }),
+        globalThis.CorrectorEnglishPatternRuleMatcher.load({ url: new URL("en-pattern-rule-candidates.json.gz", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishSpecificCase.load({ url: new URL("en-specific-case.json", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishAvsAn.load({ baseUrl, fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishSimpleReplace.load({ url: new URL("en-simple-replace.json", baseUrl), fetcher: fetchOptions.fetcher }),
@@ -6674,128 +7075,67 @@
   globalThis.CorrectorEnglishPipeline = EnglishPipeline;
 })();
 
-/* Source: engine-src/modules/ca-morphology.js */
-/* Read-only POS index adapter. Data format CACPOS1; source and filters in resource manifest. */
+/* Source: engine-src/modules/ca-morphology-cfsa2.js */
+/* Experimental drop-in morphology adapter over the locally implemented CFSA2 reader. */
 (() => {
   "use strict";
   const decoder = new TextDecoder("utf-8", { fatal: true });
   const normalize = value => String(value ?? "").normalize("NFC").replace(/[’ʼ]/gu, "'");
 
-  class CatalanMorphology {
+  class CatalanMorphologyCfsa2 {
     constructor(buffer, manifest) {
-      if (!(buffer instanceof ArrayBuffer)) throw new TypeError("El diccionari POS ha de ser un ArrayBuffer.");
-      if (manifest?.schema !== 1 || manifest?.format !== "CACPOS1") throw new Error("Format del diccionari POS desconegut.");
-      if (buffer.byteLength !== manifest.rawBytes || decoder.decode(new Uint8Array(buffer, 0, 8)) !== "CACPOS1\0") {
-        throw new Error("La mida o la capçalera del diccionari POS no coincideix amb el manifest.");
-      }
-      this.buffer = buffer;
-      this.manifest = manifest;
-      this.sections = {};
-      for (const [name, section] of Object.entries(manifest.sections)) {
-        const width = section.type === "u32" ? 4 : section.type === "bytes" ? 1 : 0;
-        if (!width || section.offset < 8 || section.offset + section.length * width > buffer.byteLength || (width === 4 && section.offset % 4)) {
-          throw new Error(`Secció POS invàlida: ${name}`);
-        }
-        this.sections[name] = width === 4
-          ? new Uint32Array(buffer, section.offset, section.length)
-          : new Uint8Array(buffer, section.offset, section.length);
-      }
-      this.validateSections();
-    }
-
-    validateSections() {
-      const required = ["formsOffsets", "formsBytes", "lemmasOffsets", "lemmasBytes", "tagsOffsets", "tagsBytes", "formReadingOffsets", "readings", "lemmaReadingOffsets", "lemmaReadingIds"];
-      for (const name of required) if (!this.sections[name]) throw new Error(`Falta la secció POS ${name}`);
-      if (this.sections.formsOffsets.length !== this.manifest.counts.forms + 1 || this.sections.formReadingOffsets.length !== this.manifest.counts.forms + 1) {
-        throw new Error("Recompte de formes POS incompatible amb el manifest.");
-      }
-      if (this.sections.lemmasOffsets.length !== this.manifest.counts.lemmas + 1 || this.sections.lemmaReadingOffsets.length !== this.manifest.counts.lemmas + 1) {
-        throw new Error("Recompte de lemes POS incompatible amb el manifest.");
-      }
-      if (this.sections.readings.length !== this.manifest.counts.readings * 2) throw new Error("Recompte de lectures POS incompatible amb el manifest.");
-      if (this.sections.lemmaReadingIds.length !== this.manifest.counts.readings) throw new Error("Recompte de lectures inverses POS incompatible amb el manifest.");
-      if (this.sections.formReadingOffsets[this.sections.formReadingOffsets.length - 1] !== this.manifest.counts.readings || this.sections.lemmaReadingOffsets[this.sections.lemmaReadingOffsets.length - 1] !== this.manifest.counts.readings) {
-        throw new Error("Els índexs de lectures POS no cobreixen les lectures declarades.");
-      }
-    }
-
-    string(table, id) {
-      const offsets = this.sections[`${table}Offsets`];
-      const bytes = this.sections[`${table}Bytes`];
-      if (!offsets || !bytes || id < 0 || id >= offsets.length - 1) return "";
-      return decoder.decode(bytes.subarray(offsets[id], offsets[id + 1]));
-    }
-
-    findForm(value) {
-      const target = normalize(value);
-      const offsets = this.sections.formsOffsets;
-      let low = 0, high = offsets.length - 2;
-      while (low <= high) {
-        const middle = (low + high) >>> 1;
-        const candidate = this.string("forms", middle);
-        if (candidate === target) return middle;
-        if (candidate < target) low = middle + 1;
-        else high = middle - 1;
-      }
-      return -1;
+      if (!(buffer instanceof ArrayBuffer) && !ArrayBuffer.isView(buffer)) throw new TypeError("El diccionari POS CFSA2 ha de ser un buffer binari.");
+      if (manifest?.schema !== 1 || manifest?.language !== "ca-ES" || !manifest?.dictionaries?.analysis) throw new Error("Manifest CFSA2 català invàlid.");
+      if (typeof globalThis.CorrectorCatalanCfsa2Dictionary !== "function") throw new Error("No s'ha carregat el lector CFSA2.");
+      const descriptor = manifest.dictionaries.analysis;
+      const bytes = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+      if (bytes.byteLength !== descriptor.sourceBytes) throw new Error("La mida del diccionari POS CFSA2 no coincideix amb el manifest.");
+      this.manifest = descriptor;
+      this.dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(bytes, {
+        separator: descriptor.separator,
+        encoding: descriptor.encoding,
+        encoderType: descriptor.encoder,
+      });
+      this.rawBytes = bytes.byteLength;
     }
 
     lookup(form, { lowercaseFallback = true } = {}) {
       const normalized = normalize(form);
-      let id = this.findForm(normalized);
-      if (id < 0 && lowercaseFallback) id = this.findForm(normalized.toLocaleLowerCase("ca"));
-      if (id < 0) return [];
-      const rows = this.sections.readings;
-      const ranges = this.sections.formReadingOffsets;
-      const result = [];
-      for (let row = ranges[id]; row < ranges[id + 1]; row++) {
-        const lemmaId = rows[row * 2];
-        const tagId = rows[row * 2 + 1];
-        result.push({ form: this.string("forms", id), lemma: this.string("lemmas", lemmaId), tag: this.string("tags", tagId) });
-      }
-      return result;
+      const exact = this.dictionary.lookup(normalized);
+      if (exact.length || !lowercaseFallback) return exact;
+      const lower = normalized.toLocaleLowerCase("ca");
+      return lower === normalized ? exact : this.dictionary.lookup(lower);
     }
 
     getStats() {
-      return { ...this.manifest.counts, rawBytes: this.buffer.byteLength, profile: this.manifest.profile };
+      return { ...this.manifest.counts, rawBytes: this.rawBytes, profile: this.manifest.profile, format: "CFSA2" };
     }
 
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
-      const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/central/");
+      const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/central-cfsa2/");
       if (!base) throw new Error("Cal indicar baseUrl per carregar els recursos fora de l'extensió.");
       const manifestResponse = await fetcher(new URL("resource-index.json", base));
-      if (!manifestResponse.ok) throw new Error(`No s'ha pogut carregar el manifest POS (${manifestResponse.status}).`);
+      if (!manifestResponse.ok) throw new Error(`No s'ha pogut carregar el manifest CFSA2 (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
-      const dataResponse = await fetcher(new URL(manifest.dataFile, base));
-      if (!dataResponse.ok) throw new Error(`No s'ha pogut carregar el diccionari POS (${dataResponse.status}).`);
-      if (typeof DecompressionStream !== "function") throw new Error("Aquest runtime no pot descomprimir els recursos POS.");
-
-      const expected = Number(manifest.rawBytes);
-      if (!Number.isSafeInteger(expected) || expected <= 8) throw new Error("Mida declarada del diccionari POS invàlida.");
-      const bytes = new Uint8Array(expected);
-      const reader = dataResponse.body.pipeThrough(new DecompressionStream("gzip")).getReader();
-      let offset = 0;
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          if (offset + value.byteLength > expected) throw new Error("El diccionari POS descomprimit supera la mida declarada.");
-          bytes.set(value, offset);
-          offset += value.byteLength;
-        }
-      } finally {
-        reader.releaseLock();
-      }
-      if (offset !== expected) throw new Error("El diccionari POS està truncat.");
-      if (!globalThis.crypto?.subtle) throw new Error("WebCrypto no està disponible per verificar el diccionari POS.");
-      const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes.buffer);
-      const actualHash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-      if (actualHash !== manifest.rawSha256) throw new Error("El hash SHA-256 del diccionari POS no coincideix.");
-      return new CatalanMorphology(bytes.buffer, manifest);
+      const descriptor = manifest?.dictionaries?.analysis;
+      if (manifest?.schema !== 1 || manifest?.language !== "ca-ES" || !descriptor?.file) throw new Error("Manifest CFSA2 català invàlid.");
+      const response = await fetcher(new URL(descriptor.file, base));
+      if (!response.ok) throw new Error(`No s'ha pogut carregar el diccionari POS CFSA2 (${response.status}).`);
+      if (typeof DecompressionStream !== "function") throw new Error("Aquest runtime no pot descomprimir el diccionari CFSA2.");
+      const compressed = new Uint8Array(await response.arrayBuffer());
+      const compressedHash = await crypto.subtle.digest("SHA-256", compressed);
+      const compressedSha256 = Array.from(new Uint8Array(compressedHash), byte => byte.toString(16).padStart(2, "0")).join("");
+      if (compressed.byteLength !== descriptor.compressedBytes || compressedSha256 !== descriptor.compressedSha256) throw new Error("El diccionari CFSA2 comprimit no coincideix amb el manifest.");
+      const raw = new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+      if (raw.byteLength !== descriptor.sourceBytes) throw new Error("El diccionari CFSA2 descomprimit no coincideix amb la mida declarada.");
+      const rawHash = await crypto.subtle.digest("SHA-256", raw);
+      const rawSha256 = Array.from(new Uint8Array(rawHash), byte => byte.toString(16).padStart(2, "0")).join("");
+      if (rawSha256 !== descriptor.sourceSha256) throw new Error("El hash del diccionari CFSA2 no coincideix amb el manifest.");
+      return new CatalanMorphologyCfsa2(raw.buffer, manifest);
     }
   }
 
-  globalThis.CorrectorCatalanMorphology = CatalanMorphology;
+  globalThis.CorrectorCatalanMorphologyCfsa2 = CatalanMorphologyCfsa2;
 })();
 
 /* Source: engine-src/modules/es-morphology.js */
@@ -7347,6 +7687,82 @@
   globalThis.CorrectorSpanishSynthesizer = SpanishSynthesizer;
 })();
 
+/* Source: analysis/spanish-reduction/modules/es-synthesis-cfsa2.js */
+/* Experimental es-ES synthesis adapter over the same lossless Morfologik CFSA2 reader. */
+(() => {
+  "use strict";
+  const Base = globalThis.CorrectorSpanishSynthesizer;
+  const sha256 = async bytes => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), byte => byte.toString(16).padStart(2, "0")).join("");
+
+  class SpanishSynthesizerCfsa2 {
+    constructor(dictionary, manifest, tags = []) {
+      if (!Base || !(dictionary instanceof globalThis.CorrectorCatalanCfsa2Dictionary)
+          || manifest?.schema !== 1 || manifest?.format !== "CFSA2"
+          || manifest?.profile !== "es-ES LanguageTool 6.9-SNAPSHOT / spanish-pos-dict 2.5") {
+        throw new Error("El diccionario de síntesis CFSA2 no corresponde al perfil es-ES.");
+      }
+      this.dictionary = dictionary;
+      this.manifest = manifest;
+      this.tags = tags;
+      this.lookupCache = new Map();
+      this.synthesisCache = new Map();
+    }
+
+    lookup(key) {
+      const normalized = String(key).normalize("NFC");
+      if (this.lookupCache.has(normalized)) return this.lookupCache.get(normalized).slice();
+      const value = this.dictionary.lookup(normalized).map(({ lemma }) => lemma);
+      if (this.lookupCache.size >= 12000) this.lookupCache.delete(this.lookupCache.keys().next().value);
+      this.lookupCache.set(normalized, value);
+      return value.slice();
+    }
+
+    synthesize(token, posTag, posTagRegExp = false) {
+      const cacheKey = `${String(token?.lemma ?? token).normalize("NFC")}\u0000${String(posTag ?? "")}\u0000${posTagRegExp ? 1 : 0}`;
+      if (this.synthesisCache.has(cacheKey)) return this.synthesisCache.get(cacheKey).slice();
+      const value = Base.prototype.synthesize.call(this, token, posTag, posTagRegExp);
+      if (this.synthesisCache.size >= 12000) this.synthesisCache.delete(this.synthesisCache.keys().next().value);
+      this.synthesisCache.set(cacheKey, value);
+      return value?.slice() ?? value;
+    }
+
+    getStats() {
+      return { keys: this.manifest.keys, forms: this.manifest.forms, rawBytes: this.manifest.rawBytes,
+        compressedBytes: this.manifest.compressedBytes, profile: "es-ES", storage: "morfologik-cfsa2" };
+    }
+
+    static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
+      const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/es-ES/");
+      if (!base) throw new Error("Se debe indicar baseUrl para cargar los recursos de síntesis española.");
+      const manifestResponse = await fetcher(new URL("synthesis-manifest.json", base));
+      if (!manifestResponse.ok) throw new Error(`No se pudo cargar el manifiesto de síntesis español (${manifestResponse.status}).`);
+      const manifest = await manifestResponse.json();
+      if (manifest?.profile !== "es-ES LanguageTool 6.9-SNAPSHOT / spanish-pos-dict 2.5" || manifest.format !== "CFSA2") {
+        throw new Error("El manifiesto no corresponde a la síntesis independiente es-ES CFSA2.");
+      }
+      const [dataResponse, tagsResponse] = await Promise.all([
+        fetcher(new URL(manifest.dataFile, base)), fetcher(new URL("es-ES-tags.txt", base)),
+      ]);
+      if (!dataResponse.ok || !tagsResponse.ok || typeof DecompressionStream !== "function" || !globalThis.crypto?.subtle) {
+        throw new Error("No se pudieron cargar los recursos locales CFSA2 de síntesis española.");
+      }
+      const compressed = new Uint8Array(await dataResponse.arrayBuffer());
+      if (compressed.byteLength !== manifest.compressedBytes || await sha256(compressed) !== manifest.compressedSha256) {
+        throw new Error("El diccionario de síntesis CFSA2 español comprimido no coincide con el manifiesto.");
+      }
+      const raw = new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+      if (raw.byteLength !== manifest.rawBytes || await sha256(raw) !== manifest.rawSha256) {
+        throw new Error("El diccionario de síntesis CFSA2 español está truncado o su hash no coincide.");
+      }
+      const dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(raw, { separator: "_", encoding: "utf-8", encoderType: "SUFFIX" });
+      return new SpanishSynthesizerCfsa2(dictionary, manifest, (await tagsResponse.text()).split(/\r?\n/u).filter(Boolean));
+    }
+  }
+
+  Object.setPrototypeOf(SpanishSynthesizerCfsa2.prototype, Base.prototype);
+  globalThis.CorrectorSpanishSynthesizer = SpanishSynthesizerCfsa2;
+})();
+
 /* Source: engine-src/modules/es-spelling.js */
 /* Local es-ES spell-check adapter over the pinned Morfologik POS FSA. */
 (() => {
@@ -7856,10 +8272,21 @@
   class SpanishChunker {
     constructor(resource) {
       if (resource?.schema !== 1 || resource?.profile !== "es-ES" || !Array.isArray(resource.multiwords) || !Array.isArray(resource.globalEntries)) throw new Error("Los recursos de chunking no pertenecen a es-ES.");
+      this.referenceTables = { multiwords: resource.multiwords, globalEntries: resource.globalEntries };
       this.spanish = expandRows(resource.multiwords, resource.behavior.spanish);
       this.global = expandRows(resource.globalEntries.map(phrase => [phrase]), resource.behavior.global, "NPCN000");
       this.counts = { spanishEntries: resource.multiwords.length, globalEntries: resource.globalEntries.length };
     }
+
+    resolveSharedReference(reference) {
+      if (!Number.isSafeInteger(reference) || reference === 0 || !this.referenceTables) throw new Error("Referencia compartida es-ES inválida o fuera de su fase de carga.");
+      const index = Math.abs(reference) - 1;
+      const value = reference > 0 ? this.referenceTables.multiwords[index]?.[0] : this.referenceTables.globalEntries[index];
+      if (typeof value !== "string") throw new Error("Referencia compartida es-ES fuera de rango.");
+      return value;
+    }
+
+    releaseReferenceTables() { this.referenceTables = null; }
 
     disambiguate(tokens) {
       const matches = [];
@@ -12592,6 +13019,20 @@
     return typeof tag === "string" && tag.startsWith("NC") ? `AQ0${tag.slice(2, 4)}0` : tag;
   }
 
+  function expandSharedWordReferences(resource, field, chunker, referenceFormat) {
+    const marker = `${field}ReferenceFormat`;
+    if (resource?.[marker] == null) return resource;
+    if (resource[marker] !== referenceFormat || !Array.isArray(resource[field])) {
+      throw new Error(`Formato de referencias compartidas no válido para ${field} es-ES.`);
+    }
+    const values = resource[field].map(value => {
+      if (typeof value === "string") return value;
+      if (typeof value === "number") return chunker.resolveSharedReference(value);
+      throw new Error(`Entrada de referencia compartida no válida para ${field} es-ES.`);
+    });
+    return { ...resource, [field]: values };
+  }
+
   const SPANISH_RULE_PRIORITIES = new Map([
     // Spanish.java#getPriorityMap(): explicit rule priorities override the
     // PatternRule category/default priority in CleanOverlappingFilter.
@@ -12948,8 +13389,10 @@
       if (!synonymsResponse.ok) throw new Error(`No se pudo cargar el diccionario de sinónimos es-ES (${synonymsResponse.status}).`);
       if (!confusionPairsResponse.ok) throw new Error(`No se pudo cargar el recurso de pares de confusión es-ES (${confusionPairsResponse.status}).`);
       morphology.configureManualTags(await manualTagsResponse.json());
-      const spellingData = globalThis.CorrectorSpanishSpelling.createDataIndex(await spellingResponse.json());
-      const multitokenSpellerData = await multitokenSpellerResponse.json();
+      const spellingResource = expandSharedWordReferences(await spellingResponse.json(), "acceptedWords", chunker, "es-multiword-index-v1");
+      const spellingData = globalThis.CorrectorSpanishSpelling.createDataIndex(spellingResource);
+      const multitokenSpellerData = expandSharedWordReferences(await multitokenSpellerResponse.json(), "entries", chunker, "es-multiword-index-v1");
+      chunker.releaseReferenceTables();
       const simpleReplaceResource = await simpleReplaceResponse.json();
       const simpleReplaceData = globalThis.CorrectorSpanishSimpleReplace.createDataIndex(simpleReplaceResource);
       const simpleReplaceVerbData = globalThis.CorrectorSpanishSimpleReplaceVerbs.createDataIndex(simpleReplaceResource);
@@ -13007,65 +13450,133 @@
   globalThis.CorrectorCatalanSoros = Object.freeze({load, spellNumber});
 })();
 
-/* Source: engine-src/modules/ca-synthesis.js */
-/* Exact Softcatala 3.3 synthesis lookup with LanguageTool Catalan-variant fallbacks. */
+/* Source: engine-src/modules/ca-synthesis-cfsa2.js */
+/* Experimental drop-in Catalan synthesizer over the CFSA2 source dictionary. */
 (() => {
   "use strict";
-  let bytes, keysOffsets, valuesOffsets, keysStart, valuesStart, tags=[], promise;
-  const decoder = new TextDecoder("utf8");
-  const tagCache=new Map(), lookupCache=new Map();
-  async function load() {
-    if(!promise) promise=(async()=>{
-      const base=chrome.runtime.getURL("build/resources/synthesis/");
-      const manifest=await (await fetch(base+"resource-index.json")).json();
-      const response=await fetch(base+"ca-synthesis.bin.gz");
-      const raw=await new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
-      const digest=await crypto.subtle.digest("SHA-256",raw);
-      if(manifest.schemaVersion!==1||manifest.language!=="ca-ES"||raw.byteLength!==manifest.rawBytes
-        ||Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")!==manifest.rawSha256)throw new Error("Invalid synthesis resource.");
-      bytes=new Uint8Array(raw); const header=new DataView(raw);
-      if(decoder.decode(bytes.slice(0,8))!=="CACSYNT1")throw new Error("Invalid synthesis header.");
-      const n=header.getUint32(8,true);keysOffsets=new Uint32Array(raw,20,n+1);valuesOffsets=new Uint32Array(raw,20+(n+1)*4,n+1);
-      keysStart=20+(n+1)*8; valuesStart=keysStart+header.getUint32(12,true);
-      if(valuesStart+header.getUint32(16,true)!==raw.byteLength)throw new Error("Invalid synthesis ranges.");
-      tags=manifest.possibleTags;return {keys:n,rows:manifest.rows};
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let dictionary, tags = [], overlayByKey = new Map(), manifest, promise;
+  const tagCache = new Map();
+  const lookupCache = new Map();
+
+  async function readVerifiedGzip(base, descriptor, fetcher, rawHashField) {
+    const response = await fetcher(new URL(descriptor.file, base));
+    if (!response.ok) throw new Error(`No s'ha pogut carregar el recurs CFSA2 ${descriptor.id} (${response.status}).`);
+    const compressed = new Uint8Array(await response.arrayBuffer());
+    const compressedHash = await crypto.subtle.digest("SHA-256", compressed);
+    const compressedSha256 = Array.from(new Uint8Array(compressedHash), byte => byte.toString(16).padStart(2, "0")).join("");
+    if (compressed.byteLength !== descriptor.compressedBytes || compressedSha256 !== descriptor.compressedSha256) throw new Error(`El recurs CFSA2 ${descriptor.id} comprimit no coincideix amb el manifest.`);
+    const raw = new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+    const expectedBytes = descriptor.sourceBytes ?? descriptor.rawBytes;
+    if (raw.byteLength !== expectedBytes) throw new Error(`El recurs CFSA2 ${descriptor.id} descomprimit no coincideix amb la mida declarada.`);
+    const rawHash = await crypto.subtle.digest("SHA-256", raw);
+    const actualRawHash = Array.from(new Uint8Array(rawHash), byte => byte.toString(16).padStart(2, "0")).join("");
+    if (actualRawHash !== descriptor[rawHashField]) throw new Error(`El hash del recurs CFSA2 ${descriptor.id} no coincideix amb el manifest.`);
+    return raw;
+  }
+
+  async function load({ baseUrl, fetcher = globalThis.fetch } = {}) {
+    if (!promise) promise = (async () => {
+      const base = baseUrl || globalThis.chrome?.runtime?.getURL("build/resources/central-cfsa2/");
+      if (!base) throw new Error("Cal indicar baseUrl per carregar els recursos fora de l'extensió.");
+      if (typeof DecompressionStream !== "function" || !globalThis.crypto?.subtle) throw new Error("Aquest runtime no admet la verificació i descompressió dels recursos CFSA2.");
+      const response = await fetcher(new URL("resource-index.json", base));
+      if (!response.ok) throw new Error(`No s'ha pogut carregar el manifest CFSA2 (${response.status}).`);
+      const nextManifest = await response.json();
+      if (nextManifest?.schema !== 1 || nextManifest?.language !== "ca-ES" || !nextManifest.dictionaries?.synthesis) throw new Error("Manifest CFSA2 de síntesi invàlid.");
+      const descriptor = nextManifest.dictionaries.synthesis;
+      const overlayDescriptor = nextManifest.resources?.find(resource => resource.id === "synthesis-overlays");
+      if (!overlayDescriptor || !Array.isArray(overlayDescriptor.possibleTags)) throw new Error("Falten els overlays o les etiquetes de síntesi CFSA2.");
+      const [raw, overlayRaw] = await Promise.all([
+        readVerifiedGzip(base, descriptor, fetcher, "sourceSha256"),
+        readVerifiedGzip(base, overlayDescriptor, fetcher, "rawSha256"),
+      ]);
+      const nextDictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(raw, {
+        separator: descriptor.separator,
+        encoding: descriptor.encoding,
+        encoderType: descriptor.encoder,
+      });
+      const overlayObject = JSON.parse(decoder.decode(overlayRaw));
+      if (overlayObject?.schema !== 1 || !Array.isArray(overlayObject.rows)) throw new Error("Fitxer d'overlays de síntesi invàlid.");
+      const nextOverlayByKey = new Map();
+      for (const row of overlayObject.rows) {
+        if (!row || !["add", "remove"].includes(row.action) || typeof row.key !== "string" || typeof row.form !== "string") throw new Error("Fila d'overlay de síntesi invàlida.");
+        let rows = nextOverlayByKey.get(row.key);
+        if (!rows) nextOverlayByKey.set(row.key, rows = []);
+        rows.push(row);
+      }
+      dictionary = nextDictionary;
+      overlayByKey = nextOverlayByKey;
+      tags = overlayDescriptor.possibleTags.slice();
+      manifest = nextManifest;
+      return { keys: descriptor.counts?.keys ?? null, rows: descriptor.counts?.rows ?? null };
     })();
     return promise;
   }
-  function lookup(lemma,tag) {
-    const key=`${lemma}|${tag}`;
-    if(lookupCache.has(key))return lookupCache.get(key);
-    let lo=0,hi=keysOffsets.length-2,result=[];
-    while(lo<=hi){const m=(lo+hi)>>>1,word=decoder.decode(bytes.subarray(keysStart+keysOffsets[m],keysStart+keysOffsets[m+1]));
-      if(word===key){result=decoder.decode(bytes.subarray(valuesStart+valuesOffsets[m],valuesStart+valuesOffsets[m+1])).split("\n");break;}
-      if(word<key)lo=m+1;else hi=m-1;
+
+  function lookup(lemma, tag) {
+    const key = `${lemma}|${tag}`;
+    if (lookupCache.has(key)) return lookupCache.get(key);
+    if (!dictionary) throw new Error("El diccionari de síntesi CFSA2 encara no s'ha carregat.");
+    const result = dictionary.lookup(key).map(row => row.lemma);
+    for (const row of overlayByKey.get(key) || []) {
+      if (row.action === "add") result.push(row.form);
+      else {
+        for (let index = result.length - 1; index >= 0; index--) if (result[index] === row.form) result.splice(index, 1);
+      }
     }
-    if(lookupCache.size>10000)lookupCache.clear();lookupCache.set(key,result);return result;
+    lookupCache.set(key, result);
+    if (lookupCache.size > 10000) lookupCache.clear();
+    return result;
   }
-  function selectedTags(expression){if(!tagCache.has(expression)){const r=CorrectorJavaCaseRegex.compile(expression,true);tagCache.set(expression,tags.filter(tag=>r.test(tag)));}return tagCache.get(expression);}
-  const CENTRAL_VERB_ENDINGS="[0CXY12]";
-  // LanguageTool's CatalanSynthesizer uses one ending set per variant:
-  // central [0CXY12], Valencian [0VXZ13567], and Balearic [0BYZ1247].
-  // The inclusive product merges these sets so rules can synthesize a valid
-  // form when its source reading belongs to any supported variety.
-  const INCLUSIVE_VERB_ENDINGS="[0CXY12VXZ13567BYZ1247]";
-  const VERB_ENDINGS_BY_PROFILE={central:CENTRAL_VERB_ENDINGS,valencian:"[0VXZ13567]",balearic:"[0BYZ1247]",inclusive:INCLUSIVE_VERB_ENDINGS};
-  function synthesize(reading,expression,regexp=false,localeProfile="inclusive"){
-    if(!reading?.lemma||!expression||expression.startsWith("_spell_number_"))return [];
-    if(regexp&&["enterar","sentar","conseguir","alcançar"].includes(reading.lemma))return [];
-    let lemma=reading.lemma,after="";
-    if(expression.startsWith("V")&&lemma.includes(" ")){const i=lemma.indexOf(" ");after=lemma.slice(i+1);lemma=lemma.slice(0,i);}
-    let result=selectedTags(expression).flatMap(tag=>lookup(lemma,tag));
-    if(!result.length&&expression.startsWith("V")&&(!regexp||/^V.*[CVBXYZ0123456]$/u.test(expression))&&!["enterar","sentar","conseguir","alcançar"].includes(reading.lemma))result=selectedTags(expression.slice(0,-1)+(VERB_ENDINGS_BY_PROFILE[localeProfile]||CENTRAL_VERB_ENDINGS)).flatMap(tag=>lookup(lemma,tag));
-    return after?result.map(value=>value+" "+after):result;
+
+  function selectedTags(expression) {
+    if (!tagCache.has(expression)) {
+      const regexp = CorrectorJavaCaseRegex.compile(expression, true);
+      tagCache.set(expression, tags.filter(tag => regexp.test(tag)));
+    }
+    return tagCache.get(expression);
   }
-  function targetPosTag(values,fallback=""){
-    const compare=(a,b)=>{if(a.length>4&&b.length>4){if(a.includes("3S")&&b==="1S")return 150;if(a.includes("1S")&&b.includes("3S"))return -150;
-      if(a==="VMIP2P00"&&b==="VMIS3S00")return 150;if(b==="VMIP2P00"&&a==="VMIS3S00")return -150;
-      if(a[2]==="I"&&b[2]!=="I")return 100;if(b[2]==="I"&&a[2]!=="I")return -100;if(a[4]==="3"&&b[4]==="1")return 50;if(b[4]==="3"&&a[4]==="1")return -50;}return 0;};
-    return values.slice().sort(compare).at(-1)??fallback;
+
+  const CENTRAL_VERB_ENDINGS = "[0CXY12]";
+  const INCLUSIVE_VERB_ENDINGS = "[0CXY12VXZ13567BYZ1247]";
+  const VERB_ENDINGS_BY_PROFILE = { central: CENTRAL_VERB_ENDINGS, valencian: "[0VXZ13567]", balearic: "[0BYZ1247]", inclusive: INCLUSIVE_VERB_ENDINGS };
+
+  function synthesize(reading, expression, regexp = false, localeProfile = "inclusive") {
+    if (!reading?.lemma || !expression || expression.startsWith("_spell_number_")) return [];
+    if (regexp && ["enterar", "sentar", "conseguir", "alcançar"].includes(reading.lemma)) return [];
+    let lemma = reading.lemma, after = "";
+    if (expression.startsWith("V") && lemma.includes(" ")) {
+      const index = lemma.indexOf(" ");
+      after = lemma.slice(index + 1);
+      lemma = lemma.slice(0, index);
+    }
+    let result = selectedTags(expression).flatMap(tag => lookup(lemma, tag));
+    if (!result.length && expression.startsWith("V") && (!regexp || /^V.*[CVBXYZ0123456]$/u.test(expression))
+        && !["enterar", "sentar", "conseguir", "alcançar"].includes(reading.lemma)) {
+      result = selectedTags(expression.slice(0, -1) + (VERB_ENDINGS_BY_PROFILE[localeProfile] || CENTRAL_VERB_ENDINGS)).flatMap(tag => lookup(lemma, tag));
+    }
+    return after ? result.map(value => `${value} ${after}`) : result;
   }
-  globalThis.CorrectorCatalanSynthesis=Object.freeze({load,lookup,synthesize,targetPosTag,getPossibleTags:()=>tags});
+
+  function targetPosTag(values, fallback = "") {
+    const compare = (a, b) => {
+      if (a.length > 4 && b.length > 4) {
+        if (a.includes("3S") && b === "1S") return 150;
+        if (a.includes("1S") && b.includes("3S")) return -150;
+        if (a === "VMIP2P00" && b === "VMIS3S00") return 150;
+        if (b === "VMIP2P00" && a === "VMIS3S00") return -150;
+        if (a[2] === "I" && b[2] !== "I") return 100;
+        if (b[2] === "I" && a[2] !== "I") return -100;
+        if (a[4] === "3" && b[4] === "1") return 50;
+        if (b[4] === "3" && a[4] === "1") return -50;
+      }
+      return 0;
+    };
+    return values.slice().sort(compare).at(-1) ?? fallback;
+  }
+
+  globalThis.CorrectorCatalanSynthesisCfsa2 = Object.freeze({ load, lookup, synthesize, targetPosTag, getPossibleTags: () => tags });
 })();
 
 /* Source: engine-src/modules/ca-morfologik-speller.js */
@@ -18477,6 +18988,13 @@
   globalThis.CorrectorCatalanSpellingLexicon = Object.freeze({ load, isAccepted, isOverlayAccepted, inspect, clear });
 })();
 
+/* Source: analysis/bilingual-reduction/generated/cfsa2-runtime-aliases.js */
+/* Experimental bilingual reduction bridge; never used by the production build. */
+(() => {
+  globalThis.CorrectorCatalanMorphology = globalThis.CorrectorCatalanMorphologyCfsa2;
+  globalThis.CorrectorCatalanSynthesis = globalThis.CorrectorCatalanSynthesisCfsa2;
+})();
+
 /* Source: engine-src/language-engine.js */
 /* Public facade for the local Catalan correction engine. */
 (() => {
@@ -18490,7 +19008,10 @@
   const PARITY_SCOPE = "finite-regression-benchmark; not a claim of universal equivalence";
   const SPANISH_LANGUAGE = "es-ES";
   const ENGLISH_LANGUAGE = "en-US";
-  const SUPPORTED_LANGUAGE_CODES = new Set([PRODUCT_LANGUAGE, REFERENCE_LANGUAGE, "ca-ES-valencia", "ca-ES-balear", SPANISH_LANGUAGE, ENGLISH_LANGUAGE]);
+  // Proof-only French profiles share a base pipeline and apply the precise
+  // disabled-rule overrides documented by LanguageTool's variant classes.
+  const FRENCH_LANGUAGES = new Set(["fr-FR", "fr-CA", "fr-CH", "fr-BE"]);
+  const SUPPORTED_LANGUAGE_CODES = new Set([PRODUCT_LANGUAGE, REFERENCE_LANGUAGE, "ca-ES-valencia", "ca-ES-balear", SPANISH_LANGUAGE, ENGLISH_LANGUAGE, ...FRENCH_LANGUAGES]);
 
   class EngineError extends Error {
     constructor(code, message, details = {}) {
@@ -18572,6 +19093,9 @@
     if (requestedLanguage === ENGLISH_LANGUAGE) {
       return Object.freeze({ ...options, language: ENGLISH_LANGUAGE, referenceLanguage: ENGLISH_LANGUAGE, checkLevel });
     }
+    if (FRENCH_LANGUAGES.has(requestedLanguage)) {
+      return Object.freeze({ ...options, language: requestedLanguage, referenceLanguage: requestedLanguage, checkLevel });
+    }
     const localeProfile = options.localeProfile == null
       ? ({ "ca": "inclusive", "ca-ES": "central", "ca-ES-valencia": "valencian", "ca-ES-balear": "balearic" }[requestedLanguage] || "central")
       : String(options.localeProfile);
@@ -18649,6 +19173,9 @@
   let englishPipeline = null;
   let englishResourcePromise = null;
   let englishLastError = null;
+  let frenchPipeline = null;
+  let frenchResourcePromise = null;
+  const frenchRequestedProfiles = new Set();
   let sentenceTokenizer = null;
   let completedChecks = 0;
   let completedBatches = 0;
@@ -18675,18 +19202,23 @@
     const catalan = cloneStatus();
     const spanishReady = !!spanishPipeline;
     const englishReady = !!englishPipeline;
-    const anyReady = catalan.ready || spanishReady || englishReady;
+    const frenchReady = !!frenchPipeline;
+    const anyReady = catalan.ready || spanishReady || englishReady || frenchReady;
     return {
       ...catalan,
       ready: anyReady,
       implemented: catalan.implemented || spanishReady || englishReady,
       phase: anyReady ? "ready" : catalan.phase,
-      loadedLanguages: [...new Set([...catalan.loadedLanguages, ...(spanishPipeline ? [SPANISH_LANGUAGE] : []), ...(englishPipeline ? [ENGLISH_LANGUAGE] : [])])],
-      activeStages: [...new Set([...catalan.activeStages, ...(spanishPipeline?.stages || []), ...(englishPipeline?.stages || [])])],
+      loadedLanguages: [...new Set([...catalan.loadedLanguages, ...(spanishPipeline ? [SPANISH_LANGUAGE] : []), ...(englishPipeline ? [ENGLISH_LANGUAGE] : []), ...frenchRequestedProfiles])],
+      activeStages: [...new Set([...catalan.activeStages, ...(spanishPipeline?.stages || []), ...(englishPipeline?.stages || []), ...(frenchPipeline ? ["french-SRX-sentence-segmentation", "french-tokenization", "french-local-spelling", `languagetool-french-pattern-rules:${frenchPipeline.rules.length}`] : [])])],
       profiles: {
         "ca-ES": { ready: catalan.ready, phase: catalan.phase, lastError: catalan.lastError },
         "es-ES": { ready: !!spanishPipeline, phase: spanishPipeline ? "ready" : spanishResourcePromise ? "loading-resources" : "cold" },
-        "en-US": { ready: !!englishPipeline, phase: englishPipeline ? "ready" : englishResourcePromise ? "loading-resources" : englishLastError ? "error" : "cold", lastError: englishLastError ? { ...englishLastError } : null }
+        "en-US": { ready: !!englishPipeline, phase: englishPipeline ? "ready" : englishResourcePromise ? "loading-resources" : englishLastError ? "error" : "cold", lastError: englishLastError ? { ...englishLastError } : null },
+        "fr-FR": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
+        "fr-CA": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
+        "fr-CH": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
+        "fr-BE": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" }
       }
     };
   }
@@ -18727,13 +19259,30 @@
         await spanishResourcePromise;
       }
     }
-    const catalanRequested = normalized.filter(language => language !== SPANISH_LANGUAGE && language !== ENGLISH_LANGUAGE);
+    const requestedFrenchProfiles = normalized.filter(language => FRENCH_LANGUAGES.has(language));
+    if (requestedFrenchProfiles.length) {
+      if (!globalThis.CorrectorFrenchPatternPipeline?.FrenchPatternPipeline) throw new EngineError("FRENCH_PIPELINE_UNAVAILABLE", "The proof-only French pipeline is not included in this bundle.", { stage: "language-profile", language: requestedFrenchProfiles[0] });
+      if (!frenchPipeline) {
+        if (!frenchResourcePromise) {
+          frenchResourcePromise = globalThis.CorrectorFrenchPatternPipeline.FrenchPatternPipeline.load().then(pipeline => {
+            frenchPipeline = pipeline;
+            return pipeline;
+          }).catch(error => {
+            frenchResourcePromise = null;
+            throw new EngineError("FRENCH_RESOURCE_LOAD_FAILED", `Could not load proof-only French resources: ${error?.message || error}`, { stage: "resource-load", language: requestedFrenchProfiles[0], retryable: true });
+          });
+        }
+        await frenchResourcePromise;
+      }
+      for (const profile of requestedFrenchProfiles) frenchRequestedProfiles.add(profile);
+    }
+    const catalanRequested = normalized.filter(language => language !== SPANISH_LANGUAGE && language !== ENGLISH_LANGUAGE && !FRENCH_LANGUAGES.has(language));
     if (!catalanRequested.length) {
-      const language = normalized.includes(ENGLISH_LANGUAGE) ? ENGLISH_LANGUAGE : SPANISH_LANGUAGE;
-      const pipeline = language === ENGLISH_LANGUAGE ? englishPipeline : spanishPipeline;
+      const language = requestedFrenchProfiles[0] || (normalized.includes(ENGLISH_LANGUAGE) ? ENGLISH_LANGUAGE : SPANISH_LANGUAGE);
+      const pipeline = FRENCH_LANGUAGES.has(language) ? frenchPipeline : language === ENGLISH_LANGUAGE ? englishPipeline : spanishPipeline;
       return { ok: true, language, ready: true, implemented: true, profile: language,
-        status: getPublicLoadStatus(), diagnostics: pipeline.getDiagnostics(),
-        morphology: pipeline.morphology.getStats() };
+        proofOnly: FRENCH_LANGUAGES.has(language), status: getPublicLoadStatus(), diagnostics: pipeline.getDiagnostics(),
+        morphology: pipeline.morphology?.getStats?.() || pipeline.lexicalData?.getStats?.() || null };
     }
     status.phase = "loading-resources";
     status.ready = false;
@@ -18809,6 +19358,12 @@
       completedChecks++;
       return issues;
     }
+    if (FRENCH_LANGUAGES.has(normalized.language)) {
+      if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${normalized.language}']) before requesting analysis.`, { stage: "resource-load", language: normalized.language, retryable: true });
+      const issues = frenchPipeline.analyzeText(text, normalized).issues.map(issue => ({ ...issue, language: normalized.language }));
+      completedChecks++;
+      return issues;
+    }
     if (!morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
     const started = monotonicNow();
     const skipSpelling = normalized.skipSpelling === true;
@@ -18849,7 +19404,7 @@
     if (!Array.isArray(items)) {
       throw new EngineError("INVALID_BATCH", "El lote debe ser una lista de textos con identificador.", { stage: "request-model", language: normalized.language });
     }
-    if (normalized.language !== SPANISH_LANGUAGE && normalized.language !== ENGLISH_LANGUAGE && !morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
+    if (normalized.language !== SPANISH_LANGUAGE && normalized.language !== ENGLISH_LANGUAGE && !FRENCH_LANGUAGES.has(normalized.language) && !morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
     items.forEach((item, index) => {
       if (item == null || typeof item !== "object" || Array.isArray(item) || typeof item.text !== "string") {
         throw new EngineError("INVALID_BATCH_ITEM", `El elemento ${index} debe contener un texto y, opcionalmente, un identificador.`, { stage: "request-model", language: normalized.language });
@@ -18861,6 +19416,10 @@
   }
 
   function tokenize(text, language = PRODUCT_LANGUAGE) {
+    if (FRENCH_LANGUAGES.has(language)) {
+      if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before tokenizing.`, { stage: "resource-load", language, retryable: true });
+      return frenchPipeline.tokenizer.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
+    }
     if (language === ENGLISH_LANGUAGE) {
       if (!englishPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['en-US']) before tokenizing.", { stage: "resource-load", language: ENGLISH_LANGUAGE, retryable: true });
       return globalThis.CorrectorEnglishText.tokenize(text, englishPipeline.morphology);
@@ -18870,6 +19429,10 @@
   }
 
   function segmentSentences(text, language = PRODUCT_LANGUAGE) {
+    if (FRENCH_LANGUAGES.has(language)) {
+      if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before segmenting sentences.`, { stage: "resource-load", language, retryable: true });
+      return frenchPipeline.sentenceTokenizer.segment(text);
+    }
     if (language === ENGLISH_LANGUAGE) {
       if (!englishPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['en-US']) before segmenting sentences.", { stage: "resource-load", language: ENGLISH_LANGUAGE, retryable: true });
       return englishPipeline.sentenceTokenizer.segment(text);
@@ -18896,6 +19459,13 @@
     return copy;
   }
   function tagText(text, localeProfile = "inclusive") {
+    if (FRENCH_LANGUAGES.has(localeProfile)) {
+      if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${localeProfile}']) before tagging.`, { stage: "resource-load", language: localeProfile, retryable: true });
+      return frenchPipeline.tokenizer.tokenizeRows(text).map(row => ({
+        text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings,
+        analysis: row.analysis
+      }));
+    }
     const scope = activeAnalysisCache;
     if (!scope || localeProfile === ENGLISH_LANGUAGE) return tagTextUncached(text, localeProfile);
     const key = JSON.stringify([localeProfile, text]);
@@ -19254,6 +19824,9 @@
     englishPipeline = null;
     englishResourcePromise = null;
     englishLastError = null;
+    frenchPipeline = null;
+    frenchResourcePromise = null;
+    frenchRequestedProfiles.clear();
     globalThis.CorrectorCatalanChunker.clear();
     globalThis.CorrectorCatalanXmlDisambiguator.clear();
     globalThis.CorrectorCatalanMultitokenDisambiguator.clear();
@@ -19263,7 +19836,7 @@
 
   const engine = Object.freeze({
     apiVersion: API_VERSION,
-    languages: Object.freeze({ product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE }),
+    languages: Object.freeze({ product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: Object.freeze([...FRENCH_LANGUAGES]) }),
     EngineError,
     createIssue,
     normalizeOptions,
@@ -19287,7 +19860,7 @@
       implemented: getPublicLoadStatus().implemented,
       parityComplete: status.ready && status.missingStages.length === 0,
       parityScope: PARITY_SCOPE,
-      languages: { product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE },
+      languages: { product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: [...FRENCH_LANGUAGES] },
       localeProfiles: { default: "central", available: ["central", "valencian", "balearic", "inclusive"] },
       checkLevels: { supported: [...SUPPORTED_CHECK_LEVELS], default: DEFAULT_CHECK_LEVEL },
       activeStages: status.activeStages.slice(),
@@ -19296,7 +19869,8 @@
         "ca-ES": { ready: status.ready, phase: status.phase },
         "es-ES": { ready: !!spanishPipeline, phase: spanishPipeline ? "ready" : spanishResourcePromise ? "loading-resources" : "cold" },
         "en-US": { ready: !!englishPipeline, phase: englishPipeline ? "ready" : englishResourcePromise ? "loading-resources" : englishLastError ? "error" : "cold",
-          diagnostics: englishPipeline?.getDiagnostics() || null, lastError: englishLastError ? { ...englishLastError } : null }
+          diagnostics: englishPipeline?.getDiagnostics() || null, lastError: englishLastError ? { ...englishLastError } : null },
+        "fr-FR": { ready: !!frenchPipeline, phase: frenchPipeline ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" }
       },
       error: status.lastError ? { ...status.lastError } : null
     }),

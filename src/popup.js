@@ -3,7 +3,7 @@ function detectInitialUiLanguage() {
   let locale = "";
   try { locale = String(chrome.i18n?.getUILanguage?.() || navigator.language || ""); } catch (_) {}
   const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
-  return ["ca", "es", "en"].includes(primary) ? primary : "en";
+  return ["ca", "es", "en", "fr"].includes(primary) ? primary : "en";
 }
 const defaults = { enabled: true, language: "ca-ES", uiLanguage: detectInitialUiLanguage(), theme: "system", showReviewButton: true, excludedSites: [], disabledEditorGroups: [] };
 const privateDiagnosticKeys = new Set([
@@ -16,7 +16,9 @@ const privateDiagnosticKeys = new Set([
   "firstmarksviewportsignature", "requestedsignature", "requestedviewportsignature", "lastcheckedsignature", "lastcheckedgeometrysignature",
   "currentvisibletextsignature", "lastcheckedvisibletextsignature", "currentvisiblesignature", "textsignature", "geometrysignature"
 ].map(key => key.toLowerCase()));
-const DICTIONARY_PROFILES = ["ca-ES", "ca-ES-valencia", "ca-ES-balear", "es-ES", "en-US"];
+const DICTIONARY_PROFILES = ["ca-ES", "ca-ES-valencia", "ca-ES-balear", "es-ES", "en-US", "fr-FR"];
+const FRENCH_PROFILES = ["fr-FR", "fr-CA", "fr-CH", "fr-BE"];
+const PROOFING_PROFILES = [...new Set([...DICTIONARY_PROFILES, ...FRENCH_PROFILES])];
 let dictionary = Object.fromEntries(DICTIONARY_PROFILES.map(profile => [profile, []]));
 let selectedDictionaryProfile = "ca-ES";
 let currentHost = "";
@@ -28,21 +30,84 @@ let enabledWriteQueue = Promise.resolve();
 let uiLanguage = "ca";
 let uiText = globalThis.CorrectorLocalUiLocales?.ca || {};
 let engineErrorTestMode = false;
+let installedPackIds = new Set();
+let enabledLanguageProfiles = {};
+function packIdForProfile(profile) {
+  const value = String(profile || "");
+  const declared = (globalThis.LletriumPackDescriptors || []).find(pack => pack.profiles?.includes(value));
+  return declared?.id || (value.startsWith("ca-") ? "ca" : value === "es-ES" ? "es" : value === "en-US" ? "en" : value.startsWith("fr-") ? "fr" : "");
+}
+function syncFrenchProfileOptions() {
+  const select = document.getElementById("language");
+  if (!select) return;
+  const previous = select.value;
+  const groups = [
+    {id:"ca", profiles:["ca-ES","ca-ES-valencia","ca-ES-balear"], labels:["central","valencian","balearic"], general:"catalan"},
+    {id:"fr", profiles:FRENCH_PROFILES, labels:["frenchFrance","frenchCanada","frenchSwitzerland","frenchBelgium"], general:"french"}
+  ];
+  for (const group of groups) {
+    for (const option of [...select.options].filter(item => group.profiles.includes(item.value))) option.remove();
+    const installed = installedPackIds.has(group.id);
+    const selected = enabledLanguageProfiles[group.id];
+    const preferred = group.profiles.filter(profile => !Array.isArray(selected) || selected.includes(profile));
+    const profiles = installed ? (preferred.length ? preferred : group.profiles) : [group.profiles[0]];
+    for (const profile of profiles) {
+      const option = document.createElement("option");
+      option.value = profile;
+      option.dataset.i18n = installed ? group.labels[group.profiles.indexOf(profile)] : group.general;
+      option.textContent = !installed && group.id === "ca" ? ({ca:"Català",es:"Catalán",en:"Catalan",fr:"Catalan"}[uiLanguage] || "Català") : tr(option.dataset.i18n);
+      select.append(option);
+    }
+  }
+  if ([...select.options].some(option => option.value === previous)) select.value = previous;
+}
+function syncComingSoonOptions() {
+  const select=document.getElementById("language");
+  if (!select) return;
+  for (const language of globalThis.CorrectorLocalUiLocales.plannedLanguages) {
+    let option=[...select.options].find(option=>option.value===language.profile);
+    if (!option) { option=document.createElement("option");option.value=language.profile;select.append(option); }
+    delete option.dataset.i18n;
+    option.dataset.comingSoon="true";
+    option.dataset.baseLabel=language.labels[uiLanguage]||language.labels.en;
+    option.textContent=option.dataset.baseLabel+" — "+globalThis.CorrectorLocalUiLocales.comingSoonLabels[uiLanguage];
+    option.disabled=true;
+  }
+}
+function refreshPackAvailability() {
+  syncComingSoonOptions();
+  const proofing = document.getElementById("language");
+  const dictionarySelect = document.getElementById("dictionaryLanguage");
+  for (const select of [proofing, dictionarySelect]) for (const option of select?.options || []) if (option.dataset.comingSoon !== "true") {
+    const baseLabel = select === proofing && option.value === "ca-ES" && !installedPackIds.has("ca") ? ({ca:"Català",es:"Catalán",en:"Catalan",fr:"Catalan"}[uiLanguage] || "Català") : option.dataset.i18n ? tr(option.dataset.i18n) : (option.dataset.baseLabel || option.textContent.replace(/\s+[—–-]\s+(?:No instal·lat|No instalado|Not installed)$/i, ""));
+    option.dataset.baseLabel = baseLabel;
+    const missing = !installedPackIds.has(packIdForProfile(option.value));
+    option.disabled = missing;
+    option.textContent = missing ? `${baseLabel} — ${tr("notInstalled")}` : baseLabel;
+  }
+}
+function openLanguageSetup() { return chrome.runtime.sendMessage({ type: "CL_OPEN_LANGUAGE_MANAGER" }); }
 function getProofingLanguage() {
   const selected = document.getElementById("language")?.value || "ca-ES";
-  return DICTIONARY_PROFILES.includes(selected) ? selected : "ca-ES";
+  return PROOFING_PROFILES.includes(selected) ? selected : "ca-ES";
 }
-function dictionaryProfileForProofing(profile = getProofingLanguage()) { return profile.startsWith("ca-") ? "ca-ES" : profile; }
-function dictionaryLocale(profile = getProofingLanguage()) { return profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : "ca"; }
+function dictionaryProfileForProofing(profile = getProofingLanguage()) { return profile.startsWith("ca-") ? "ca-ES" : profile.startsWith("fr-") ? "fr-FR" : profile; }
+function dictionaryLocale(profile = getProofingLanguage()) { return profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile.startsWith("fr-") ? "fr" : "ca"; }
 function profileLabel(profile = getProofingLanguage()) {
-  const labels = { "ca-ES": "central", "ca-ES-valencia": "valencian", "ca-ES-balear": "balearic", "es-ES": "spanish", "en-US": "english" };
+  const labels = { "ca-ES": "central", "ca-ES-valencia": "valencian", "ca-ES-balear": "balearic", "es-ES": "spanish", "en-US": "english", "fr-FR": "frenchFrance", "fr-CA": "frenchCanada", "fr-CH": "frenchSwitzerland", "fr-BE": "frenchBelgium" };
   return tr(labels[profile] || "central");
 }
 function dictionaryProfileLabel(profile = selectedDictionaryProfile) {
-  return profile === "ca-ES" ? tr("catalan") : profileLabel(profile);
+  return profile === "ca-ES" ? tr("catalan") : profile === "fr-FR" ? tr("french") : profileLabel(profile);
 }
 function alphabetizedOptions(select) {
-  return [...select.options].sort((a, b) => a.textContent.localeCompare(b.textContent, uiLanguage, { sensitivity: "base", numeric: true }));
+  const rank = option => {
+    if (option.dataset.comingSoon === "true") return 2;
+    return option.disabled ? 1 : 0;
+  };
+  const label = option => option.dataset.baseLabel || option.textContent.replace(/\s+[—–-]\s+(?:No instal·lat|No instalado|Not installed)$/i, "");
+  return [...select.options].sort((a, b) => rank(a) - rank(b)
+    || label(a).localeCompare(label(b), uiLanguage, { sensitivity: "base", numeric: true }));
 }
 function countryFlagMarkup(profile) {
   return globalThis.CorrectorLocalUiLocales.profileFlagMarkup(profile);
@@ -75,7 +140,8 @@ function renderInterfaceLanguagePicker() {
   const label = document.getElementById("uiLanguagePickerLabel");
   const options = document.getElementById("uiLanguageOptions");
   if (!select || !label || !options) return;
-  label.textContent = select.selectedOptions[0]?.textContent || "Català";
+  const nativeNames = { ca: "Català", es: "Español", en: "English", fr: "Français" };
+  label.textContent = nativeNames[select.value] || "English";
   options.replaceChildren(...[...select.options].map(option => {
     const item = document.createElement("div");
     item.className = "language-option";
@@ -83,7 +149,7 @@ function renderInterfaceLanguagePicker() {
     item.setAttribute("aria-selected", String(option.value === select.value));
     item.tabIndex = -1;
     item.dataset.value = option.value;
-    item.textContent = option.textContent;
+    item.textContent = nativeNames[option.value] || option.textContent;
     return item;
   }));
 }
@@ -102,6 +168,7 @@ function renderDictionaryLanguagePicker() {
     item.className = "language-option";
     item.setAttribute("role", "option");
     item.setAttribute("aria-selected", String(option.value === profile));
+    item.setAttribute("aria-disabled", String(option.disabled));
     item.tabIndex = -1;
     item.dataset.value = option.value;
     item.innerHTML = `<span class="language-badge" aria-hidden="true">${countryFlagMarkup(option.value)}</span><span>${option.textContent}</span>`;
@@ -125,7 +192,14 @@ function wireSelectPicker(selectId, buttonId, optionsId) {
   };
   const choose = value => {
     const option = [...select.options].find(entry => entry.value === value);
-    if (!option || option.disabled) return;
+    if (!option) return;
+    if (option.disabled) {
+      if (select.id === "language" && PROOFING_PROFILES.includes(value) && !installedPackIds.has(packIdForProfile(value))) {
+        close();
+        openLanguageSetup();
+      }
+      return;
+    }
     select.value = value;
     select.dispatchEvent(new Event("change", { bubbles: true }));
     close(true);
@@ -171,7 +245,7 @@ function tr(key, values = {}) {
   return value;
 }
 function applyPopupLocale(language = "ca") {
-  uiLanguage = ["ca", "es", "en"].includes(language) ? language : "ca";
+  uiLanguage = ["ca", "es", "en", "fr"].includes(language) ? language : "ca";
   uiText = globalThis.CorrectorLocalUiLocales?.[uiLanguage] || globalThis.CorrectorLocalUiLocales?.ca || {};
   document.documentElement.lang = uiLanguage;
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = tr(el.dataset.i18n); });
@@ -185,7 +259,10 @@ function applyPopupLocale(language = "ca") {
   }
   document.title = tr("appTitle");
   document.getElementById("versionInfo").textContent = tr("version", { version: chrome.runtime.getManifest().version });
+  const settingsVersion = document.getElementById("settingsVersion");
+  if (settingsVersion) settingsVersion.textContent = tr("version", { version: chrome.runtime.getManifest().version });
   document.getElementById("currentHost").textContent = currentHost || tr("siteUnavailable");
+  refreshPackAvailability();
   renderUnsupportedSiteNotice();
   renderEnabledState();
   renderInterfaceLanguagePicker();
@@ -228,13 +305,17 @@ function setEngineFailureHelp(visible) {
 document.addEventListener("DOMContentLoaded", initialize);
 
 async function initialize() {
-  const [storedSettings, personal, tabs] = await Promise.all([
+  const [storedSettings, personal, tabs, installedPacks] = await Promise.all([
     chrome.storage.sync.get(null),
     chrome.storage.local.get({ personalDictionary: {}, engineErrorTestMode: false, advancedUnlocked: false }),
-    chrome.tabs.query({ active: true, currentWindow: true }).catch(() => [])
+    chrome.tabs.query({ active: true, currentWindow: true }).catch(() => []),
+    globalThis.LletriumLanguagePacks.listPacks().catch(() => [])
   ]);
+  installedPackIds = new Set(installedPacks.filter(pack => globalThis.LletriumLanguagePacks.isPackCompatible(pack)).map(pack => pack.id));
+  enabledLanguageProfiles = storedSettings.enabledLanguageProfiles || {};
+  syncFrenchProfileOptions();
   const settings = { ...defaults, ...storedSettings };
-  if (!["ca", "es", "en"].includes(settings.uiLanguage)) {
+  if (!["ca", "es", "en", "fr"].includes(settings.uiLanguage)) {
     settings.uiLanguage = defaults.uiLanguage;
     chrome.storage.sync.set({ uiLanguage: settings.uiLanguage }).catch(() => {});
   }
@@ -252,12 +333,18 @@ async function initialize() {
   conditionalSiteNoticeKey = await getConditionalSiteNoticeKey(activeTabId, currentHref);
   document.getElementById("enabled").checked = settings.enabled !== false;
   document.getElementById("showReviewButton").checked = settings.showReviewButton !== false;
-  document.getElementById("uiLanguage").value = ["ca", "es", "en"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca";
+  document.getElementById("uiLanguage").value = ["ca", "es", "en", "fr"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca";
   applyPopupLocale(document.getElementById("uiLanguage").value);
   applyPopupTheme(settings.theme);
   const languageControl = document.getElementById("language");
   const savedLanguage = settings.language === "ca" ? "ca-ES" : settings.language === "es" ? "es-ES" : settings.language === "en" ? "en-US" : settings.language;
-  languageControl.value = DICTIONARY_PROFILES.includes(savedLanguage) ? savedLanguage : "ca-ES";
+  refreshPackAvailability();
+  const availableProfiles = [...languageControl.options].map(option => option.value);
+  const validSavedLanguage = availableProfiles.includes(savedLanguage) && installedPackIds.has(packIdForProfile(savedLanguage));
+  const fallbackLanguage = availableProfiles.find(profile => installedPackIds.has(packIdForProfile(profile)));
+  const missingProfile = savedLanguage.startsWith("ca-") ? "ca-ES" : savedLanguage.startsWith("fr-") ? "fr-FR" : savedLanguage;
+  languageControl.value = validSavedLanguage ? savedLanguage : fallbackLanguage || (availableProfiles.includes(missingProfile) ? missingProfile : "ca-ES");
+  if (fallbackLanguage && !validSavedLanguage) chrome.storage.sync.set({ language: fallbackLanguage }).catch(() => {});
   selectedDictionaryProfile = dictionaryProfileForProofing(languageControl.value);
   renderLanguagePicker();
   renderDictionaryLanguagePicker();
@@ -284,10 +371,38 @@ async function initialize() {
   wireAdvancedUnlock();
   wireSettings();
   wireDictionary();
+  const launchState = await chrome.storage.local.get({ openLanguageManager: false });
+  if (launchState.openLanguageManager) {
+    await chrome.storage.local.set({ openLanguageManager: false });
+    openLanguageSetup();
+  }
   refreshEngineStatus();
   const timer = setInterval(refreshEngineStatus, 1400);
   window.addEventListener("pagehide", () => clearInterval(timer), { once: true });
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.installedLanguagePacksRevision) {
+      globalThis.LletriumLanguagePacks.listPacks().then(packs => {
+        installedPackIds = new Set(packs.filter(pack => globalThis.LletriumLanguagePacks.isPackCompatible(pack)).map(pack => pack.id));
+        syncFrenchProfileOptions();
+        const languageControl = document.getElementById("language");
+        const activeLanguage = languageControl?.value || "";
+        if (languageControl && PROOFING_PROFILES.includes(activeLanguage) && !installedPackIds.has(packIdForProfile(activeLanguage))) {
+          const fallback = [...languageControl.options].map(option => option.value).find(profile => installedPackIds.has(packIdForProfile(profile)));
+          if (fallback) {
+            languageControl.value = fallback;
+            chrome.storage.sync.set({ language: fallback }).catch(() => {});
+          }
+        }
+        refreshPackAvailability();
+        renderLanguagePicker();
+        renderDictionaryLanguagePicker();
+        refreshEngineStatus();
+      }).catch(() => {});
+    }
+    if (area === "sync" && changes.enabledLanguageProfiles) {
+      enabledLanguageProfiles = changes.enabledLanguageProfiles.newValue || {};
+      syncFrenchProfileOptions(); refreshPackAvailability(); renderLanguagePicker();
+    }
     if (area === "sync" && changes.excludedSites) renderSites(changes.excludedSites.newValue || []);
     if (area === "sync" && changes.enabled) {
       document.getElementById("enabled").checked = changes.enabled.newValue !== false;
@@ -302,7 +417,7 @@ async function initialize() {
       applyPopupTheme(changes.theme.newValue || "system");
     }
     if (area === "sync" && changes.language) {
-      document.getElementById("language").value = DICTIONARY_PROFILES.includes(changes.language.newValue) ? changes.language.newValue : "ca-ES";
+      document.getElementById("language").value = PROOFING_PROFILES.includes(changes.language.newValue) ? changes.language.newValue : "ca-ES";
       renderLanguagePicker();
       renderDictionary();
       refreshEngineStatus();
@@ -340,6 +455,8 @@ function wireNavigation() {
     button.addEventListener("click", () => showView(button.dataset.openView));
   }
   for (const button of document.querySelectorAll("[data-back]")) button.addEventListener("click", () => showView("home"));
+  document.getElementById("manageLanguages")?.addEventListener("click", openLanguageSetup);
+
 }
 function wireAdvancedUnlock() {
   let progress = "";
@@ -397,7 +514,8 @@ function wireSettings() {
     });
   });
   document.getElementById("language").addEventListener("change", event => {
-    const language = DICTIONARY_PROFILES.includes(event.currentTarget.value) ? event.currentTarget.value : "ca-ES";
+    const language = PROOFING_PROFILES.includes(event.currentTarget.value) ? event.currentTarget.value : "ca-ES";
+    if (!installedPackIds.has(packIdForProfile(language))) { openLanguageSetup(); return; }
     event.currentTarget.value = language;
     renderLanguagePicker();
     renderDictionary();
@@ -405,7 +523,7 @@ function wireSettings() {
     chrome.storage.sync.set({ language }).catch(() => {});
   });
   document.getElementById("uiLanguage").addEventListener("change", event => {
-    const value = ["ca", "es", "en"].includes(event.currentTarget.value) ? event.currentTarget.value : "ca";
+    const value = ["ca", "es", "en", "fr"].includes(event.currentTarget.value) ? event.currentTarget.value : "ca";
     applyPopupLocale(value);
     chrome.storage.sync.set({ uiLanguage: value }).then(() => notifyActiveTabOfUiPreferences()).catch(() => {});
   });
@@ -453,7 +571,7 @@ function wireSettings() {
   document.getElementById("editorAnalysisBtn").addEventListener("click", runEditorAnalysis);
   const pickEditorButton = document.createElement("button");
   pickEditorButton.type = "button";
-  pickEditorButton.textContent = ({ ca: "⌖ Seleccionar text a la pàgina", es: "⌖ Seleccionar texto en la página", en: "⌖ Pick text on the page" })[uiLanguage] || "⌖ Pick text on the page";
+  pickEditorButton.textContent = ({ ca: "⌖ Seleccionar text a la pàgina", es: "⌖ Seleccionar texto en la página", en: "⌖ Pick text on the page", fr: "⌖ Sélectionner le texte sur la page" })[uiLanguage] || "⌖ Pick text on the page";
   document.getElementById("editorAnalysisBtn").after(pickEditorButton);
   pickEditorButton.addEventListener("click", async () => {
     try {
@@ -608,6 +726,7 @@ function normalizeDictionary(input) {
     ...(Array.isArray(input?.["ca-ES-valencia"]) ? input["ca-ES-valencia"] : []),
     ...(Array.isArray(input?.["ca-ES-balear"]) ? input["ca-ES-balear"] : [])
   ];
+  const sharedFrench = [...FRENCH_PROFILES, "fr"].flatMap(profile => Array.isArray(input?.[profile]) ? input[profile] : []);
   const profiles = Object.fromEntries(DICTIONARY_PROFILES.map(profile => {
     let values = profile.startsWith("ca-") ? sharedCatalan : (Array.isArray(input?.[profile]) ? input[profile] : []);
     if (profile === "es-ES" && !values.length && Array.isArray(input?.es)) values = input.es;
@@ -617,6 +736,9 @@ function normalizeDictionary(input) {
     for (const value of values.map(cleanWord).filter(Boolean)) unique.set(value.toLocaleLowerCase(language), value);
     return [profile, [...unique.values()].sort((a, b) => a.localeCompare(b, language))];
   }));
+  const frenchUnique = new Map();
+  for (const value of sharedFrench.map(cleanWord).filter(Boolean)) frenchUnique.set(value.toLocaleLowerCase("fr"), value);
+  profiles["fr-FR"] = [...frenchUnique.values()].sort((a, b) => a.localeCompare(b, "fr"));
   return profiles;
 }
 let latestExcludedSites = [];
