@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, readFile, rm, writeFile, access } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
@@ -7,6 +7,28 @@ import { fileURLToPath } from "node:url";
 import { isSupportedDisambiguationRule } from "./tools/disambiguation-rule-gate.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+// The focused source ZIP carries only the LanguageTool language/core sources
+// needed by Lletrium, under references/. Recreate the legacy analysis checkout
+// layout on demand so existing conversion tools work without shipping the full
+// multi-language LanguageTool repository.
+const ltCheckout = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master");
+const ltSourceMappings = [
+  ["references/languagetool-en-US/languagetool-language-modules/en/src/main", "languagetool-language-modules/en/src/main"],
+  ["references/languagetool-es-ES/languagetool-language-modules/es/src/main", "languagetool-language-modules/es/src/main"],
+  ["references/languagetool-audit/languagetool-core/src/main", "languagetool-core/src/main"],
+  ["references/languagetool-audit/languagetool-language-modules/ca/src/main", "languagetool-language-modules/ca/src/main"]
+];
+for (const [packagedRelative, checkoutRelative] of ltSourceMappings) {
+  const destination = resolve(ltCheckout, checkoutRelative);
+  try { await access(destination); }
+  catch {
+    const packagedSource = resolve(root, packagedRelative);
+    try { await access(packagedSource); }
+    catch { throw new Error(`Missing pinned LanguageTool source: ${packagedRelative}`); }
+    await mkdir(dirname(destination), { recursive: true });
+    await cp(packagedSource, destination, { recursive: true });
+  }
+}
 const englishSrxBuild = spawnSync(process.execPath, [resolve(root, "analysis/reference-oracle/build-english-srx.mjs")], { encoding: "utf8" });
 if (englishSrxBuild.status !== 0) throw new Error(englishSrxBuild.stderr || englishSrxBuild.stdout || "Could not build the English SRX resource.");
 const englishDisambiguationBuild = spawnSync(process.execPath, [resolve(root, "engine-src/tools/build-en-disambiguation.mjs")], { encoding: "utf8" });
@@ -48,6 +70,7 @@ if (spanishRepeatedPatternsBuild.status !== 0) throw new Error(spanishRepeatedPa
 const spanishFilterSpellerVerify = spawnSync(process.execPath, [resolve(root, "engine-src/tools/verify-es-filter-speller-source.mjs")], { encoding: "utf8" });
 if (spanishFilterSpellerVerify.status !== 0) throw new Error(spanishFilterSpellerVerify.stderr || spanishFilterSpellerVerify.stdout || "Spanish LanguageTool filter-speller source does not match the pinned profile.");
 const sourceFiles = [
+  "engine-src/modules/ca-cfsa2-dictionary.js",
   "engine-src/modules/en-morphology.js",
   "engine-src/modules/en-tagger.js",
   "engine-src/modules/en-synthesis.js",
@@ -157,11 +180,19 @@ const spanishMultitokenSpeller = JSON.parse(await readFile(resolve(spanishResour
 if (spanishMultitokenSpeller?.schemaVersion !== 1 || spanishMultitokenSpeller.profile !== "es-ES"
     || spanishMultitokenSpeller.sourceHashes?.["es/multiwords.txt"] !== spanishMultiword.sourceHashes["es/multiwords.txt"]
     || spanishMultitokenSpeller.sourceHashes?.["spelling_global.txt"] !== spanishMultiword.sourceHashes["spelling_global.txt"]
-    || spanishMultitokenSpeller.sourceHashes?.["es/hyphenated_words.txt"] !== "6088c25b42a82cc2cd325e43ea39999fac20da5af262cc951bad0661531317e1" || !Array.isArray(spanishMultitokenSpeller.entries)) throw new Error("Spanish multitoken spelling resource differs from the pinned LanguageTool sources.");
+    || spanishMultitokenSpeller.sourceHashes?.["es/hyphenated_words.txt"] !== "6088c25b42a82cc2cd325e43ea39999fac20da5af262cc951bad0661531317e1"
+    || spanishMultitokenSpeller.entriesReferenceFormat !== "es-multiword-index-v1"
+    || spanishMultitokenSpeller.entries?.length !== 38425
+    || !spanishMultitokenSpeller.entries.every(value => typeof value === "string" || Number.isSafeInteger(value) && value !== 0)) throw new Error("Spanish multitoken spelling resource differs from the pinned LanguageTool sources.");
 const spanishDisambiguation = JSON.parse(await readFile(resolve(spanishResourceSource, "es-disambiguation-rules.json"), "utf8"));
 if (spanishDisambiguation?.schemaVersion !== 1 || spanishDisambiguation.language !== "es-ES" || spanishDisambiguation.sourceSha256 !== "a997ec038fb422f9502886be4c792542010d83e6bf28e82408bab23503949f54" || spanishDisambiguation.supportedRuleCount !== spanishDisambiguation.rules?.length || spanishDisambiguation.supportedRuleCount !== 733 || spanishDisambiguation.upstreamRuleCount !== 733 || spanishDisambiguation.englishWordTagsSha256 !== "44222a02ee55f5e6796cce8cdd8ba83d89fcda199ffa510f89affa5860e654fa" || Object.keys(spanishDisambiguation.englishWordTags || {}).length !== 203189) throw new Error("Spanish LanguageTool disambiguation resource differs from the pinned es-ES snapshot.");
 const spanishSpellingData = JSON.parse(await readFile(resolve(spanishResourceSource, "es-spelling-data.json"), "utf8"));
-if (spanishSpellingData?.schemaVersion !== 1 || spanishSpellingData.profile !== "es-ES" || spanishSpellingData.sourceHashes?.["es/hunspell/spelling.txt"] !== "b767c65a6f8ca830bb7bc1c7944695ff40c6d133e11f31e03e3f4ee09194bcd8" || spanishSpellingData.sourceHashes?.["es/hunspell/prohibit.txt"] !== "08bcc37896c36d64e7e1b066a304c0749d01ce974a116cbb0599639738081563") throw new Error("Spanish LanguageTool spelling lists differ from the pinned es-ES snapshot.");
+if (spanishSpellingData?.schemaVersion !== 1 || spanishSpellingData.profile !== "es-ES"
+    || spanishSpellingData.sourceHashes?.["es/hunspell/spelling.txt"] !== "b767c65a6f8ca830bb7bc1c7944695ff40c6d133e11f31e03e3f4ee09194bcd8"
+    || spanishSpellingData.sourceHashes?.["es/hunspell/prohibit.txt"] !== "08bcc37896c36d64e7e1b066a304c0749d01ce974a116cbb0599639738081563"
+    || spanishSpellingData.acceptedWordsReferenceFormat !== "es-multiword-index-v1"
+    || spanishSpellingData.acceptedWords?.length !== 47278
+    || !spanishSpellingData.acceptedWords.every(value => typeof value === "string" || Number.isSafeInteger(value) && value < 0)) throw new Error("Spanish LanguageTool spelling lists differ from the pinned es-ES snapshot.");
 const spanishManualTags = JSON.parse(await readFile(resolve(spanishResourceSource, "es-manual-tags.json"), "utf8"));
 if (spanishManualTags?.schemaVersion !== 1 || spanishManualTags.profile !== "es-ES"
     || spanishManualTags.sourceHashes?.["added.txt"] !== "683a17d2a9518e25675706190045198f0fbe5a07f00ab4f6f1b553254212006a"
@@ -215,6 +246,7 @@ if (spanishPatternRules?.schemaVersion !== 1 || spanishPatternRules.language !==
 await copyFile(spanishPatternRulesPath, resolve(spanishResourceOutput, "es-pattern-rule-candidates.json"));
 const englishResourceSource = resolve(root, "engine-src/resources/en-US");
 const englishResourceOutput = resolve(root, "build/resources/en-US");
+await rm(englishResourceOutput, { recursive: true, force: true });
 await mkdir(englishResourceOutput, { recursive: true });
 const englishManifest = JSON.parse(await readFile(resolve(englishResourceSource, "manifest.json"), "utf8"));
 if (englishManifest?.schemaVersion !== 1 || englishManifest.profile !== "en-US"
@@ -222,10 +254,13 @@ if (englishManifest?.schemaVersion !== 1 || englishManifest.profile !== "en-US"
     || englishManifest.sourceJar?.sha256 !== "2a3e96b49854e5275f8eb7a1bb5b3b85b82f687fed272f3043882ccc0b1634b1"
     || englishManifest.soros?.file !== "en-US-en.sor" || englishManifest.soros?.sha256 !== "ad78ab088ceb4a5b1858020facd818ac1df5433cead09e784833047691333d11"
     || englishManifest.soros?.romanFile !== "Roman.sor" || englishManifest.soros?.romanSha256 !== "11002fdb8c7039c1a71a5ba8f3a2b405548e993f8668066363d6e1fea58ca4b1"
-    || englishManifest.posIndex?.entries !== 259353 || englishManifest.synthesisIndex?.entries !== 259332
+    || englishManifest.posDictionary?.entries !== 259353 || englishManifest.synthesisDictionary?.entries !== 259332
     || englishManifest.manualTags?.file !== "en-manual-tags.json" || englishManifest.manualTags?.additions !== 442 || englishManifest.manualTags?.removals !== 27
-    || englishManifest.spelling?.locale !== "en_US"
-    || englishManifest.openNlp?.format !== "ONLPX1" || Object.keys(englishManifest.openNlp?.models || {}).length !== 3) throw new Error("The English lexical resources do not match the pinned en-US profile.");
+    || englishManifest.spelling?.locale !== "en_US" || englishManifest.spelling?.format !== "CFSA2"
+    || englishManifest.spelling?.dataFile !== "en-US-spelling-cfsa2.bin.gz"
+    || englishManifest.spelling?.sourceSha256 !== "9ca20ca1dd0bda6d6484331ab72459ffe49bd2624e506c63b1b47651c28451d2"
+    || englishManifest.spelling?.compressedBytes !== 607289
+    || englishManifest.openNlp?.format !== "GIS1" || Object.keys(englishManifest.openNlp?.models || {}).length !== 3) throw new Error("The English lexical resources do not match the pinned en-US profile.");
 const englishManualTagsBytes = await readFile(resolve(englishResourceSource, englishManifest.manualTags?.file || "en-manual-tags.json"));
 const englishManualTags = JSON.parse(englishManualTagsBytes.toString("utf8"));
 if (createHash("sha256").update(englishManualTagsBytes).digest("hex") !== englishManifest.manualTags?.sha256
@@ -234,8 +269,8 @@ if (createHash("sha256").update(englishManualTagsBytes).digest("hex") !== englis
     || englishManualTags.sourceHashes?.["removed.txt"] !== "d34555d63c6a7c97cce1e48feef71e960acd2cf003d2863460c78a3d9da75b0c") {
   throw new Error("The en-US manual POS tag overlay does not match the pinned LanguageTool source.");
 }
-for (const name of [englishManifest.pos.dataFile, englishManifest.posIndex.file,
-  englishManifest.synthesis.dataFile, englishManifest.synthesisIndex.file, englishManifest.spelling.dataFile,
+for (const name of [englishManifest.pos.dataFile, englishManifest.posDictionary.file, englishManifest.synthesisDictionary.file,
+  englishManifest.spelling.dataFile,
   "en-US-english_tags.txt", "en-US-en.sor", "en-US-det_a.txt", "en-US-det_an.txt", "en-srx.json",
   "en-specific-case.json",
   "en-simple-replace.json",
@@ -248,8 +283,15 @@ for (const name of [englishManifest.pos.dataFile, englishManifest.posIndex.file,
   englishManifest.openNlp.posTagDictionary.file, englishManifest.manualTags.file, "en-disambiguation-rules.json", "en-multiwords.json"]) {
   await copyFile(resolve(englishResourceSource, name), resolve(englishResourceOutput, name));
 }
-await copyFile(resolve(englishResourceSource, "manifest.json"), resolve(englishResourceOutput, "resource-index.json"));
-await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rule-candidates.json"), resolve(englishResourceOutput, "en-pattern-rule-candidates.json"));
+const englishRuntimeManifest = { ...englishManifest };
+delete englishRuntimeManifest.posIndex;
+delete englishRuntimeManifest.synthesis;
+delete englishRuntimeManifest.synthesisIndex;
+await writeFile(resolve(englishResourceOutput, "resource-index.json"), `${JSON.stringify(englishRuntimeManifest, null, 2)}\n`, "utf8");
+const englishPatternCandidatesBytes = await readFile(resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rule-candidates.json"));
+const englishPatternCandidatesGzip = gzipSync(englishPatternCandidatesBytes, { level: 9, mtime: 0 });
+await writeFile(resolve(englishResourceOutput, "en-pattern-rule-candidates.json.gz"), englishPatternCandidatesGzip);
+await rm(resolve(englishResourceOutput, "en-pattern-rule-candidates.json"), { force: true });
 await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-repeated-pattern-rules.json"), resolve(englishResourceOutput, "en-repeated-pattern-rules.json"));
 await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-regex-rules.json"), resolve(englishResourceOutput, "en-regex-rules.json"));
 const englishAdverbMap = JSON.parse(await readFile(resolve(root, "engine-src/resources/en-US-adverb-to-adjective.json"), "utf8"));
@@ -259,7 +301,7 @@ if (englishAdverbMap?.schemaVersion !== 1 || englishAdverbMap.profile !== "en-US
   throw new Error("The packaged en-US AdverbFilter map is incomplete or differs from LanguageTool.");
 }
 await copyFile(resolve(root, "engine-src/resources/en-US-adverb-to-adjective.json"), resolve(englishResourceOutput, "en-US-adverb-to-adjective.json"));
-const englishPatternCandidates = JSON.parse(await readFile(resolve(englishResourceOutput, "en-pattern-rule-candidates.json"), "utf8"));
+const englishPatternCandidates = JSON.parse(englishPatternCandidatesBytes.toString("utf8"));
 if (englishPatternCandidates.runtimeRuleCount !== 5798 || englishPatternCandidates.rules?.length !== 5798) {
   throw new Error("The packaged English PatternRule inventory is incomplete.");
 }
@@ -741,12 +783,13 @@ const manifest = {
     sourceSha256: multiwordReplaceHash,
     entries: multiwordEntries.length
   },
-  resourceManifests: ["build/resources/en-US/resource-index.json", "build/resources/en-US/en-srx.json", "build/resources/en-US/en-disambiguation-rules.json", "build/resources/en-US/en-multiwords.json", "build/resources/en-US/en-word-coherency.json", "build/resources/en-US/en-synonyms.json", "build/resources/en-US/en-compounds.json", "build/resources/en-US/en-wrong-word-context.json", "build/resources/en-US/en-contractions.json", "build/resources/en-US/en-pattern-rule-candidates.json", "build/resources/en-US/en-repeated-pattern-rules.json", "build/resources/central/resource-index.json", "build/resources/es-ES/resource-index.json", "build/resources/es-ES/synthesis-manifest.json", "build/resources/es-ES/es-srx.json", "build/resources/es-ES/es-multiword.json", "build/resources/es-ES/es-multitoken-speller.json", "build/resources/es-ES/es-disambiguation-rules.json", "build/resources/es-ES/es-spelling-data.json", "build/resources/es-ES/es-manual-tags.json", "build/resources/es-ES/es-simple-replace.json", "build/resources/es-ES/es-wrong-word-context.json", "build/resources/es-ES/es-compounds.json", "build/resources/es-ES/es-synonyms.json", "build/resources/es-ES/es-confusion-pairs.json", "build/resources/es-ES/es-repeated-pattern-rules.json", "build/resources/ca-srx.json", "build/resources/ca-tagger-data.json", "build/resources/ca-chunker-data.json", "build/resources/ca-disambiguation-rules.json", "build/resources/ca-pattern-rule-candidates.json", "build/resources/ca-dialect-pattern-rules.json", "build/resources/ca-dialect-profile-overrides.json", "build/resources/ca-simple-replace-multiwords.json", "build/resources/ca-spelling-multitoken-words.txt.gz", "build/resources/ca-spelling-words.txt.gz", "build/resources/ca-spelling-overlays.txt.gz", "build/resources/synthesis/resource-index.json", "build/resources/synthesis/ca-synthesis.bin.gz", "build/resources/ca-speller-metadata.json", "build/resources/ca-speller-multitoken-metadata.json", "build/resources/ca-speller-multitoken-graph.bin.gz", "build/resources/ca-speller-graph.bin.gz", "build/resources/ca-spelling-overlay-graph.bin.gz", "build/resources/ca-filter-data.json", "build/resources/ca-table-rules.json"]
+  resourceManifests: ["build/resources/en-US/resource-index.json", "build/resources/en-US/en-srx.json", "build/resources/en-US/en-disambiguation-rules.json", "build/resources/en-US/en-multiwords.json", "build/resources/en-US/en-word-coherency.json", "build/resources/en-US/en-synonyms.json", "build/resources/en-US/en-compounds.json", "build/resources/en-US/en-wrong-word-context.json", "build/resources/en-US/en-contractions.json", "build/resources/en-US/en-pattern-rule-candidates.json.gz", "build/resources/en-US/en-repeated-pattern-rules.json", "build/resources/central/resource-index.json", "build/resources/es-ES/resource-index.json", "build/resources/es-ES/synthesis-manifest.json", "build/resources/es-ES/es-srx.json", "build/resources/es-ES/es-multiword.json", "build/resources/es-ES/es-multitoken-speller.json", "build/resources/es-ES/es-disambiguation-rules.json", "build/resources/es-ES/es-spelling-data.json", "build/resources/es-ES/es-manual-tags.json", "build/resources/es-ES/es-simple-replace.json", "build/resources/es-ES/es-wrong-word-context.json", "build/resources/es-ES/es-compounds.json", "build/resources/es-ES/es-synonyms.json", "build/resources/es-ES/es-confusion-pairs.json", "build/resources/es-ES/es-repeated-pattern-rules.json", "build/resources/ca-srx.json", "build/resources/ca-tagger-data.json", "build/resources/ca-chunker-data.json", "build/resources/ca-disambiguation-rules.json", "build/resources/ca-pattern-rule-candidates.json", "build/resources/ca-dialect-pattern-rules.json", "build/resources/ca-dialect-profile-overrides.json", "build/resources/ca-simple-replace-multiwords.json", "build/resources/ca-spelling-multitoken-words.txt.gz", "build/resources/ca-spelling-words.txt.gz", "build/resources/ca-spelling-overlays.txt.gz", "build/resources/synthesis/resource-index.json", "build/resources/synthesis/ca-synthesis.bin.gz", "build/resources/ca-speller-metadata.json", "build/resources/ca-speller-multitoken-metadata.json", "build/resources/ca-speller-multitoken-graph.bin.gz", "build/resources/ca-speller-graph.bin.gz", "build/resources/ca-spelling-overlay-graph.bin.gz", "build/resources/ca-filter-data.json", "build/resources/ca-table-rules.json"]
 };
 manifest.resourceManifests.push("build/resources/en-US/en-regex-rules.json");
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 await mkdir(resolve(stagedExtension, "src"), { recursive: true });
 await mkdir(resolve(stagedExtension, "build"), { recursive: true });
+await rm(resolve(stagedExtension, "build/resources/en-US"), { recursive: true, force: true });
 for (const resourceRoot of [resolve(root, "build/resources"), resolve(stagedExtension, "build/resources")]) {
   for (const path of ["central/manifest.json", "en-US/manifest.json", "es-ES/manifest.json", "synthesis/manifest.json"]) {
     await rm(resolve(resourceRoot, path), { force: true });

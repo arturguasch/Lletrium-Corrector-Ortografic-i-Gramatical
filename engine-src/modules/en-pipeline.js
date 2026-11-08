@@ -46,7 +46,7 @@
       this.patternRules.configureSynthesizer(this.synthesizer);
       this.patternRules.configureMultitokenSpeller({ schemaVersion: 1, profile: "en-US", entries: multiwordChunker.multitokenSpellerEntries });
       this.profile = "en-US";
-      this.stages = ["en-US-SRX", "en-US-EnglishWordTokenizer", "english-pos-dictionary", "english-synthesis-dictionary", "en-US-LanguageTool-Soros-number-synthesis", "en-US-Morfologik-spelling", "OpenNLP-1.9.5-models-local", "OpenNLP-tokenizer-ONLPX1", "OpenNLP-POS-sequence-ONLPX1", "OpenNLP-chunker-sequence-ONLPX1", "EnglishChunkFilter", "LanguageTool-spelling_global-multiwords", "LanguageTool-en-multiwords", "en-US-LanguageTool-XML-disambiguation", "en-US-LanguageTool-PatternRule-portable", "en-US-EnglishSpecificCaseRule-local-table", "en-US-AvsAnRule-local-exception-tables", "en-US-SimpleReplaceRule-tables", "en-US-English-WordCoherency-document-rule", "en-US-LanguageTool-WordRepeat-and-WordRepeatBeginning-rules", "en-US-LanguageTool-RepeatedWords-PICKY-with-local-synonyms", "en-US-LanguageTool-CompoundRule-8908-source-entries", "en-US-EnglishWrongWordInContext-11-local-context-pairs", "en-US-ContractionSpellingRule-table", "en-US-EnglishDashRule-PICKY-compounds-table", "en-US-LanguageTool-punctuation-brackets-quotes-and-paragraph-end"];
+      this.stages = ["en-US-SRX", "en-US-EnglishWordTokenizer", "english-pos-dictionary", "english-synthesis-dictionary", "en-US-LanguageTool-Soros-number-synthesis", "en-US-Morfologik-spelling", "OpenNLP-1.9.5-models-local", "OpenNLP-tokenizer-GIS1", "OpenNLP-POS-sequence-GIS1", "OpenNLP-chunker-sequence-GIS1", "EnglishChunkFilter", "LanguageTool-spelling_global-multiwords", "LanguageTool-en-multiwords", "en-US-LanguageTool-XML-disambiguation", "en-US-LanguageTool-PatternRule-portable", "en-US-EnglishSpecificCaseRule-local-table", "en-US-AvsAnRule-local-exception-tables", "en-US-SimpleReplaceRule-tables", "en-US-English-WordCoherency-document-rule", "en-US-LanguageTool-WordRepeat-and-WordRepeatBeginning-rules", "en-US-LanguageTool-RepeatedWords-PICKY-with-local-synonyms", "en-US-LanguageTool-CompoundRule-8908-source-entries", "en-US-EnglishWrongWordInContext-11-local-context-pairs", "en-US-ContractionSpellingRule-table", "en-US-EnglishDashRule-PICKY-compounds-table", "en-US-LanguageTool-punctuation-brackets-quotes-and-paragraph-end"];
     }
 
     analyzeText(text, options = {}) {
@@ -279,7 +279,7 @@
 
     getDiagnostics() {
       return { profile: this.profile, activeStages: [...this.stages], morphology: this.morphology.getStats(),
-        synthesisEntries: this.synthesizer.manifest.synthesisIndex.entries,
+        synthesisEntries: this.synthesizer.manifest.synthesisDictionary.entries,
         numberSynthesis: { source: this.synthesizer.manifest.soros.file, sourceSha256: this.synthesizer.manifest.soros.sha256,
           executableRules: this.synthesizer.numberProgram?.rules.length || 0,
           romanSource: this.synthesizer.manifest.soros.romanFile, romanSourceSha256: this.synthesizer.manifest.soros.romanSha256,
@@ -309,7 +309,7 @@
         globalThis.CorrectorEnglishOpenNlp.load(fetchOptions),
         globalThis.CorrectorEnglishXmlDisambiguator.load({ url: new URL("en-disambiguation-rules.json", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishMultiwordChunker.load(fetchOptions),
-        globalThis.CorrectorEnglishPatternRuleMatcher.load({ url: new URL("en-pattern-rule-candidates.json", baseUrl), fetcher: fetchOptions.fetcher }),
+        globalThis.CorrectorEnglishPatternRuleMatcher.load({ url: new URL("en-pattern-rule-candidates.json.gz", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishSpecificCase.load({ url: new URL("en-specific-case.json", baseUrl), fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishAvsAn.load({ baseUrl, fetcher: fetchOptions.fetcher }),
         globalThis.CorrectorEnglishSimpleReplace.load({ url: new URL("en-simple-replace.json", baseUrl), fetcher: fetchOptions.fetcher }),

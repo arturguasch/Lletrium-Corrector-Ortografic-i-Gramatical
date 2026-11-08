@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const RESOURCE_PATH = "build/resources/en-US/en-pattern-rule-candidates.json";
+  const RESOURCE_PATH = "build/resources/en-US/en-pattern-rule-candidates.json.gz";
   const EXPECTED_GRAMMAR_HASH = "525966679e4dac23d70b5f7c09092b67b9aa20fcfbe70327b858e3fd06b63974";
   const ADVERB_MAP_HASH = "d1b53f4cd0d8fc91413d866a6a4dd3c7aa96682e43cc1a18256801685d42ae78";
   let rules = [];
@@ -59,6 +59,15 @@
   let heldOutFilterCount = 0;
   let heldOutNumberCount = 0;
   let adverbToAdjective = Object.create(null);
+
+  async function parsePatternResource(response, url) {
+    if (!String(url).endsWith(".gz")) return response.json();
+    if (typeof DecompressionStream !== "function" || !response.body) {
+      throw new Error("This runtime cannot decompress the local en-US PatternRule resource.");
+    }
+    const stream = response.body.pipeThrough(new DecompressionStream("gzip"));
+    return new Response(stream).json();
+  }
 
   function compilePosRegex(source) {
     if (compiledPosRegexes.has(source)) return compiledPosRegexes.get(source);
@@ -247,7 +256,9 @@
         if (!response.ok) throw new Error(`Could not load the local en-US PatternRule resource (${response.status}).`);
         if (!repeatedResponse.ok) throw new Error(`Could not load the local en-US repeated-pattern resource (${repeatedResponse.status}).`);
         if (!adverbMapResponse.ok) throw new Error(`Could not load the local en-US AdverbFilter map (${adverbMapResponse.status}).`);
-        const [resource, repeatedResource, adverbMapResource] = await Promise.all([response.json(), repeatedResponse.json(), adverbMapResponse.json()]);
+        const [resource, repeatedResource, adverbMapResource] = await Promise.all([
+          parsePatternResource(response, resourceUrl), repeatedResponse.json(), adverbMapResponse.json()
+        ]);
         if (resource?.schemaVersion !== 1 || resource.language !== "en-US"
             || resource.grammarXmlSha256 !== EXPECTED_GRAMMAR_HASH
             || !Number.isInteger(resource.activeRuleCount) || !Array.isArray(resource.rules)

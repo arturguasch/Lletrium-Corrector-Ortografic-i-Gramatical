@@ -175,30 +175,72 @@
     };
   }
 
-  async function ensureDirectEngineScript() {
-    if (!globalThis.CorrectorLocalEngine?.checkText) {
-      if (!STATE.directScriptLoading) {
-        STATE.directScriptLoading = new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = chrome.runtime.getURL("src/language-engine.js");
-          script.onload = () => {
-            if (globalThis.CorrectorLocalEngine?.checkText) resolve(globalThis.CorrectorLocalEngine);
-            else reject(new Error("language-engine.js carregat sense checkText"));
-          };
-          script.onerror = () => reject(new Error("No he pogut carregar language-engine.js a l'offscreen"));
-          document.documentElement.appendChild(script);
-        }).catch(error => {
-          STATE.directScriptLoading = null;
-          throw error;
-        });
+  const DIRECT_ENGINE_BASE_SCRIPTS = [
+    "src/language-pack-descriptors.generated.js",
+    "src/language-pack-runtime.js",
+    "src/language-engine.js"
+  ];
+  const DIRECT_ENGINE_FRENCH_SCRIPTS = [
+    "src/french-lexical-runtime.js",
+    "src/french-word-tokenizer.js",
+    "src/french-find-suggestions-filter.js",
+    "src/lt-catalan-filters.js",
+    "src/french-postponed-adjective-filter.js",
+    "src/lt-pattern-runtime.js",
+    "src/french-sentence-tokenizer.js",
+    "src/french-whitespace-rule.js",
+    "src/french-comma-whitespace-rule.js",
+    "src/french-core-punctuation-rule.js",
+    "src/french-unpaired-brackets-rule.js",
+    "src/french-long-sentence-rule.js",
+    "src/french-long-paragraph-rule.js",
+    "src/french-uppercase-sentence-rule.js",
+    "src/french-repeated-words-rule.js",
+    "src/french-compounds-rule.js",
+    "src/french-simple-replace-rule.js",
+    "src/french-pattern-pipeline.js"
+  ];
+
+  function loadDirectEngineScript(path) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = chrome.runtime.getURL(path);
+      script.onload = () => { script.remove(); resolve(); };
+      script.onerror = () => { script.remove(); reject(new Error(`Could not load ${path} in the offscreen engine.`)); };
+      document.documentElement.appendChild(script);
+    });
+  }
+
+  async function ensureDirectEngineScript(language = "ca-ES") {
+    const scripts = [...DIRECT_ENGINE_BASE_SCRIPTS];
+    if (String(language).startsWith("fr-")) scripts.push(...DIRECT_ENGINE_FRENCH_SCRIPTS);
+    if (!STATE.directScriptsLoaded) STATE.directScriptsLoaded = new Set();
+
+    const loadMissingScripts = async () => {
+      for (const path of scripts) {
+        if (STATE.directScriptsLoaded.has(path)) continue;
+        if (path === "src/language-engine.js" && globalThis.CorrectorLocalEngine?.checkText) {
+          STATE.directScriptsLoaded.add(path);
+          continue;
+        }
+        await loadDirectEngineScript(path);
+        STATE.directScriptsLoaded.add(path);
       }
-      await STATE.directScriptLoading;
-    }
-    return globalThis.CorrectorLocalEngine;
+      if (!globalThis.CorrectorLocalEngine?.checkText) throw new Error("language-engine.js loaded without checkText");
+      return globalThis.CorrectorLocalEngine;
+    };
+
+    const previous = STATE.directScriptLoading || Promise.resolve();
+    const loading = previous.catch(() => {}).then(loadMissingScripts);
+    STATE.directScriptLoading = loading.catch(error => {
+      STATE.directScriptLoading = null;
+      throw error;
+    });
+    return STATE.directScriptLoading;
   }
 
   async function ensureEngine(language) {
-    await ensureDirectEngineScript();
+    await ensureDirectEngineScript(language);
     if (globalThis.CorrectorLocalEngine.preload && !STATE.loadedLanguages.has(language)) {
       await globalThis.CorrectorLocalEngine.preload([language]);
       STATE.loadedLanguages.add(language);

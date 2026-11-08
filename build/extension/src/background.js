@@ -1,4 +1,15 @@
 
+import "./language-pack-descriptors.generated.js";
+import "./language-pack-runtime.js";
+import "./language-pack-external.js";
+
+function openLanguageManager() {
+  const url = new URL("https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html");
+  url.searchParams.set("extensionId", chrome.runtime.id);
+  url.hash = "languages";
+  return chrome.tabs.create({ url: url.href, active: true });
+}
+
 const BG_GDOCS_ENGINE = {
   loading: null,
   preloadedLanguages: new Set(),
@@ -23,6 +34,13 @@ const FRAME_REVIEW_CARD_ROUTES = new Map();
 const TEMPORARY_DISMISSALS = new Map();
 const TEMPORARY_DISMISSAL_QUEUES = new Map();
 const temporaryDismissalStorageKey = tabId => `correctorTemporaryDismissals:${tabId}`;
+
+function languagePackIdForProfile(profile) {
+  const value = String(profile || "");
+  const declared = (globalThis.LletriumPackDescriptors || []).find(pack => Array.isArray(pack.profiles) && pack.profiles.includes(value));
+  if (declared) return declared.id;
+  return value.startsWith("ca-") ? "ca" : value === "es-ES" ? "es" : value === "en-US" ? "en" : value.startsWith("fr-") ? "fr" : "";
+}
 
 async function getTemporaryDismissals(tabId) {
   const key = temporaryDismissalStorageKey(tabId);
@@ -409,7 +427,7 @@ function runTinyCatalanFallback(text) {
 async function preloadGoogleDocsFullEngine(language = "ca-ES", options = {}) {
   const started = Date.now();
   const keepAlive = !!options.keepAlive;
-  const timeoutMs = keepAlive ? 35000 : 60000;
+  const timeoutMs = keepAlive ? 70000 : 60000;
   if (GDOCS_OFFSCREEN.shutdown) await GDOCS_OFFSCREEN.shutdown.catch(() => {});
   if (!await isCorrectionEnabled()) {
     return { ok: false, transport: "preload-skipped-disabled", durationMs: Date.now() - started, error: "El corrector està desactivat" };
@@ -457,18 +475,19 @@ async function preloadGoogleDocsFullEngine(language = "ca-ES", options = {}) {
 
 
 async function eagerPreloadGoogleDocsEngine() {
-  if (factoryResetInProgress) return;
+  if (factoryResetInProgress || globalThis.LletriumPackMutationActive) return;
   const settings = await chrome.storage.sync.get(DEFAULT_SETTINGS).catch(() => DEFAULT_SETTINGS);
-  if (factoryResetInProgress) return;
+  if (factoryResetInProgress || globalThis.LletriumPackMutationActive) return;
   if (settings.enabled === false || settings.alwaysPreloadEngine === false) return;
   const language = settings.language === "ca" ? "ca-ES" : settings.language === "es" ? "es-ES" : settings.language === "en" ? "en-US" : settings.language || "ca-ES";
   if (GDOCS_OFFSCREEN.eagerPreloadStarted && GDOCS_OFFSCREEN.eagerPreloadLanguage === language
       && await hasOffscreenDocument()) return;
+  const preloadRevision = GDOCS_OFFSCREEN.lifecycleRevision;
   GDOCS_OFFSCREEN.eagerPreloadStarted = true;
   GDOCS_OFFSCREEN.eagerPreloadLanguage = language;
   GDOCS_OFFSCREEN.eagerPreloadAt = Date.now();
   preloadGoogleDocsFullEngine(language).then(result => {
-    if (GDOCS_OFFSCREEN.eagerPreloadLanguage !== language) return;
+    if (GDOCS_OFFSCREEN.eagerPreloadLanguage !== language || GDOCS_OFFSCREEN.lifecycleRevision !== preloadRevision) return;
     GDOCS_OFFSCREEN.eagerPreloadResult = {
       ok: !!result.ok,
       transport: result.transport || "",
@@ -477,7 +496,7 @@ async function eagerPreloadGoogleDocsEngine() {
       percent: result.readiness?.percent || 0
     };
   }).catch(error => {
-    if (GDOCS_OFFSCREEN.eagerPreloadLanguage !== language) return;
+    if (GDOCS_OFFSCREEN.eagerPreloadLanguage !== language || GDOCS_OFFSCREEN.lifecycleRevision !== preloadRevision) return;
     GDOCS_OFFSCREEN.eagerPreloadResult = {
       ok: false,
       error: String(error?.message || error),
@@ -487,14 +506,93 @@ async function eagerPreloadGoogleDocsEngine() {
   });
 }
 
+async function refreshEngineAfterLanguagePackChange() {
+  const task = extensionEngineLifecycleQueue.catch(() => {}).then(async () => {
+    const settings = await chrome.storage.sync.get(DEFAULT_SETTINGS).catch(() => DEFAULT_SETTINGS);
+    const language = settings.language === "ca" ? "ca-ES" : settings.language === "es" ? "es-ES" : settings.language === "en" ? "en-US" : settings.language || "ca-ES";
+    const packId = languagePackIdForProfile(language);
+    const packs = await globalThis.LletriumLanguagePacks.listPacks().catch(() => []);
+    const selectedPackInstalled = packs.some(pack => pack.id === packId);
+
+    // A prior preload can have cached the failed state for a missing pack.
+    // Retire that worker before retrying so the new IndexedDB resources are
+    // read from a clean engine instance.
+    GDOCS_OFFSCREEN.lifecycleRevision += 1;
+    GDOCS_OFFSCREEN.eagerPreloadStarted = false;
+    GDOCS_OFFSCREEN.eagerPreloadLanguage = "";
+    GDOCS_OFFSCREEN.eagerPreloadResult = null;
+    const shutdown = resetGdocsOffscreenDocument("language-packs-changed");
+    GDOCS_OFFSCREEN.shutdown = shutdown;
+    try {
+      const reset = await shutdown;
+      if (!reset.ok) throw new Error(reset.error || "No s’ha pogut reiniciar el motor després d’actualitzar els idiomes.");
+    } finally {
+      if (GDOCS_OFFSCREEN.shutdown === shutdown) GDOCS_OFFSCREEN.shutdown = null;
+    }
+
+    BG_GDOCS_ENGINE.preloadedLanguages.clear();
+    BG_GDOCS_ENGINE.loading = null;
+    try { globalThis.CorrectorLocalEngine?.clearCache?.(); } catch (_) {}
+
+    if (settings.enabled === false) return { ok: true, skipped: "extension-disabled", language };
+    if (!selectedPackInstalled) return { ok: true, skipped: "selected-language-not-installed", language };
+    if (settings.alwaysPreloadEngine === false) return { ok: true, skipped: "preloading-disabled", language };
+
+    GDOCS_OFFSCREEN.eagerPreloadStarted = true;
+    GDOCS_OFFSCREEN.eagerPreloadLanguage = language;
+    GDOCS_OFFSCREEN.eagerPreloadAt = Date.now();
+    const result = await preloadGoogleDocsFullEngine(language, { keepAlive: true });
+    GDOCS_OFFSCREEN.eagerPreloadResult = {
+      ok: !!result.ok,
+      transport: result.transport || "",
+      durationMs: result.durationMs || 0,
+      at: Date.now(),
+      percent: result.readiness?.percent || 0,
+      error: result.error || ""
+    };
+    const ready = result.ok && result.readiness?.phase === "worker-ready-full" && result.readiness?.loaded === true
+      && result.readiness?.workerLoaded === true && result.readiness?.worker?.workerAlive === true
+      && Number(result.readiness?.percent) >= 100;
+    if (!ready) {
+      GDOCS_OFFSCREEN.eagerPreloadStarted = false;
+      return { ok: false, language, error: result.error || result.readiness?.error || "El motor no ha confirmat que estigui preparat.", readiness: result.readiness || null };
+    }
+    return { ok: true, language, readiness: result.readiness };
+  });
+  extensionEngineLifecycleQueue = task.catch(() => {});
+  return task;
+}
+
+globalThis.LletriumRefreshEngineAfterLanguagePackChange = refreshEngineAfterLanguagePackChange;
+
 try {
-  chrome.runtime?.onStartup?.addListener?.(() => setTimeout(eagerPreloadGoogleDocsEngine, 250));
-  chrome.runtime?.onInstalled?.addListener?.(() => setTimeout(eagerPreloadGoogleDocsEngine, 250));
-  setTimeout(eagerPreloadGoogleDocsEngine, 500);
+  const preloadIfLanguageAvailable = async () => {
+    const installedPacks = await globalThis.LletriumLanguagePacks.listPacks().catch(() => []);
+    const settings = await chrome.storage.sync.get(DEFAULT_SETTINGS).catch(() => DEFAULT_SETTINGS);
+    const profile = String(settings.language || "ca-ES");
+    const packId = languagePackIdForProfile(profile);
+    if (settings.enabled === false || !installedPacks.some(pack => pack.id === packId)) return;
+    const state = await getEngineReadiness(profile).catch(() => null);
+    const readiness = state?.readiness || {};
+    const failed = state?.ok === false || !!state?.error || !!readiness.error || /(?:error|failed|failure)/i.test(String(readiness.phase || ""));
+    if (failed && await hasOffscreenDocument()) {
+      GDOCS_OFFSCREEN.lifecycleRevision += 1;
+      await resetGdocsOffscreenDocument("startup-retry-after-previous-engine-error");
+    }
+    GDOCS_OFFSCREEN.eagerPreloadStarted = false;
+    GDOCS_OFFSCREEN.eagerPreloadLanguage = "";
+    GDOCS_OFFSCREEN.eagerPreloadResult = null;
+    eagerPreloadGoogleDocsEngine();
+  };
+  chrome.runtime?.onStartup?.addListener?.(() => setTimeout(preloadIfLanguageAvailable, 250));
+  chrome.runtime?.onInstalled?.addListener?.(() => setTimeout(async () => {
+    await preloadIfLanguageAvailable();
+  }, 250));
+  setTimeout(preloadIfLanguageAvailable, 500);
 } catch (_) {}
 
 chrome.storage?.onChanged?.addListener?.((changes, area) => {
-  if (factoryResetInProgress) return;
+  if (factoryResetInProgress || globalThis.LletriumPackMutationActive) return;
   if (area !== "sync") return;
   const enabledChanged = Object.prototype.hasOwnProperty.call(changes, "enabled");
   const languageChanged = Object.prototype.hasOwnProperty.call(changes, "language");
@@ -891,6 +989,7 @@ async function checkNormalTextInBackground(message) {
 
 
 const DEFAULT_SETTINGS = {
+  enabledLanguageProfiles: {},
   enabled: true,
   language: "ca-ES",
   uiLanguage: "ca",
@@ -909,37 +1008,55 @@ function detectInitialUiLanguage() {
   let locale = "";
   try { locale = String(chrome.i18n?.getUILanguage?.() || ""); } catch (_) {}
   const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
-  return ["ca", "es", "en"].includes(primary) ? primary : "en";
+  return ["ca", "es", "en", "fr"].includes(primary) ? primary : "en";
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async details => {
   const stored = await chrome.storage.sync.get(null);
   const current = { ...DEFAULT_SETTINGS, ...stored };
-  if (!["ca", "es", "en"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
+  if (!["ca", "es", "en", "fr"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
   await chrome.storage.sync.remove(["debounceMs", "maxTextLength"]);
   if (current.language === "ca") current.language = "ca-ES";
   if (current.language === "es") current.language = "es-ES";
   if (current.language === "en") current.language = "en-US";
   await chrome.storage.sync.set({ ...DEFAULT_SETTINGS, ...current });
+  if (["install", "update"].includes(details?.reason)) {
+    const installedPacks = await globalThis.LletriumLanguagePacks.listPacks().catch(() => []);
+    const usablePacks = installedPacks.filter(pack => globalThis.LletriumLanguagePacks.isPackCompatible(pack));
+    const selectedPack = (globalThis.LletriumPackDescriptors || []).find(pack => pack.profiles?.includes(current.language)
+      || (pack.id === "es" && current.language === "es-ES") || (pack.id === "en" && current.language === "en-US"));
+    const selectedNeedsUpdate = installedPacks.some(pack => pack.id === selectedPack?.id)
+      && !usablePacks.some(pack => pack.id === selectedPack?.id);
+    if (!usablePacks.length || selectedNeedsUpdate) {
+      await openLanguageManager().catch(() => {});
+    }
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message?.type === "CL_OPEN_ACTION_POPUP") {
-    if (!sender?.tab?.id) { sendResponse({ ok: false, error: "Missing tab context" }); return false; }
-    const openFallback = () => chrome.tabs.create({ url: chrome.runtime.getURL("src/popup.html"), active: true });
-    if (typeof chrome.action?.openPopup === "function") {
-      const options = Number.isInteger(sender.tab.windowId) ? { windowId: sender.tab.windowId } : undefined;
-      Promise.resolve(options ? chrome.action.openPopup(options) : chrome.action.openPopup())
-        .then(() => sendResponse({ ok: true, mode: "action-popup" }))
-        .catch(() => openFallback().then(() => sendResponse({ ok: true, mode: "popup-tab" }))
-          .catch(error => sendResponse({ ok: false, error: String(error?.message || error) })));
-    } else {
-      openFallback().then(() => sendResponse({ ok: true, mode: "popup-tab" }))
-        .catch(error => sendResponse({ ok: false, error: String(error?.message || error) }));
-    }
+  if (message?.type === "CL_OPEN_LANGUAGE_MANAGER") {
+    openLanguageManager().then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error?.message || error) }));
     return true;
   }
-
+  if (message?.type === "CL_LANGUAGE_PACKS_CHANGED") {
+    refreshEngineAfterLanguagePackChange().then(sendResponse).catch(error => sendResponse({ ok: false, error: String(error?.message || error) }));
+    return true;
+  }
+  if (message?.type === "CL_GET_INSTALLED_LANGUAGE_PACKS") {
+    globalThis.LletriumLanguagePacks.listPacks()
+      .then(packs => sendResponse({ ok: true, ids: packs.filter(pack => globalThis.LletriumLanguagePacks.isPackCompatible(pack)).map(pack => String(pack.id)) }))
+      .catch(error => sendResponse({ ok: false, ids: [], error: String(error?.message || error) }));
+    return true;
+  }
+  if (message?.type === "CL_OPEN_ACTION_POPUP") {
+    if (!sender?.tab?.id) { sendResponse({ ok: false, error: "Missing tab context" }); return false; }
+    if (typeof chrome.action?.openPopup !== "function") { sendResponse({ ok: false, error: "Popup API unavailable" }); return false; }
+    const options = Number.isInteger(sender.tab.windowId) ? { windowId: sender.tab.windowId } : undefined;
+    Promise.resolve(options ? chrome.action.openPopup(options) : chrome.action.openPopup())
+      .then(() => sendResponse({ ok: true, mode: "action-popup" }))
+      .catch(error => sendResponse({ ok: false, error: String(error?.message || error) }));
+    return true;
+  }
   if (message?.type === "RESET_EXTENSION_TO_FACTORY_DEFAULTS") {
     resetExtensionToFactoryDefaults().then(sendResponse).catch(error => sendResponse({
       ok: false,
@@ -1023,7 +1140,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     chrome.scripting.executeScript({
       target: { tabId, frameIds: [frameId] },
-      files: ["src/language-engine.js"]
+      files: ["src/language-pack-descriptors.generated.js", "src/language-pack-runtime.js", "src/language-engine.js"]
     }).then(() => {
       sendResponse({ ok: true });
     }).catch(error => {
@@ -1250,6 +1367,8 @@ async function resetExtensionToFactoryDefaults() {
 
     const cache = await deleteIndexedDb("corrector-local-engine-cache");
     if (!cache.ok) throw new Error(cache.error || "No s’ha pogut esborrar la memòria cau del motor.");
+    const languagePacks = await deleteIndexedDb("lletrium-language-packs");
+    if (!languagePacks.ok) throw new Error(languagePacks.error || "No s’han pogut esborrar els paquets d’idioma.");
     await chrome.storage.sync.clear();
     await chrome.storage.local.clear();
     if (chrome.storage.session?.clear) await chrome.storage.session.clear();

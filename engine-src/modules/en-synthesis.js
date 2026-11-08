@@ -11,9 +11,9 @@
   }
 
   class EnglishSynthesizer {
-    constructor(entries, tags, articleA, articleAn, manifest, numberProgram = null, romanProgram = null) {
-      if (!entries || typeof entries !== "object" || !Array.isArray(tags) || manifest?.profile !== "en-US") throw new Error("English synthesis resources are invalid.");
-      this.entries = new Map(Object.entries(entries));
+    constructor(dictionary, tags, articleA, articleAn, manifest, numberProgram = null, romanProgram = null) {
+      if (!dictionary || !Array.isArray(tags) || manifest?.profile !== "en-US") throw new Error("English synthesis resources are invalid.");
+      this.dictionary = dictionary;
       this.tags = tags;
       this.articleA = articleA;
       this.articleAn = articleAn;
@@ -65,7 +65,7 @@
       }) : [tag];
       const values = [], seen = new Set();
       for (const currentTag of tags) {
-        for (const form of this.entries.get(`${lemma}|${currentTag}`) || []) {
+        for (const { lemma: form } of this.dictionary.lookup(`${lemma}|${currentTag}`)) {
           if (form.startsWith("'") || EXCEPTIONS.has(form) || seen.has(form)) continue;
           seen.add(form); values.push(`${determiner}${form}`);
         }
@@ -89,7 +89,9 @@
       if (manifest?.profile !== "en-US") throw new Error("Synthesis resources are not en-US.");
       if (manifest.soros?.file !== "en-US-en.sor" || manifest.soros?.sha256 !== "ad78ab088ceb4a5b1858020facd818ac1df5433cead09e784833047691333d11"
           || manifest.soros?.romanFile !== "Roman.sor" || manifest.soros?.romanSha256 !== "11002fdb8c7039c1a71a5ba8f3a2b405548e993f8668066363d6e1fea58ca4b1") throw new Error("The en-US number synthesizers are not the pinned LanguageTool resources.");
-      const files = [manifest.synthesisIndex.file, "en-US-english_tags.txt", "en-US-det_a.txt", "en-US-det_an.txt", manifest.soros.file, manifest.soros.romanFile];
+      const resource = manifest.synthesisDictionary;
+      if (resource?.format !== "CFSA2") throw new Error("The English synthesis dictionary format is unsupported.");
+      const files = [resource.file, "en-US-english_tags.txt", "en-US-det_a.txt", "en-US-det_an.txt", manifest.soros.file, manifest.soros.romanFile];
       const responses = await Promise.all(files.map(path => fetcher(new URL(path, base))));
       if (responses.some(response => !response.ok)) throw new Error("Could not load all local en-US synthesis resources.");
       const [compressed, tagsText, aText, anText, sorosBytes, romanBytes] = await Promise.all([responses[0].arrayBuffer(), responses[1].text(), responses[2].text(), responses[3].text(), responses[4].arrayBuffer(), responses[5].arrayBuffer()]);
@@ -102,13 +104,17 @@
       const numberProgram = new globalThis.CorrectorSorosRuntime.SorosProgram(new TextDecoder("utf-8", {fatal: true}).decode(sorosBytes), "en-US", "en-US");
       const romanProgram = new globalThis.CorrectorSorosRuntime.SorosProgram(new TextDecoder("utf-8", {fatal: true}).decode(romanBytes), "Roman");
       const payload = new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
-      if (payload.byteLength !== manifest.synthesisIndex.rawBytes) throw new Error("English synthesis data has an invalid length.");
-      const digest = await crypto.subtle.digest("SHA-256", payload);
+      if (payload.byteLength !== resource.rawBytes) throw new Error("English synthesis CFSA2 data has an invalid length.");
+      const [digest, compressedDigest] = await Promise.all([crypto.subtle.digest("SHA-256", payload), crypto.subtle.digest("SHA-256", compressed)]);
       const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-      if (hash !== manifest.synthesisIndex.rawSha256) throw new Error("English synthesis data hash mismatch.");
-      const entries = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(payload));
+      const compressedHash = Array.from(new Uint8Array(compressedDigest), byte => byte.toString(16).padStart(2, "0")).join("");
+      if (hash !== resource.rawSha256 || compressedHash !== resource.compressedSha256) throw new Error("English synthesis CFSA2 data hash mismatch.");
+      if (typeof globalThis.CorrectorCatalanCfsa2Dictionary !== "function") throw new Error("The CFSA2 dictionary reader is unavailable.");
+      const dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(payload, {
+        separator: resource.separator, encoding: resource.encoding, encoderType: resource.encoder
+      });
       const tags = tagsText.split(/\r?\n/u).map(value => value.trim()).filter(Boolean);
-      return new EnglishSynthesizer(entries, tags, parseWordList(aText), parseWordList(anText), manifest, numberProgram, romanProgram);
+      return new EnglishSynthesizer(dictionary, tags, parseWordList(aText), parseWordList(anText), manifest, numberProgram, romanProgram);
     }
   }
   globalThis.CorrectorEnglishSynthesizer = EnglishSynthesizer;

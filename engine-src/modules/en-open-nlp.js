@@ -3,9 +3,98 @@
   "use strict";
   const decoder = new TextDecoder("utf-8", { fatal: true });
 
+  function parseBinaryGis(buffer) {
+    const view = new DataView(buffer), bytes = new Uint8Array(buffer); let offset = 0;
+    const need = size => { if (!Number.isInteger(size) || size < 0 || offset + size > buffer.byteLength) throw new Error("Truncated OpenNLP GIS model."); };
+    const readUint16 = () => { need(2); const value = view.getUint16(offset, false); offset += 2; return value; };
+    const readInt32 = () => { need(4); const value = view.getInt32(offset, false); offset += 4; return value; };
+    const readDouble = () => { need(8); const value = view.getFloat64(offset, false); offset += 8; return value; };
+    const readUtf = () => {
+      const length = readUint16(); need(length); const end = offset + length, units = [];
+      while (offset < end) {
+        const first = bytes[offset++];
+        if ((first & 0x80) === 0) units.push(first);
+        else if ((first & 0xe0) === 0xc0) {
+          if (offset >= end) throw new Error("Malformed OpenNLP modified UTF-8 string.");
+          const second = bytes[offset++];
+          if ((second & 0xc0) !== 0x80) throw new Error("Malformed OpenNLP modified UTF-8 continuation.");
+          units.push(((first & 0x1f) << 6) | (second & 0x3f));
+        } else if ((first & 0xf0) === 0xe0) {
+          if (offset + 1 >= end) throw new Error("Malformed OpenNLP modified UTF-8 string.");
+          const second = bytes[offset++], third = bytes[offset++];
+          if ((second & 0xc0) !== 0x80 || (third & 0xc0) !== 0x80) throw new Error("Malformed OpenNLP modified UTF-8 continuation.");
+          units.push(((first & 0x0f) << 12) | ((second & 0x3f) << 6) | (third & 0x3f));
+        } else throw new Error("Malformed OpenNLP modified UTF-8 lead byte.");
+      }
+      let value = "";
+      for (let index = 0; index < units.length; index += 8192) value += String.fromCharCode(...units.slice(index, index + 8192));
+      return value;
+    };
+    const checkedCount = (value, limit, label) => {
+      if (value < 0 || value > limit) throw new Error(`Invalid OpenNLP ${label}: ${value}`);
+      return value;
+    };
+    if (readUtf() !== "GIS") throw new Error("Unsupported OpenNLP binary model type.");
+    const correctionConstant = readInt32(), correctionParameter = readDouble();
+    if (correctionConstant < 1 || !Number.isFinite(correctionParameter)) throw new Error("Invalid OpenNLP GIS correction parameters.");
+    const outcomeCount = checkedCount(readInt32(), 256, "outcome count");
+    const outcomes = Array.from({ length: outcomeCount }, readUtf);
+    const patternCount = checkedCount(readInt32(), 2_000_000, "outcome-pattern count");
+    const patterns = Array.from({ length: patternCount }, () => {
+      const values = readUtf().trim().split(/\s+/u).map(Number);
+      if (values.length < 2 || !Number.isInteger(values[0]) || values[0] < 1
+          || values.slice(1).some(value => !Number.isInteger(value) || value < 0 || value >= outcomeCount)) {
+        throw new Error("Invalid OpenNLP GIS outcome pattern.");
+      }
+      return values;
+    });
+    const featureCount = checkedCount(readInt32(), 2_000_000, "predicate count");
+    const names = Array.from({ length: featureCount }, readUtf);
+    let totalWeights = 0;
+    for (const pattern of patterns) totalWeights += pattern[0] * (pattern.length - 1);
+    if (totalWeights > 50_000_000) throw new Error("OpenNLP GIS weight table exceeds safe limits.");
+    const unsortedStarts = new Uint32Array(featureCount + 1), unsortedOutcomes = new Uint16Array(totalWeights), unsortedWeights = new Float64Array(totalWeights);
+    let featureIndex = 0, weightIndex = 0;
+    for (const pattern of patterns) {
+      const count = pattern[0], outcomeIndexes = pattern.slice(1);
+      for (let row = 0; row < count; row++) {
+        if (featureIndex >= featureCount) throw new Error("OpenNLP GIS outcome patterns exceed predicate count.");
+        unsortedStarts[featureIndex] = weightIndex;
+        for (const outcome of outcomeIndexes) {
+          const weight = readDouble();
+          if (!Number.isFinite(weight)) throw new Error("Invalid OpenNLP GIS predicate weight.");
+          unsortedOutcomes[weightIndex] = outcome; unsortedWeights[weightIndex] = weight; weightIndex++;
+        }
+        featureIndex++;
+      }
+    }
+    if (featureIndex !== featureCount || offset !== buffer.byteLength) throw new Error("OpenNLP GIS model dimensions or trailing bytes are invalid.");
+    unsortedStarts[featureCount] = weightIndex;
+    const order = Array.from({ length: featureCount }, (_unused, index) => index).sort((left, right) => names[left] < names[right] ? -1 : names[left] > names[right] ? 1 : 0);
+    const featureNames = new Array(featureCount), featureStarts = new Uint32Array(featureCount + 1);
+    const weightOutcomes = new Uint16Array(totalWeights), weightValues = new Float64Array(totalWeights);
+    let sortedWeightIndex = 0;
+    for (let index = 0; index < featureCount; index++) {
+      const originalIndex = order[index], start = unsortedStarts[originalIndex], end = unsortedStarts[originalIndex + 1];
+      featureNames[index] = names[originalIndex]; featureStarts[index] = sortedWeightIndex;
+      weightOutcomes.set(unsortedOutcomes.subarray(start, end), sortedWeightIndex);
+      weightValues.set(unsortedWeights.subarray(start, end), sortedWeightIndex);
+      sortedWeightIndex += end - start;
+    }
+    featureStarts[featureCount] = sortedWeightIndex;
+    return { outcomes, featureNames, featureStarts, weightOutcomes, weightValues, correctionConstant, correctionParameter };
+  }
+
   class MaxentModel {
     constructor(buffer, expectedKind) {
       if (!(buffer instanceof ArrayBuffer)) throw new TypeError("OpenNLP model data must be an ArrayBuffer.");
+      if (buffer.byteLength >= 5 && new Uint8Array(buffer, 0, 5).join(",") === "0,3,71,73,83") {
+        const parsed = parseBinaryGis(buffer);
+        this.kind = expectedKind; this.modelType = "Maxent"; this.outcomes = parsed.outcomes;
+        this.featureNames = parsed.featureNames; this.featureStarts = parsed.featureStarts;
+        this.weightOutcomes = parsed.weightOutcomes; this.weightValues = parsed.weightValues;
+        return;
+      }
       const view = new DataView(buffer); let offset = 0;
       const readBytes = length => { if (length < 0 || offset + length > buffer.byteLength) throw new Error("Truncated OpenNLP model resource."); const bytes = new Uint8Array(buffer, offset, length); offset += length; return bytes; };
       const readUtf = () => { const length = view.getInt32(offset, false); offset += 4; return decoder.decode(readBytes(length)); };
@@ -321,7 +410,7 @@
       const response = await fetcher(new URL("resource-index.json", base));
       if (!response.ok) throw new Error(`Could not load en-US manifest (${response.status}).`);
       const manifest = await response.json();
-      if (manifest.profile !== "en-US" || manifest.openNlp?.format !== "ONLPX1") throw new Error("OpenNLP model manifest does not belong to en-US.");
+      if (manifest.profile !== "en-US" || !["ONLPX1", "GIS1"].includes(manifest.openNlp?.format)) throw new Error("OpenNLP model manifest does not belong to en-US.");
       const models = Object.create(null);
       await Promise.all(Object.entries(manifest.openNlp.models).map(async ([kind, info]) => {
         const modelResponse = await fetcher(new URL(info.file, base));

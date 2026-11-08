@@ -8,6 +8,20 @@
     return typeof tag === "string" && tag.startsWith("NC") ? `AQ0${tag.slice(2, 4)}0` : tag;
   }
 
+  function expandSharedWordReferences(resource, field, chunker, referenceFormat) {
+    const marker = `${field}ReferenceFormat`;
+    if (resource?.[marker] == null) return resource;
+    if (resource[marker] !== referenceFormat || !Array.isArray(resource[field])) {
+      throw new Error(`Formato de referencias compartidas no válido para ${field} es-ES.`);
+    }
+    const values = resource[field].map(value => {
+      if (typeof value === "string") return value;
+      if (typeof value === "number") return chunker.resolveSharedReference(value);
+      throw new Error(`Entrada de referencia compartida no válida para ${field} es-ES.`);
+    });
+    return { ...resource, [field]: values };
+  }
+
   const SPANISH_RULE_PRIORITIES = new Map([
     // Spanish.java#getPriorityMap(): explicit rule priorities override the
     // PatternRule category/default priority in CleanOverlappingFilter.
@@ -364,8 +378,10 @@
       if (!synonymsResponse.ok) throw new Error(`No se pudo cargar el diccionario de sinónimos es-ES (${synonymsResponse.status}).`);
       if (!confusionPairsResponse.ok) throw new Error(`No se pudo cargar el recurso de pares de confusión es-ES (${confusionPairsResponse.status}).`);
       morphology.configureManualTags(await manualTagsResponse.json());
-      const spellingData = globalThis.CorrectorSpanishSpelling.createDataIndex(await spellingResponse.json());
-      const multitokenSpellerData = await multitokenSpellerResponse.json();
+      const spellingResource = expandSharedWordReferences(await spellingResponse.json(), "acceptedWords", chunker, "es-multiword-index-v1");
+      const spellingData = globalThis.CorrectorSpanishSpelling.createDataIndex(spellingResource);
+      const multitokenSpellerData = expandSharedWordReferences(await multitokenSpellerResponse.json(), "entries", chunker, "es-multiword-index-v1");
+      chunker.releaseReferenceTables();
       const simpleReplaceResource = await simpleReplaceResponse.json();
       const simpleReplaceData = globalThis.CorrectorSpanishSimpleReplace.createDataIndex(simpleReplaceResource);
       const simpleReplaceVerbData = globalThis.CorrectorSpanishSimpleReplaceVerbs.createDataIndex(simpleReplaceResource);

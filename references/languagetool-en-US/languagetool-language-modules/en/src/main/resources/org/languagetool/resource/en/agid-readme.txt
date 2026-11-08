@@ -133,7 +133,7 @@ is like variant.tab except that it also included the root form of the
 word.
 
 Words are in mixed case but all accents have been striped thus words
-like cafï¿½ are instead cafe.
+like café are instead cafe.
 
 The file "variant" contains a list of alternate inflections.
 

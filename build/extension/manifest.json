@@ -3,13 +3,14 @@
   "default_locale": "ca",
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minimum_chrome_version": "111",
   "permissions": [
     "activeTab",
     "clipboardWrite",
     "scripting",
     "storage",
+    "unlimitedStorage",
     "offscreen"
   ],
   "host_permissions": [
@@ -31,8 +32,16 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/editor-main-world.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
+      ],
+      "js": [
+        "src/editor-main-world.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN",
       "all_frames": true,
@@ -42,6 +51,10 @@
     {
       "matches": [
         "*://docs.google.com/document/*"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
       ],
       "js": [
         "src/gdocs-main-world.js"
@@ -76,6 +89,10 @@
     {
       "matches": [
         "*://docs.google.com/document/*"
+      ],
+      "exclude_matches": [
+        "*://docs.google.com/document/*/print*",
+        "*://docs.google.com/document/*/export*"
       ],
       "js": [
         "src/loader.js"
@@ -113,6 +130,8 @@
         "src/engine-worker.js",
         "src/engine-worker-client.js",
         "src/language-engine.js",
+        "src/language-pack-runtime.js",
+        "src/language-pack-descriptors.generated.js",
         "src/gdocs-main-world.js",
         "src/gslides-main-world.js",
         "src/executor.js",
@@ -123,16 +142,15 @@
         "src/content.css",
         "src/ui-localization.js",
         "src/icons/icon32.png",
+        "src/icons/chrome-extensions-logo.png",
         "src/icons/flags/*.png",
         "src/en-explanation-translations.js",
         "src/en-explanation-translations-extra.js",
         "src/es-explanation-translations.js",
-        "src/central-morphology.js",
         "src/lt-pattern-runtime.js",
         "src/lt-catalan-filters.js",
         "src/lt-speller.js",
         "build/resources/*",
-        "build/resources/central/*",
         "build/resources/synthesis/*",
         "build/engine-build.json"
       ],
@@ -148,5 +166,9 @@
     "128": "src/icons/icon128.png"
   },
   "short_name": "__MSG_shortName__",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo1lk5Zy7wRO8xI293znsgk5LQmllqCq6pzVM8WmWS/TiQ2I/jQtj86QnTZTFvBswibmGbXjvIWWmNsD/zjOHZDEl5alluMT/GIPe2b6N6VWDFEpMq4hdVYhnxupBvczNvotsBozzoLNUGOqPu5hdR/BCi8cXaYaLh8826+CZqyH+QA/v+4EU+Tzqo8fX4By/0eYMSd1PRmhly4kEnj3+0EX7QKEyQwnIhPuHkGu4wwUfjB3mzuPoS/AxwMZBcFg/52pAvBMS3yGbXUEmUwUsSQcLZ18W7/KPuxY46mYemsQoWYTvC3olCxEbnZdNDpCipNl2B10zkDk66TTErQRfbwIDAQAB"
+  "externally_connectable": {
+    "matches": [
+      "https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/*"
+    ]
+  }
 }

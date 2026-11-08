@@ -4,11 +4,12 @@
 (() => {
   'use strict';
   const normal = s => String(s ?? '').normalize('NFC').replace(/[’ʼ]/gu, "'");
-  const upperFirst = s => s ? s.replace(/\p{L}/u,c=>c.toLocaleUpperCase('ca')) : s;
+  const upperFirst = (s, locale = 'ca') => s ? s.replace(/\p{L}/u,c=>c.toLocaleUpperCase(locale)) : s;
   const unique = xs => [...new Set(xs)];
   class LtPatternRuntime {
-    constructor({ dictionary, synthesisExclusions = [], chunkRules = [], posRules = [], contextRules = [], dependencyRules = [], filterResources = {}, services = {}, maxSteps = 100000, now = () => new Date() } = {}) {
+    constructor({ dictionary, synthesisExclusions = [], chunkRules = [], posRules = [], contextRules = [], dependencyRules = [], filterResources = {}, services = {}, maxSteps = 100000, now = () => new Date(), locale = 'ca' } = {}) {
       this.dictionary = dictionary;
+      this.locale = locale;
       this.synthesisExclusions = new Set(synthesisExclusions);
       this.maxSteps = maxSteps;
       this.chunkRules = chunkRules;
@@ -20,6 +21,13 @@
       this.now = now;
       this.regexps = new Map();
       this.diagnostics = [];
+      this.validatedRules = new WeakSet();
+      // Rule definitions are immutable after loading. Cache their expanded
+      // first-token branches and cache key across reviews; candidate positions
+      // themselves remain text-specific and are recomputed per review.
+      this.candidateStartPatternCache = new WeakMap();
+      this.requiredChunkCache = new WeakMap();
+      this.ruleProgress = null;
     }
     re(pattern, sensitive = true) {
       const key = `${sensitive}:${pattern}`;
@@ -45,14 +53,29 @@
         const char=pattern[i];
         if(char==='\\'){
           const next=pattern[++i];
-          converted += /[!%,— =]/u.test(next) || next==='-'&&!classDepth ? next : '\\'+next; continue;
+          // Java's Pattern accepts escaping many punctuation characters that
+          // ECMAScript rejects under the Unicode flag (for example \# and \…).
+          // Remove only identity escapes for literal punctuation/separators;
+          // keep regex metacharacters and class-sensitive escapes intact.
+          const identityPunctuation=/[\p{P}\p{S}\p{Z}]/u.test(next)
+            && !/[\\^$.*+?()[\]{}|]/u.test(next)
+            && !(classDepth && /[-\[\]]/u.test(next));
+          converted += identityPunctuation || next==='-'&&!classDepth ? next : '\\'+next; continue;
         }
         if(char==='['){
           if(classDepth&&pattern[i+1]==='^')throw Error('Unsupported nested negated character class');
           if(!classDepth)converted+='[';classDepth++;continue;
         }
         if(char===']'&&classDepth){classDepth--;if(!classDepth)converted+=']';continue;}
+        // Java Pattern treats an unmatched closing bracket as a literal,
+        // whereas ECMAScript rejects it with the `u` flag. Preserve the
+        // upstream Java meaning instead of dropping otherwise-valid rules.
+        if(char===']'&&!classDepth){converted+='\\]';continue;}
         if(classDepth){converted+=char==='-'&&pattern[i+1]===']'?'\\-':char;continue;}
+        // Java permits quantifying zero-width anchors (e.g. `^+`). Repeating
+        // an anchor has the same match language as one anchor; group it so
+        // ECMAScript can represent that behavior without loosening the rule.
+        if(char==='^'&&pattern[i+1]==='+'){converted+='(?:^)+';i++;continue;}
         if(char==='('){
           const modifier=pattern.slice(i).match(/^\(\?([imsuU-]+)([:)])/u);
           if(modifier){
@@ -78,6 +101,55 @@
       return spec.and.reduce((products, item) => products.flatMap(product => this.branches(item).map(s => [...product, s])), [[]])
         .map(items => ({ ...items[0], conjuncts: items.slice(1) }));
     }
+    candidateStarts(rows, pattern, indexes) {
+      if (!pattern?.length) return null;
+      let prepared = this.candidateStartPatternCache.get(pattern);
+      if (!prepared) {
+        const firstBranches = this.branches(pattern[0]);
+        prepared = { firstBranches, cacheKey: JSON.stringify(firstBranches) };
+        this.candidateStartPatternCache.set(pattern, prepared);
+      }
+      const { firstBranches, cacheKey } = prepared;
+      const cache = this.candidateStartCache;
+      if (cache?.has(cacheKey)) return cache.get(cacheKey);
+      if (!firstBranches.length || firstBranches.some(spec => spec.negate || spec.reference || spec.inflected || spec.negatePos)) return null;
+      const found = new Set();
+      for (const spec of firstBranches) {
+        if (spec.text != null) {
+          if (spec.regexp) {
+            const regexp=this.re(spec.text,!!spec.caseSensitive);
+            rows.forEach((row,index)=>{if(regexp.test(normal(row.token).replaceAll('\u00ad','')))found.add(index);});
+          } else {
+            const key = spec.caseSensitive ? normal(spec.text) : normal(spec.text).toLocaleLowerCase(this.locale);
+            const source = spec.caseSensitive ? indexes.exact : indexes.folded;
+            for (const index of source.get(key) || []) found.add(index);
+          }
+          continue;
+        }
+        if (!spec.postag) return null;
+        const regexp=spec.postagRegexp?this.re(spec.postag):null;
+        rows.forEach((row,index)=>{
+          const readings=this.readings(row);
+          if(readings.some(reading=>regexp?regexp.test(reading.tag||'UNKNOWN'):reading.tag===spec.postag))found.add(index);
+        });
+      }
+      const result = [...found].sort((a,b)=>a-b);
+      if (cache) cache.set(cacheKey, result);
+      return result;
+    }
+    requiredChunksFor(rule) {
+      const cached = this.requiredChunkCache.get(rule);
+      if (cached) return cached;
+      const required = new Set();
+      const collect = spec => {
+        if (spec.chunk) required.add(spec.chunk);
+        (spec.and || spec.or || []).forEach(collect);
+        (spec.exceptions || []).forEach(collect);
+      };
+      [rule, ...(rule.antipatterns || [])].forEach(pattern => pattern.pattern.forEach(collect));
+      this.requiredChunkCache.set(rule, required);
+      return required;
+    }
     synthesize(lemma, tag, options) {
       if(options?.regexp&&['enterar','sentar','conseguir','alcançar'].includes(lemma))return [];
       let tail='';if(tag.startsWith('V')&&lemma?.includes(' ')){const cut=lemma.indexOf(' ');tail=lemma.slice(cut);lemma=lemma.slice(0,cut);}
@@ -90,6 +162,7 @@
       return forms.map(form=>form+tail);
     }
     validate(rule) {
+      if (rule && typeof rule === 'object' && this.validatedRules.has(rule)) return;
       const keys = (object, allowed) => { for (const key of Object.keys(object)) if (!allowed.includes(key)) throw Error('Unsupported attribute: ' + key); };
       const token = (spec, exception = false) => {
         if (spec.and || spec.or) {
@@ -113,12 +186,17 @@
           if(spec.reference.regexpMatch)this.expression(spec.reference.regexpMatch);
         }
       };
-      keys(rule, ['format','id','category','pattern','unify','marker','antipatterns','equivalences','filter','examples','message','suggestions','rawPos','regexp','minPrevMatches','distanceTokens','repetitionGroup','goalSpecific']);
+      keys(rule, ['format','id','category','pattern','unify','marker','antipatterns','equivalences','filter','examples','message','suggestions','rawPos','regexp','minPrevMatches','distanceTokens','repetitionGroup','goalSpecific','qualityCategory','ruleIdPrefix','ruleGroupId']);
       if(rule.regexp){
         keys(rule.regexp,['source','mark','caseSensitive']);this.expression(rule.regexp.source,rule.regexp.caseSensitive);
         if(!Number.isInteger(rule.regexp.mark)||rule.regexp.mark<0||rule.filter)throw Error('Unsupported regexp marker or filter');
-        if([rule.message,...rule.suggestions].flat().some(p=>typeof p!=='string'))throw Error('Regexp suggestions use numbered capture strings');
-        return;
+        for(const parts of [rule.message,...rule.suggestions])for(const part of parts||[])if(typeof part!=='string'){
+          keys(part,['no','regexpMatch','regexpReplace','caseConversion']);
+          if(!Number.isInteger(part.no)||part.no<0)throw Error('Invalid regexp match reference');
+          if(part.regexpMatch)this.expression(part.regexpMatch);
+          if(part.caseConversion&&!['alllower','allupper','firstupper','firstlower','startupper','startlower','preserve'].includes(part.caseConversion))throw Error('Unsupported case conversion');
+        }
+        this.validatedRules.add(rule); return;
       }
       if(rule.minPrevMatches!=null&&(!Number.isInteger(rule.minPrevMatches)||rule.minPrevMatches<1||!Number.isInteger(rule.distanceTokens)||rule.distanceTokens<1))throw Error('Invalid repetition threshold');
       const pattern = p => {
@@ -136,17 +214,33 @@
       for (const equivalents of Object.values(rule.equivalences || {})) Object.values(equivalents).forEach(spec => token(spec));
       for (const parts of [rule.message || [], ...(rule.suggestions || [])]) for (const part of parts) if (typeof part !== 'string') {
         keys(part,['no','postag','postagRegexp','postagReplace','regexpMatch','regexpReplace','caseConversion','literal','includeSkipped','setPos']);
-        if (!Number.isInteger(part.no) || part.no < 1 || part.no > rule.pattern.length) throw Error('Invalid match reference');
-        if (part.literal != null && !part.postag) throw Error('Literal lemma needs a synthesis tag');
+        // LanguageTool resolves references beyond the XML pattern length to
+        // the final token reached by the match (not to a missing capture).
+        // French rules use this for repeated/variable-length pattern tails.
+        if (!Number.isInteger(part.no) || part.no < 1) throw Error('Invalid match reference');
         if (part.caseConversion && !['alllower','allupper','firstupper','firstlower','startupper','startlower','preserve'].includes(part.caseConversion)) throw Error('Unsupported case conversion');
         if (part.includeSkipped && !['none','all','following'].includes(part.includeSkipped)) throw Error('Unsupported skipped-token range');
-        if (part.postagRegexp) this.re(part.postag);
+        if (part.postagRegexp && part.postag) this.re(part.postag);
         if (part.regexpMatch) this.re(part.regexpMatch);
       }
       if (rule.filter) {
         keys(rule.filter,['name','args']);
+        if (rule.filter.name === 'SuggestionsFilter' && typeof rule.filter.args?.RemoveSuggestionsRegexp === 'string') {
+          // Compile once during validation just as the Java filter does when
+          // accepting the rule, so unsupported source regexes fail closed in
+          // the conversion report rather than on a user's sentence.
+          new RegExp(`^(?:${rule.filter.args.RemoveSuggestionsRegexp})$`, 'iu');
+        }
         const schemas = {
           ...globalThis.CorrectorLtCatalanFilters?.schemas,
+          FrenchSuppressMisspelledSuggestionsFilter:['suppressMatch','SuppressPostag','FilterPostag'],
+          PostponedAdjectiveConcordanceFilter:['key'],
+          FrenchNumberInWordFilter:['word'],
+          InterrogativeVerbFilter:['PronounFrom','VerbFrom'],
+          FindSuggestionsFilter:['wordFrom','desiredPostag','priorityPostag','removeSuggestionsRegexp','RemoveSuggestionsRegexp','suppressMatch','Mode'],
+          WordWithDeterminerFilter:['wordFrom','determinerFrom'],
+          SuggestionsFilter:['RemoveSuggestionsRegexp'],
+          MakeContractionsFilter:['nokey'],
           AdvancedSynthesizerFilter:['lemmaFrom','lemmaSelect','postagFrom','postagSelect','postagReplace','newLemma'],
           RemoveSuggestionsFilter:['removeSuggestionsRegexp'], AdaptSuggestionsFilter:['none'],
           WhitespaceCheckFilter:['whitespaceChar','position'], ApostropheTypeFilter:['wordFrom','hasTypographicalApostrophe'],
@@ -159,10 +253,11 @@
         const allowed = schemas[rule.filter.name];
         if (!allowed) throw Error('Unsupported filter: ' + rule.filter.name);
         keys(rule.filter.args,allowed);
-        const required = rule.filter.name === 'AdvancedSynthesizerFilter' ? allowed.slice(0,4) : rule.filter.name === 'DiacriticsCheckFilter' ? allowed.slice(0,2) : rule.filter.name === 'DateCheckFilter' ? ['weekDay'] : ['AddCommasFilter','AdaptSuggestionsFilter','ConvertToSentenceCaseFilter'].includes(rule.filter.name) ? [] : allowed;
+        const required = rule.filter.name === 'AdvancedSynthesizerFilter' ? allowed.slice(0,4) : rule.filter.name === 'DiacriticsCheckFilter' ? allowed.slice(0,2) : rule.filter.name === 'DateCheckFilter' ? ['weekDay'] : rule.filter.name === 'FrenchSuppressMisspelledSuggestionsFilter' ? ['suppressMatch'] : rule.filter.name === 'FindSuggestionsFilter' ? ['wordFrom','desiredPostag'] : ['AddCommasFilter','AdaptSuggestionsFilter','ConvertToSentenceCaseFilter','MakeContractionsFilter'].includes(rule.filter.name) ? [] : allowed;
         const optionalAware=rule.filter.name in (globalThis.CorrectorLtCatalanFilters?.schemas||{})?(globalThis.CorrectorLtCatalanFilters.required[rule.filter.name]||[]):rule.filter.name==='SynthesizeWithDAFilter'?['lemmaFrom','lemmaSelect']:rule.filter.name==='SynthesizeWithAnyDeterminerFilter'?['lemmaSelect']:rule.filter.name==='TextToNumberFilter'?[]:required;
         if (optionalAware.some(k => rule.filter.args[k] == null)) throw Error('Missing filter argument');
       }
+      this.validatedRules.add(rule);
     }
     readings(row) {
       const entries = row?.ltReadings || row?.analysis?.readings || [];
@@ -176,7 +271,7 @@
       const value = spec.inflected ? reading.lemma : row.token;
       let textMatch = spec.text == null || (spec.regexp
         ? value != null && this.re(spec.text, !!spec.caseSensitive).test(normal(value).replaceAll('\u00ad',''))
-        : value != null && (spec.caseSensitive ? normal(value) === normal(spec.text) : normal(value).toLocaleLowerCase('ca') === normal(spec.text).toLocaleLowerCase('ca')));
+        : value != null && (spec.caseSensitive ? normal(value) === normal(spec.text) : normal(value).toLocaleLowerCase(this.locale) === normal(spec.text).toLocaleLowerCase(this.locale)));
       if (spec.negate) textMatch = !textMatch;
       let posMatch = !spec.postag || (spec.postagRegexp ? this.re(spec.postag).test(reading.tag || 'UNKNOWN') : reading.tag === spec.postag);
       if (spec.negatePos) posMatch = !posMatch;
@@ -258,11 +353,24 @@
       };
       return solve(0, positive.map(() => ({})));
     }
-    match(rows, start, rule) {
+    match(rows, start, rule, { antipattern = false } = {}) {
       const originalRows=rows;
       if(rule.rawPos)rows=rows.map(row=>({...row,ltReadings:row.rawReadings||this.readings(row)}));
       const found = [];
       const sentence = rows[start]?.sentence;
+      // Antipatterns only answer whether a token range is protected; their
+      // internal wildcard capture boundaries are not consumed by suggestions
+      // or unification. Collapse adjacent, unconstrained repetitions into a
+      // single bounded-length search instead of enumerating every partition.
+      // This mirrors LT's sequential matcher and prevents combinatorial work on
+      // patterns such as 15 consecutive `{min:1,max:50}` tokens.
+      const canCollapseWildcardRun = antipattern && !rule.marker && !(rule.unify || []).length &&
+        rule.pattern.every(spec => !spec.reference && !spec.and && !spec.or && !spec.conjuncts);
+      const isWildcardRepeat = spec => spec && spec.text == null && spec.postag == null &&
+        !spec.postagRegexp && !spec.inflected && !spec.negate && !spec.negatePos &&
+        !spec.reference && !spec.chunk && spec.spaceBefore == null &&
+        !(spec.exceptions || []).length && !(spec.conjuncts || []).length &&
+        (spec.skip == null || spec.skip === 0);
       const walk = (part, cursor, captures) => {
         // Java selects the first complete match from a given starting token.
         // In particular, skip must not attach a second, more distant participle
@@ -272,6 +380,33 @@
         if (part === rule.pattern.length) {
           if (this.unifyAll(rule.unify || [], captures, rule)) found.push({ captures:captures.map(c=>c.map(s=>({...s,row:originalRows[s.index]}))), start, end: cursor, rows:originalRows, marker:rule.marker });
           return;
+        }
+        if (canCollapseWildcardRun && isWildcardRepeat(rule.pattern[part])) {
+          let runEnd = part;
+          while (runEnd < rule.pattern.length && isWildcardRepeat(rule.pattern[runEnd])) runEnd++;
+          if (runEnd - part > 1) {
+            const mins = rule.pattern.slice(part,runEnd).map(spec=>spec.min ?? 1);
+            const maxs = rule.pattern.slice(part,runEnd).map(spec=>spec.max === -1 ? rows.length : spec.max ?? 1);
+            const available = (() => { let n=0; while (rows[cursor+n]?.sentence === sentence) n++; return n; })();
+            const minTotal = mins.reduce((a,b)=>a+b,0);
+            const maxTotal = Math.min(maxs.reduce((a,b)=>a+b,0),available);
+            for (let total=minTotal; total<=maxTotal && !found.length; total++) {
+              this.tick();
+              let extra=total-minTotal;
+              const collapsed=[];
+              for (let i=0;i<mins.length;i++) {
+                const count=mins[i]+Math.min(extra,maxs[i]-mins[i]); extra-=Math.min(extra,maxs[i]-mins[i]);
+                const capture=[];
+                for (let j=0;j<count;j++) {
+                  const index=cursor+collapsed.reduce((n,c)=>n+c.length,0)+j;
+                  capture.push({row:rows[index],index,readings:this.readings(rows[index])});
+                }
+                collapsed.push(capture);
+              }
+              walk(runEnd,cursor+total,[...captures,...collapsed]);
+            }
+            return;
+          }
         }
         for (const spec of this.branches(rule.pattern[part])) {
         const min = spec.min ?? 1, max = spec.max === -1 ? rows.length - cursor : spec.max ?? 1;
@@ -305,26 +440,43 @@
       return capture.length ? text.slice(capture[0].row.start, capture.at(-1).row.end) : '';
     }
     convertCase(value, mode, sample = '') {
-      if (mode === 'alllower') return value.toLocaleLowerCase('ca');
-      if (mode === 'allupper') return value.toLocaleUpperCase('ca');
-      if (mode === 'firstupper') return upperFirst(value.toLocaleLowerCase('ca'));
-      if (mode === 'startupper') return upperFirst(value);
-      if (mode === 'firstlower' || mode === 'startlower') return value ? value[0].toLocaleLowerCase('ca') + value.slice(1) : value;
-      if (mode === 'preserve' && /^\p{Lu}/u.test(sample)) return /^\p{Lu}+$/u.test(sample) ? value.toLocaleUpperCase('ca') : upperFirst(value);
+      if (mode === 'alllower') return value.toLocaleLowerCase(this.locale);
+      if (mode === 'allupper') return value.toLocaleUpperCase(this.locale);
+      if (mode === 'firstupper') return upperFirst(value.toLocaleLowerCase(this.locale), this.locale);
+      if (mode === 'startupper') return upperFirst(value, this.locale);
+      if (mode === 'firstlower' || mode === 'startlower') return value ? value[0].toLocaleLowerCase(this.locale) + value.slice(1) : value;
+      if (mode === 'preserve' && /^\p{Lu}/u.test(sample)) return /^\p{Lu}+$/u.test(sample) ? value.toLocaleUpperCase(this.locale) : upperFirst(value, this.locale);
       return value;
+    }
+    captureByReference(match, no) {
+      if (no <= match.captures.length) return match.captures[no - 1] || [];
+      // LT's matcher clamps references past the pattern length to the end of
+      // the matched token span. Empty optional captures remain empty in-range.
+      const last = match.captures.flat().at(-1);
+      return last ? [last] : [];
     }
     render(parts, match, text) {
       let alternatives = [''];
       let removedOptional=false;
       for (const part of parts || []) {
         let values;
-        if (typeof part === 'string') values = [part.replace(/\\(\d+)/gu, (_, n) => this.captureText(match.captures[Number(n) - 1] || [], text)||'\u0001').replace(/ \u0001(?=[ ,:;.!?]|$)/gu,'').replace(/^\u0001 /u,'').replaceAll('\u0001','')];
+        if (typeof part === 'string') values = [part.replace(/\\(\d+)/gu, (_, n) => this.captureText(this.captureByReference(match, Number(n)), text)||'\u0001').replace(/ \u0001(?=[ ,:;.!?]|$)/gu,'').replace(/^\u0001 /u,'').replaceAll('\u0001','')];
         else {
-          const cap = match.captures[part.no - 1] || [];
+          const cap = this.captureByReference(match, part.no);
           if(!cap.length){removedOptional=true;continue;}
           const surface = this.captureText(cap, text);
           values = [surface];
-          if (part.postag) {
+          if (part.literal != null && !part.postag) {
+            // A literal lemma without an explicit target tag means “use the
+            // captured token's morphology”, as in LT XML <match>lemma</match>.
+            // Synthesize each attested captured reading; do not emit the lemma
+            // as a raw replacement when it would change tense/number/etc.
+            values = [];
+            const readings=cap.flatMap(item=>this.readings(item.row));
+            for (const tag of unique(readings.map(reading=>reading.tag).filter(Boolean))) {
+              values.push(...this.synthesize(part.literal,tag));
+            }
+          } else if (part.postag) {
             values = [];
             if(part.postag.startsWith('_spell_number_'))values=[globalThis.CorrectorLtCatalanFilters.spellNumber(surface,part.postag.includes('feminine'))];
             else {
@@ -357,7 +509,7 @@
       return unique(removedOptional?alternatives.map(s=>s.endsWith(' ')?s.slice(0,-1):s):alternatives);
     }
     filter(filter, match, suggestions, markerStart, text) {
-      const args = Object.fromEntries(Object.entries(filter.args).map(([key,value]) => [key,String(value).replace(/\\(\d+)/gu,(_,n) => this.captureText(match.captures[Number(n)-1] || [],text))]));
+      const args = Object.fromEntries(Object.entries(filter.args).map(([key,value]) => [key,String(value).replace(/\\(\d+)/gu,(_,n) => this.captureText(this.captureByReference(match, Number(n)),text))]));
       const resolve = value => {
         const first=match.captures.flat()[0], marked=match.captures.slice(markerStart).flat()[0];
         const index = String(value).startsWith('marker') ? marked.index + Number(String(value).slice(6) || 0) : first.index + Number(value) - 1;
@@ -368,6 +520,36 @@
       const marker = match.marker || {start:0,end:match.captures.length};
       const marked = match.captures.slice(marker.start,marker.end).flat();
       const from = marked[0].row.start, to = marked.at(-1).row.end, original = text.slice(from,to);
+      // LanguageTool uses the same Java filter class name for French, but
+      // French semantics rely on the French speller/tagger/synthesizer rather
+      // than the project's Catalan implementation. Route it before the
+      // shared Catalan filter registry.
+      if (filter.name === 'FindSuggestionsFilter' && this.locale === 'fr') {
+        if (!globalThis.CorrectorFrenchFindSuggestionsFilter?.apply) throw Error('French FindSuggestionsFilter adapter unavailable');
+        return globalThis.CorrectorFrenchFindSuggestionsFilter.apply(this,{args,match,suggestions,markerStart,text});
+      }
+      if (filter.name === 'PostponedAdjectiveConcordanceFilter' && this.locale === 'fr') {
+        if (!globalThis.CorrectorFrenchPostponedAdjectiveFilter?.apply) throw Error('French postponed adjective filter adapter unavailable');
+        return globalThis.CorrectorFrenchPostponedAdjectiveFilter.apply(this, { match, markerStart });
+      }
+      if (filter.name === 'WordWithDeterminerFilter' && this.locale === 'fr') {
+        return this.frenchWordWithDeterminerFilter(args,resolve,suggestions,text);
+      }
+      if (filter.name === 'MakeContractionsFilter' && this.locale === 'fr') {
+        // Port of French MakeContractionsFilter: Java uses case-insensitive,
+        // Unicode-aware word boundaries and fixed lowercase replacements.
+        const boundaries = '(?<![\\p{L}\\p{N}_])';
+        const endBoundary = '(?![\\p{L}\\p{N}_])';
+        const pairs = [[/de le/giu,'du'],[/à le/giu,'au'],[/de les/giu,'des'],[/à les/giu,'aux']];
+        return suggestions.map(value => pairs.reduce((text,[pattern,replacement]) =>
+          text.replace(new RegExp(`${boundaries}${pattern.source}${endBoundary}`,'giu'), replacement), value));
+      }
+      if (filter.name === 'MultitokenSpellerFilter' && this.locale === 'fr') {
+        if (!globalThis.CorrectorLtCatalanFilters?.apply || !this.filterResources.multiwords) throw Error('French multitoken spelling resources are unavailable');
+        // Reuse the shared LanguageTool-core adapter with the French module's
+        // ordered lexicon and the French dictionary/speller on this runtime.
+        return globalThis.CorrectorLtCatalanFilters.apply(this,filter.name,{args,match,suggestions,resolve,marked,from,to,original,text});
+      }
       if(filter.name in (globalThis.CorrectorLtCatalanFilters?.schemas||{})){
         if(!globalThis.CorrectorLtCatalanFilters.apply)throw Error('Catalan filter implementation unavailable');
         return globalThis.CorrectorLtCatalanFilters.apply(this,filter.name,{args,match,suggestions,resolve,marked,from,to,original,text});
@@ -377,8 +559,14 @@
       if (filter.name === 'TextToNumberFilter') {const value=this.textToNumber(marked);return value==null?[]:[...suggestions,value];}
       if (filter.name === 'OblidarseSugestionsFilter') return this.oblidarseFilter(match,marked,suggestions,text);
       if (filter.name === 'RemoveSuggestionsFilter') return suggestions.filter(s => !this.re(args.removeSuggestionsRegexp).test(s));
+      if (filter.name === 'SuggestionsFilter') {
+        // LanguageTool's Java Pattern.matcher(...).matches() requires the
+        // entire suggestion to match, with CASE_INSENSITIVE | UNICODE_CASE.
+        const regexp = new RegExp(`^(?:${args.RemoveSuggestionsRegexp})$`, 'iu');
+        return { suggestions: suggestions.filter(suggestion => !regexp.test(suggestion)), allowNoSuggestions: true };
+      }
       if (filter.name === 'DiacriticsCheckFilter') {
-        const records=this.filterResources.confusionPairs?.[args.form.toLocaleLowerCase('ca')] || [];
+        const records=this.filterResources.confusionPairs?.[args.form.toLocaleLowerCase(this.locale)] || [];
         if(!records.some(r=>this.re(args.postag).test(r.tag)))return [];
         const patterns={MS:'NC[MC][SN]000|A..[MC][SN].|V.P..SM.',FS:'NC[FC][SN]000|A..[FC][SN].|V.P..SF.',MP:'NC[MC][PN]000|A..[MC][PN].|V.P..PM.',FP:'NC[FC][PN]000|A..[FC][PN].|V.P..PF.',CP:'NC[MFC][PN]000|A..[MFC][PN].|V.P..P..',CS:'NC[MFC][SN]000|A..[MFC][SN].|V.P..S..'};
         if(args.gendernumberFrom){
@@ -391,9 +579,84 @@
         replacement=this.convertCase(replacement,'preserve',args.form);
         const accent=s=>s.normalize('NFD')!==s;
         const message=accent(replacement)&&!accent(args.form)?match.message:match.message.replace("s'escriu amb accent","s'escriu d'una altra manera");
-        return {suggestions:suggestions.map(s=>s.replaceAll('{suggestion}',replacement).replaceAll('{Suggestion}',upperFirst(replacement)).replaceAll('{SUGGESTION}',replacement.toLocaleUpperCase('ca'))),message};
+        return {suggestions:suggestions.map(s=>s.replaceAll('{suggestion}',replacement).replaceAll('{Suggestion}',upperFirst(replacement,this.locale)).replaceAll('{SUGGESTION}',replacement.toLocaleUpperCase(this.locale))),message};
       }
       if(filter.name==='NewYearDateFilter'||filter.name==='DateCheckFilter')return this.dateFilter(filter.name,args,match,resolve,suggestions);
+      if (filter.name === 'FrenchSuppressMisspelledSuggestionsFilter') {
+        const speller=this.filterResources.speller, tokenizer=this.filterResources.tokenizer;
+        if (!speller?.isMisspelled || !tokenizer?.tokenizeRows) throw Error('French spelling filter resources unavailable');
+        const replacements=suggestions.filter(suggestion=>tokenizer.tokenizeRows(suggestion).every(row=>!speller.isMisspelled(row.token)));
+        if (!replacements.length && args.suppressMatch?.toLowerCase() === 'true') return null;
+        return { suggestions: replacements };
+      }
+      if (filter.name === 'FrenchNumberInWordFilter') {
+        const speller=this.filterResources.speller;
+        if (!speller?.isMisspelled || !speller?.suggest) throw Error('French number-in-word filter requires the local French speller');
+        // Port of AbstractNumberInWordFilter + FrenchNumberInWordFilter:
+        // first repair zero/O, then remove embedded digits, then ask the
+        // French Morfologik speller only if neither deterministic repair works.
+        const word=String(args.word ?? '');
+        const zeroToO=word.replaceAll('0','o');
+        const withoutDigits=word.replace(/[0-9]/gu,'');
+        const replacements=[];
+        if (zeroToO!==word && !speller.isMisspelled(zeroToO)) replacements.push(zeroToO);
+        if (!speller.isMisspelled(withoutDigits) && !replacements.includes(withoutDigits)) replacements.push(withoutDigits);
+        if (!replacements.length) replacements.push(...speller.suggest(withoutDigits));
+        return replacements.length ? { suggestions: unique(replacements) } : null;
+      }
+      if (filter.name === 'InterrogativeVerbFilter') {
+        const pronoun=resolve(args.PronounFrom), verb=resolve(args.VerbFrom);
+        const tagOf=(slot,pattern) => slot.readings.find(reading => this.re(pattern).test(reading.tag || ''));
+        const pronounToken=pronoun.row.token, verbToken=verb.row.token;
+        const pronounTags=pronoun.readings.map(reading => reading.tag || '');
+        const hasPronounTag=pattern => pronounTags.some(tag => this.re(pattern).test(tag));
+        let desiredPostag=null;
+        if (hasPronounTag('R pers obj 2 p')) desiredPostag='V.* (imp) [23] [sp]|V .*(ind|cond).* 2 p';
+        else if (hasPronounTag('R pers obj 1 p')) desiredPostag='V.* (imp) .*|V .*(ind|cond).* 1 p';
+        else if (hasPronounTag('R pers obj.*')) desiredPostag='V.* (imp) .*';
+        else if (hasPronounTag('.* 1 s')) desiredPostag='V .*(ind|cond).* 1 s';
+        else if (hasPronounTag('.* 2 s')) desiredPostag='V .*(ind|cond).* 2 s';
+        else if (hasPronounTag('.* 3( [mfe])? s')) desiredPostag='V .*(ind|cond).* 3 s';
+        else if (hasPronounTag('.* 1 p')) desiredPostag='V .*(ind|cond).* 1 p';
+        else if (hasPronounTag('.* 2 p')) desiredPostag='V .*(ind|cond).* 2 p';
+        else if (hasPronounTag('.* 3( [mf])? p')) desiredPostag='V .*(ind|cond).* 3 p';
+        if (!desiredPostag) return suggestions;
+        const separator=pronounToken.startsWith('-') ? '' : '-';
+        const output=[];
+        const append = value => { if (value && !output.includes(value)) output.push(value); };
+        let extraParticipleSuggestions=false;
+        if (hasPronounTag('.* 1 s')) {
+          const verbReading=tagOf(verb,'^V ');
+          if (verbReading?.lemma) {
+            const participles=this.synthesize(verbReading.lemma,'V ppa [me] sp?',{regexp:true});
+            for (const form of participles) if (form.endsWith('é')) {
+              extraParticipleSuggestions=true;
+              const acute=form+separator+pronounToken;
+              const grave=form.slice(0,-1)+'è'+separator+pronounToken;
+              if (!acute.endsWith('e-je')) append(acute);
+              if (!grave.endsWith('e-je')) append(grave);
+            }
+          }
+        }
+        if (!extraParticipleSuggestions) {
+          const accents=[['a','ä'],['e','ë'],['i','í'],['o','ö'],['u','ü'],['é','ë'],['à','ä'],['è','ë'],['ù','ü'],['â','ä'],['ê','ë'],['î','ï'],['ô','ö'],['û','ü']];
+          const wrong=accents.reduce((found,[from,to]) => found || (verbToken.includes(from) ? verbToken.replace(from,to) : ''),'') || verbToken+'-';
+          const speller=this.filterResources.speller;
+          if (!speller?.suggest) throw Error('French interrogative filter requires local spelling suggestions');
+          const candidates=speller.suggest(wrong);
+          const wanted=this.re('^(?:'+desiredPostag+')$');
+          for (const candidate of candidates) for (const reading of this.dictionary.lookup(candidate)) {
+            if (!wanted.test(reading.tag || '')) continue;
+            let complete=candidate+separator+pronounToken;
+            if (complete.toLocaleLowerCase(this.locale)==='peux-je') complete=this.convertCase('puis-je','preserve',complete);
+            if (complete.endsWith('e-je')) {
+              append(complete.slice(0,-4)+'é-je');
+              append(complete.slice(0,-4)+'è-je');
+            } else append(complete);
+          }
+        }
+        return output.length ? output : suggestions;
+      }
       if (filter.name === 'AdaptSuggestionsFilter') return suggestions.map(s => this.adaptSuggestion(s,original));
       if (filter.name === 'WhitespaceCheckFilter') return resolve(args.position).row.whitespaceBefore === args.whitespaceChar ? [] : suggestions;
       if (filter.name === 'ApostropheTypeFilter') return /’/u.test(resolve(args.wordFrom).row.token) === (args.hasTypographicalApostrophe.toLowerCase() === 'true') ? suggestions : [];
@@ -405,17 +668,17 @@
       if (filter.name === 'ConvertToSentenceCaseFilter') {
         if(args.startFrom!=null&&args.startFrom!=='marker')throw Error('Unsupported sentence case start position');
         const values = marked.map(slot => {
-          const lower = slot.row.token.toLocaleLowerCase('ca'), readings = this.readings(slot.row);
-          if (readings.some(r=>!r.lemma || r.tag==='UNKNOWN')) return upperFirst(lower);
-          if (readings.some(r=>r.lemma.split(' ')[0]===r.lemma.split(' ')[0].toLocaleLowerCase('ca'))) return lower;
-          if (readings.some(r=>/^\p{Lu}/u.test(r.lemma))) return upperFirst(lower);
+      const lower = slot.row.token.toLocaleLowerCase(this.locale), readings = this.readings(slot.row);
+      if (readings.some(r=>!r.lemma || r.tag==='UNKNOWN')) return upperFirst(lower,this.locale);
+      if (readings.some(r=>r.lemma.split(' ')[0]===r.lemma.split(' ')[0].toLocaleLowerCase(this.locale))) return lower;
+      if (readings.some(r=>/^\p{Lu}/u.test(r.lemma))) return upperFirst(lower,this.locale);
           return slot.row.token;
         });
         let first = false, replacement='';
         marked.forEach((slot,i)=>{
           let value=values[i];
-          if (match.rows[slot.index+1]?.token==='.') { if(value.length===1)value=value.toLocaleUpperCase('ca');else if(value==='corp')value='Corp'; }
-          if(!first&&!/^\p{P}+$/u.test(slot.row.token)&&slot.row.token){first=true;value=upperFirst(value);}
+        if (match.rows[slot.index+1]?.token==='.') { if(value.length===1)value=value.toLocaleUpperCase(this.locale);else if(value==='corp')value='Corp'; }
+        if(!first&&!/^\p{P}+$/u.test(slot.row.token)&&slot.row.token){first=true;value=upperFirst(value,this.locale);}
           if(i&&slot.row.whitespaceBefore)replacement+=' ';
           replacement+=value;
         });
@@ -438,7 +701,7 @@
       const a = lemmaSlot.readings.find(r => this.re(args.lemmaSelect).test(r.tag || ''))||lemmaSlot.readings[0];
       const b = tagSlot.readings.find(r => this.re(args.postagSelect).test(r.tag || ''))||tagSlot.readings[0];
       if (!a || !b) return [];
-      const newLemma=args.newLemma?.startsWith('_') ? this.filterResources.nounToVerb?.[a.lemma.toLocaleLowerCase('ca')] : args.newLemma || a.lemma;
+      const newLemma=args.newLemma?.startsWith('_') ? this.filterResources.nounToVerb?.[a.lemma.toLocaleLowerCase(this.locale)] : args.newLemma || a.lemma;
       if(!newLemma)return [];
       let tag = b.tag;
       if (args.postagReplace != null) {
@@ -456,7 +719,7 @@
       for (const suggestion of suggestions) for (const form of forms) {
         placeholder ||= /\{(?:suggestion|Suggestion|SUGGESTION)\}/u.test(suggestion);
         const value = this.convertCase(form,'preserve',lemmaSlot.row.token);
-        out.push(suggestion.replaceAll('{suggestion}', value).replaceAll('{Suggestion}', upperFirst(value)).replaceAll('{SUGGESTION}', value.toLocaleUpperCase('ca')));
+        out.push(suggestion.replaceAll('{suggestion}', value).replaceAll('{Suggestion}', upperFirst(value,this.locale)).replaceAll('{SUGGESTION}', value.toLocaleUpperCase(this.locale)));
       }
       if (!placeholder) out.push(...forms);
       return unique(out.map(value=>this.adaptSuggestion(value,'')));
@@ -530,7 +793,7 @@
           this.synthesize(determiner.reading.lemma,determiner.reading.tag.slice(0,2)+'.[C'+gn[0]+']'+gn[1]+'.',{regexp:true}).map(p=>p+' '):[this.determinerPrefix(candidate.form,gn,prep)];
         for(const prefix of prefixes){let value=(name==='SynthesizeWithDAFilter'?prefix:this.convertCase(prefix,'preserve',match.rows[first].token))+between+form;
           const beginning=name==='SynthesizeWithDAFilter'?marked[0].index:first;
-          if(beginning===0||match.rows[beginning-1].sentenceStart||match.rows[beginning-1].sentence!==row.sentence)value=upperFirst(value);out.push(value);}
+      if(beginning===0||match.rows[beginning-1].sentenceStart||match.rows[beginning-1].sentence!==row.sentence)value=upperFirst(value,this.locale);out.push(value);}
       }
       return name==='SynthesizeWithDAFilter'?unique([...suggestions,...out]):{start:match.rows[first].start,end:marked.at(-1).row.end,suggestions:unique(out)};
     }
@@ -643,16 +906,16 @@
       replace("([MTLSN])['’]"+consonant,(_,a,b)=>'E'+a.toLowerCase()+' '+b);
       replace("([Dd])['’]"+consonant,'$1e $2');
       replace("(a|de|pe) (ls?)(?!['’])"+end,'$1$2','giu');
-      if(capitalized)value=upperFirst(value);
+      if(capitalized)value=upperFirst(value,this.locale);
       value=value.replaceAll(' ,',',');
-      if(original&&original===original.toLocaleUpperCase('ca')&&/\p{L}/u.test(original))return value.toLocaleUpperCase('ca');
-      return /^\p{Lu}/u.test(original)&&!/[\p{Lu}\p{Lt}]/u.test(original.slice(1))?upperFirst(value.toLocaleLowerCase('ca')):value;
+      if(original&&original===original.toLocaleUpperCase(this.locale)&&/\p{L}/u.test(original))return value.toLocaleUpperCase(this.locale);
+      return /^\p{Lu}/u.test(original)&&!/[\p{Lu}\p{Lt}]/u.test(original.slice(1))?upperFirst(value.toLocaleLowerCase(this.locale),this.locale):value;
     }
     dateFilter(name,args,match,resolve,suggestions) {
       // Date filters use logical capture references, corrected for optional tokens and skips.
-      if(name==='DateCheckFilter')resolve=value=>{const slot=match.captures[Number(value)-1]?.[0];if(!slot)throw Error('Missing date capture '+value);return slot;};
-      const months=['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
-      const monthNumber=s=>/^\d+$/u.test(s)?Number(s):months.findIndex(prefix=>s.toLocaleLowerCase('ca').startsWith(prefix))+1;
+      if(name==='DateCheckFilter')resolve=value=>{const slot=this.captureByReference(match,Number(value))?.[0];if(!slot)throw Error('Missing date capture '+value);return slot;};
+      const months=this.locale==='fr'?['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc']:['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
+      const monthNumber=s=>/^\d+$/u.test(s)?Number(s):months.findIndex(prefix=>s.toLocaleLowerCase(this.locale).startsWith(prefix))+1;
       const valid=(year,month,day)=>{const d=new Date(0);d.setUTCFullYear(year,month-1,day);d.setUTCHours(0,0,0,0);return d.getUTCFullYear()===year&&d.getUTCMonth()===month-1&&d.getUTCDate()===day?d:null;};
       const current=this.now(),currentYear=current.getFullYear();
       if(name==='NewYearDateFilter'){
@@ -660,15 +923,15 @@
         if(!valid(year,month,day)||current.getMonth()!==0||month===12||year+1!==currentYear)return [];
         return {suggestions,message:match.message.replaceAll('{year}',String(year)).replaceAll('{realYear}',String(currentYear)),allowNoSuggestions:true};
       }
-      const weekdays=['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'],short=['dg','dl','dt','dc','dj','dv','ds'];
-      const week=resolve(args.weekDay),weekText=week.row.token.replaceAll('\u00ad','').toLocaleLowerCase('ca');
+      const weekdays=this.locale==='fr'?['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi']:['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'],short=this.locale==='fr'?['dim','lun','mar','mer','jeu','ven','sam']:['dg','dl','dt','dc','dj','dv','ds'];
+      const week=resolve(args.weekDay),weekText=week.row.token.replaceAll('\u00ad','').toLocaleLowerCase(this.locale);
       const expected=weekdays.includes(weekText)?weekdays.indexOf(weekText):short.indexOf(weekText);if(expected<0)return [];
       let daySlot,monthText,yearText,dayText,yearSlot;
       if(args.date&&Number(args.date)>-1){daySlot=resolve(args.date);[yearText,monthText,dayText]=daySlot.row.token.split('-');yearSlot=daySlot;}
       else{daySlot=resolve(args.day);dayText=daySlot.row.token;monthText=resolve(args.month).row.token;yearSlot=args.year&&Number(args.year)>-1?resolve(args.year):null;yearText=yearSlot?.row.token;}
       const day=Number(dayText.match(/^\d+/u)?.[0]||0),month=monthNumber(monthText),year=yearText==null?currentYear:Number(yearText);
       const date=valid(year,month,day);if(!date||date.getUTCDay()===expected)return [];
-      if(yearSlot&&valid(currentYear,month,day)?.getUTCDay()===expected){return {start:yearSlot.row.start,end:yearSlot.row.end,suggestions:[args.date?currentYear+'-'+monthText+'-'+dayText:String(currentYear)],message:'Aquesta data no és correcta. ¿Us referiu a l\'any "'+currentYear+'"?'};}
+      if(yearSlot&&valid(currentYear,month,day)?.getUTCDay()===expected){return {start:yearSlot.row.start,end:yearSlot.row.end,suggestions:[args.date?currentYear+'-'+monthText+'-'+dayText:String(currentYear)],message:this.locale==='fr'?'Cette date est incorrecte. Faites-vous référence à l\'année "'+currentYear+'" ?':'Aquesta data no és correcta. ¿Us referiu a l\'any "'+currentYear+'"?'};}
       const start=Math.min(week.row.start,daySlot.row.start),end=Math.max(week.row.end,daySlot.row.end),original=this.text.slice(start,end);
       const replace=(slot,value)=>original.slice(0,slot.row.start-start)+value+original.slice(slot.row.end-start);
       const replacements=[replace(week,this.convertCase(weekdays[date.getUTCDay()],'preserve',week.row.token))];
@@ -678,7 +941,7 @@
       return {start,end,suggestions:replacements,message:match.message.replaceAll('{realDay}',weekdays[date.getUTCDay()]).replaceAll('{day}',weekdays[expected]).replaceAll('{currentYear}',String(currentYear))};
     }
     productiveReadings(word) {
-      const lower=normal(word).toLocaleLowerCase('ca'),lookup=form=>this.dictionary.lookup(form,{lowercaseFallback:false});
+      const lower=normal(word).toLocaleLowerCase(this.locale),lookup=form=>this.dictionary.lookup(form,{lowercaseFallback:false});
       if(lower.endsWith('ment')&&lookup(lower.slice(0,-4)).some(r=>/^(?:VMP00SF.|A[QO].[FC]S.)$/u.test(r.tag)))return [{tag:'RG',lemma:lower}];
       const auto=lower.match(/^(auto)(.*[aeiouàéèíòóïü].+[aeiouàéèíòóïü].*)$/u);
       if(auto)return lookup(auto[2]).filter(r=>r.tag.startsWith('V')&&r.lemma!=='nòmer').map(r=>({...r,lemma:'auto'+r.lemma}));
@@ -693,7 +956,7 @@
       return [];
     }
     tokenizeOriginal(text, tokenRows) {
-      const profile=this.filterResources.tokenizer;if(!profile)return tokenRows;
+      const profile=this.filterResources.tokenizer;if(!profile||profile.externalTokenRows)return tokenRows;
       let source=text.replace(/[‐‑]/gu,'-').replaceAll('ʼ','’');
       const substitutions=[
         [/([aeiouàéèíóòúïüAEIOUÀÈÉÍÒÓÚÏÜ])l[.•⋅∙\uF0D7]l([aeiouàéèíóòúïü])/gu,'$1xxELA_GEMINADAxx$2'],
@@ -731,7 +994,69 @@
         const readings=[...this.dictionary.lookup(normal(piece)),...this.productiveReadings(piece)];return [{token:text.slice(start,offset),start,end:offset,analysis:{readings,lexical:readings.length>0}}];
       });
     }
+    frenchWordWithDeterminerFilter(args,resolve,suggestions) {
+      const determinerSlot=resolve(args.determinerFrom),wordSlot=resolve(args.wordFrom);
+      const select=(slot,pattern)=>slot.readings.find(reading=>this.re(pattern).test(reading.tag||''));
+      const determinerReading=select(determinerSlot,'(P.)?D .*|J .*|V.* ppa .*');
+      const wordReading=select(wordSlot,'[ZNJ] .*|V.* ppa .*');
+      if(!determinerReading||!wordReading)return suggestions;
+      const determinerToken=determinerSlot.row.token,wordToken=wordSlot.row.token;
+      const capitalized=value=>/^\p{Lu}/u.test(value);
+      const allUpper=value=>/\p{Lu}/u.test(value)&&!/[\p{Ll}]/u.test(value);
+      const determinerUpper=capitalized(determinerToken),wordUpper=capitalized(wordToken);
+      const determinerAllUpper=allUpper(determinerToken)&&determinerToken.toLocaleUpperCase(this.locale)!=="L'";
+      const wordAllUpper=allUpper(wordToken);
+      const isNoun=/^[NZ]/u.test(wordReading.tag||''),isAdjective=/^J/u.test(wordReading.tag||'');
+      const prefix=isNoun&&!isAdjective?'[NZ] ':!isNoun&&isAdjective?'J ':'[ZNJ] ';
+      const determinerPattern='((P.)?D |J |V.* ppa )';
+      const genderNumber=['([me]) (s|sp)','([fe]) (s|sp)','([me]) (p|sp)','([fe]) (p|sp)'];
+      const determinerForms=[],wordForms=[];
+      for(const ending of genderNumber){
+        let det=this.synthesize(determinerReading.lemma,determinerPattern+ending,{regexp:true});
+        let word=this.synthesize(wordReading.lemma,prefix+ending,{regexp:true});
+        if(!det.length&&this.re('.+'+ending).test(determinerReading.tag||''))det=[determinerToken];
+        if(!word.length&&this.re('.+'+ending).test(wordReading.tag||''))word=[wordToken];
+        determinerForms.push(det);wordForms.push(word);
+      }
+      const exceptions=new Set(['bels','fols','mols','nouvels']),generated=[];
+      for(let i=0;i<4;i++)for(const wordForm of wordForms[i])for(const determinerForm of determinerForms[i]){
+        if(exceptions.has(determinerForm))continue;
+        let det=determinerForm,word=wordForm;
+        if(determinerUpper&&det)det=det[0].toLocaleUpperCase(this.locale)+det.slice(1);
+        if(wordUpper&&word)word=word[0].toLocaleUpperCase(this.locale)+word.slice(1);
+        if(determinerAllUpper)det=det.toLocaleUpperCase(this.locale);
+        if(wordAllUpper)word=word.toLocaleUpperCase(this.locale);
+        const replacement=(det+' '+word).replace(/' /gu,"'");
+        if(!replacement.trim()||generated.includes(replacement))continue;
+        if(this.frenchSuggestionPassesAgreementChecks(replacement)){
+          if(replacement.endsWith(wordToken))generated.unshift(replacement);else generated.push(replacement);
+        }
+      }
+      // Keep explicit XML suggestions first, as in the upstream Java filter.
+      return [...suggestions,...generated];
+    }
+    frenchSuggestionPassesAgreementChecks(candidate) {
+      const rules=this.filterResources.frenchSuggestionValidationRules,tokenizer=this.filterResources.tokenizer;
+      if(!Array.isArray(rules)||!tokenizer?.tokenizeRows)return false;
+      const cache=this.filterResources.frenchSuggestionValidationCache||(this.filterResources.frenchSuggestionValidationCache=new Map());
+      if(cache.has(candidate))return cache.get(candidate);
+      const savedText=this.text,savedDiagnostics=this.diagnostics,savedSteps=this.steps;
+      let passes=false;
+      try {
+        const issues=this.run(candidate,tokenizer.tokenizeRows(candidate),rules);
+        passes=issues.length===0&&this.diagnostics.length===0;
+      }
+      finally { this.text=savedText;this.diagnostics=savedDiagnostics;this.steps=savedSteps; }
+      if(cache.size>=2048)cache.clear();
+      cache.set(candidate,passes);
+      return passes;
+    }
     sentenceBoundaries(text) {
+      const sentenceTokenizer = this.filterResources.sentenceTokenizer;
+      if (sentenceTokenizer?.segment) {
+        const segments = sentenceTokenizer.segment(text);
+        return segments.slice(0, -1).map(segment => segment.end);
+      }
       if(!this.filterResources.sentenceRules?.length)return null;
       if(!this.srxRules)this.srxRules=this.filterResources.sentenceRules.map(rule=>({...rule,beforeRe:this.expression(rule.before+'$',true,false),afterRe:this.expression('^'+rule.after,true,false)}));
       const boundaries=[];let begin=0;
@@ -764,7 +1089,7 @@
         // The complete original analysis remains available on value.analysis.
         if(this.contextRules.length&&row.analysis?.lexical===false)value.ltReadings=[{tag:'UNKNOWN',lemma:null}];
         if(this.contextRules.length){
-          const lower=normal(row.token).toLocaleLowerCase('ca'),exact=this.dictionary.lookup(row.token,{lowercaseFallback:false});
+          const lower=normal(row.token).toLocaleLowerCase(this.locale),exact=this.dictionary.lookup(row.token,{lowercaseFallback:false});
           const capitalized=row.token!==lower&&!/\p{Ll}.*\p{Lu}/u.test(row.token);
           const lexical=[...exact,...(capitalized?this.dictionary.lookup(lower,{lowercaseFallback:false}):[])];
           if(!lexical.length)lexical.push(...this.productiveReadings(row.token));
@@ -775,27 +1100,51 @@
       if(boundaries)rows.forEach((row,i)=>{if(!row.sentenceStart&&(!rows[i+1]||rows[i+1].sentence!==row.sentence)){row.ltReadings=[...this.readings(row),{tag:'SENT_END',lemma:null}];if(!rows[i+1]||/\r?\n\s*\r?\n/u.test(text.slice(row.end,rows[i+1].start)))row.ltReadings.push({tag:'PARA_END',lemma:null});}});
       if(this.filterResources.verbEndings)this.annotateIncorrectVerbs(rows);
       if(this.filterResources.multiwordTags)this.annotateMultiwords(rows);
+      if(this.filterResources.frenchChunker)this.annotateFrenchChunkers(rows);
       rows.forEach(row=>{row.rawReadings=this.readings(row).map(r=>({...r}));});
       if(this.contextRules.length)this.annotateContext(rows);
       else {
         if(this.posRules.length)this.annotatePos(rows);
         if(this.chunkRules.length)this.annotateChunks(rows);
       }
+      // Expose only the latest analysis rows for proof-pipeline consumers such
+      // as spelling overlays. With external tokenizer rows, source spans stay
+      // identical; synthetic sentence-boundary rows have zero-width spans.
+      this.lastAnalysisRows=rows;
       if(analysisOnly)return rows;
+      const tokenIndexes = { exact: new Map(), folded: new Map() };
+      rows.forEach((row,index)=>{
+        if(row.sentenceStart)return;
+        const exact=normal(row.token),folded=exact.toLocaleLowerCase(this.locale);
+        if(!tokenIndexes.exact.has(exact))tokenIndexes.exact.set(exact,[]);tokenIndexes.exact.get(exact).push(index);
+        if(!tokenIndexes.folded.has(folded))tokenIndexes.folded.set(folded,[]);tokenIndexes.folded.get(folded).push(index);
+      });
       const output = [];
+      // Pattern rules never mutate token readings while they run. Cache the
+      // repeated first-token scans for this one analysis only; contextual
+      // annotation above remains uncached because it mutates those readings.
+      this.candidateStartCache = new Map();
       for (const rule of rules) {
+        const ruleStartedAt = this.ruleProgress ? performance.now() : 0;
         this.steps = 0;
         const pending = [];
         try {
           this.validate(rule);
           if(rule.regexp){output.push(...this.runRegexp(text,rule,boundaries));continue;}
-          const requiredChunks = new Set();
-          const collect = spec => { if(spec.chunk)requiredChunks.add(spec.chunk); (spec.and || spec.or || []).forEach(collect); (spec.exceptions || []).forEach(collect); };
-          [rule,...(rule.antipatterns || [])].forEach(p => p.pattern.forEach(collect));
+          // candidateStarts is a conservative prefilter: null means "cannot
+          // decide", while an empty array proves the first token cannot
+          // match anywhere in this text. Skip chunk/antipattern setup for
+          // that rule; matching would produce no result either way.
+          const starts=this.candidateStarts(rows,rule.pattern,tokenIndexes);
+          if(starts?.length===0)continue;
+          const requiredChunks = this.requiredChunksFor(rule);
           if (requiredChunks.size && !rows.some(r => r.chunks || r.analysis?.chunks)) throw Error('Missing LanguageTool chunk annotations: ' + [...requiredChunks].join(','));
           const antipatterns = [];
-          for (const anti of rule.antipatterns || []) for (let i = 0; i < rows.length; i++) antipatterns.push(...this.match(rows, i, { ...anti, equivalences: rule.equivalences }));
-          for (let i = 0; i < rows.length; i++) for (const match of this.match(rows, i, rule)) {
+          for (const anti of rule.antipatterns || []) {
+            const starts=this.candidateStarts(rows,anti.pattern,tokenIndexes) ?? rows.map((_,i)=>i);
+            for (const i of starts) antipatterns.push(...this.match(rows, i, { ...anti, equivalences: rule.equivalences }, { antipattern: true }));
+          }
+          for (const i of (starts ?? rows.map((_,i)=>i))) for (const match of this.match(rows, i, rule)) {
             const flat = match.captures.flat();
             if (!flat.length) continue;
             if (antipatterns.some(a => {const scope=(a.marker ? a.captures.slice(a.marker.start,a.marker.end) : a.captures).flat();return scope.length&&flat.some(f=>f.index>=scope[0].index&&f.index<=scope.at(-1).index);})) continue;
@@ -811,38 +1160,64 @@
             let suggestions = (rule.suggestions || []).flatMap(parts => this.render(parts, match, text));
             const firstSuggestion=rule.suggestions?.[0]?.[0];
             const explicitCase=(typeof firstSuggestion==='object'||typeof firstSuggestion==='string'&&/^\\\d/u.test(firstSuggestion))&&rule.suggestions.some(parts=>parts.some(part=>typeof part==='object'&&part.caseConversion&&part.caseConversion!=='preserve'));
-            if(!explicitCase&&/^\p{Lu}/u.test(text.slice(start,end)))suggestions=suggestions.map(upperFirst);
+            if(!explicitCase&&/^\p{Lu}/u.test(text.slice(start,end)))suggestions=suggestions.map(value=>upperFirst(value,this.locale));
             if (rule.filter) {
               const filtered=this.filter(rule.filter, match, suggestions, marker.start, text);
+              if (filtered === null) continue;
               if(Array.isArray(filtered))suggestions=filtered;
               else { suggestions=filtered.suggestions;start=filtered.start ?? start;end=filtered.end ?? end;message=filtered.message ?? message;allowNoSuggestions=!!filtered.allowNoSuggestions; }
             }
             const original = text.slice(start, end);
             suggestions = unique(suggestions).filter(s => typeof s==='string' && s !== original && !/\{(?:suggestion|Suggestion|SUGGESTION)\}/u.test(s));
             if (!suggestions.length&&!allowNoSuggestions) continue;
-            const style=['TYPOGRAPHY_OPTIONS','PREFERABLE_EXPRESSIONS','STYLE_OPTIONAL'].includes(rule.category)||rule.filter?.name==='LocalCatalanRewriteFilter';
-            pending.push({ ruleId: 'CA_LT_XML_' + rule.id, start, end, text: original, suggestions, message, category: rule.category, meta: { engine: 'lt-xml-v1', sourceRule: rule.id, qualityCategory: style?'style':'grammar', qualityRisk: style?'review':'safe' } });
+            const style=rule.qualityCategory==='style'||['TYPOGRAPHY_OPTIONS','PREFERABLE_EXPRESSIONS','STYLE_OPTIONAL'].includes(rule.category)||rule.filter?.name==='LocalCatalanRewriteFilter';
+            pending.push({ ruleId: (rule.ruleIdPrefix||'CA_LT_XML_') + rule.id, start, end, text: original, suggestions, message, category: rule.category, meta: { engine: 'lt-xml-v1', sourceRule: rule.id, ruleGroupId: rule.ruleGroupId || null, qualityCategory: rule.qualityCategory||(style?'style':'grammar'), qualityRisk: style?'review':'safe' } });
           }
           const seen = new Set();
           for (const issue of pending) {if(pending.some(other=>other!==issue&&other.start<=issue.start&&other.end>=issue.end&&(other.start<issue.start||other.end>issue.end)))continue;const key = JSON.stringify([issue.start, issue.end, issue.suggestions]); if (!seen.has(key)) { seen.add(key); output.push(issue); } }
         } catch (error) {
           this.diagnostics.push({ ruleId: rule.id, error: String(error.message) });
         }
+        if (this.ruleProgress) this.ruleProgress({ ruleId: rule.id, durationMs: performance.now() - ruleStartedAt, steps: this.steps });
       }
-      const repeated=new Map();
-      for(const rule of rules.filter(r=>r.minPrevMatches)){
-        const group=rule.repetitionGroup||rule.id;if(repeated.has(group))continue;
-        const ids=new Set(rules.filter(r=>(r.repetitionGroup||r.id)===group).map(r=>'CA_LT_XML_'+r.id));
-        const hits=output.filter(h=>ids.has(h.ruleId)).sort((a,b)=>a.start-b.start||b.end-a.end),seen=new Set(),positions=[];
-        for(const hit of hits){
-          const position=rows.filter(row=>!row.sentenceStart&&row.start<hit.start).length;
-          const key=hit.start+':'+hit.end;if(seen.has(key)){hit.repetitionRejected=true;continue;}seen.add(key);
-          const spec=rules.find(r=>'CA_LT_XML_'+r.id===hit.ruleId),minimum=spec.minPrevMatches;
-          hit.repetitionRejected=positions.length<minimum||position-positions[positions.length-minimum]>=spec.distanceTokens;positions.push(position);
+      this.candidateStartCache = null;
+      const repeatedGroups=new Map(),repeatedRules=new Map();
+      for(const rule of rules){
+        if(!rule.minPrevMatches)continue;
+        const group=rule.repetitionGroup||rule.id,outputId=(rule.ruleIdPrefix||'CA_LT_XML_')+rule.id;
+        if(!repeatedGroups.has(group))repeatedGroups.set(group,[]);
+        repeatedGroups.get(group).push(rule);repeatedRules.set(outputId,{rule,group});
+      }
+      if(!repeatedGroups.size)return output;
+      const tokenStarts=rows.filter(row=>!row.sentenceStart).map(row=>row.start);
+      const tokenPosition=start=>{let low=0,high=tokenStarts.length;while(low<high){const middle=(low+high)>>>1;if(tokenStarts[middle]<start)low=middle+1;else high=middle;}return low;};
+      const hitsByGroup=new Map();
+      for(const hit of output){
+        const repeated=repeatedRules.get(hit.ruleId);if(!repeated)continue;
+        if(!hitsByGroup.has(repeated.group))hitsByGroup.set(repeated.group,[]);
+        hitsByGroup.get(repeated.group).push({hit,rule:repeated.rule});
+      }
+      const rejected=new Set();
+      for(const [group,hits] of hitsByGroup){
+        hits.sort((a,b)=>a.hit.start-b.hit.start||a.hit.end-b.hit.end);
+        // LanguageTool first applies SameRuleGroupFilter to the patterns in
+        // this repeated-rule group, then counts the surviving matches.
+        const sameGroup=[];
+        for(const item of hits){
+          const previous=sameGroup.at(-1)?.hit;
+          if(previous&&previous.start<=item.hit.end&&previous.end>=item.hit.start)continue;
+          sameGroup.push(item);
         }
-        repeated.set(group,true);
+        let previousCount=0,previousToken=0;const distances=[];
+        for(const {hit,rule} of sameGroup){
+          const currentToken=tokenPosition(hit.start),minimum=rule.minPrevMatches;
+          distances.push(currentToken-previousToken);
+          let distance=0;for(let index=0;index<minimum&&index<distances.length;index++)distance+=distances[distances.length-1-index];
+          if(previousCount<minimum||distance>=rule.distanceTokens)rejected.add(hit);
+          previousToken=currentToken;previousCount++;
+        }
       }
-      return output.filter(hit=>!hit.repetitionRejected).map(hit=>{delete hit.repetitionRejected;return hit;});
+      return rejected.size?output.filter(hit=>!rejected.has(hit)):output;
     }
     runRegexp(text,rule,boundaries) {
       const base=this.expression(rule.regexp.source,rule.regexp.caseSensitive,false,true),regexp=new RegExp(base.source,base.flags+'d'),output=[];
@@ -852,9 +1227,14 @@
         while((match=regexp.exec(segment))){
           if(!match[0].length){regexp.lastIndex++;continue;}
           const range=match.indices[rule.regexp.mark];if(!range)throw Error('Invalid regexp capture marker');
-          const render=parts=>parts.join('').replace(/\\(\d+)/gu,(_,n)=>match[Number(n)]||'');
+          const render=parts=>(parts||[]).map(part=>{
+            if(typeof part==='string')return part.replace(/\\(\d+)/gu,(_,n)=>match[Number(n)]||'');
+            let value=match[part.no]||'';
+            if(part.regexpMatch)value=normal(value).replace(this.expression(part.regexpMatch,true,false,true),part.regexpReplace||'');
+            return this.convertCase(value,part.caseConversion,match[part.no]||'');
+          }).join('');
           const start=limits[i]+range[0],end=limits[i]+range[1],suggestions=unique(rule.suggestions.map(render)).filter(s=>s!==text.slice(start,end));
-          if(suggestions.length)output.push({ruleId:'CA_LT_XML_'+rule.id,start,end,text:text.slice(start,end),suggestions,message:render(rule.message),category:rule.category,meta:{engine:'lt-xml-v1',sourceRule:rule.id,sourceKind:'regexp',qualityCategory:'style',qualityRisk:'review'}});
+          if(suggestions.length)output.push({ruleId:(rule.ruleIdPrefix||'CA_LT_XML_')+rule.id,start,end,text:text.slice(start,end),suggestions,message:render(rule.message),category:rule.category,meta:{engine:'lt-xml-v1',sourceRule:rule.id,sourceKind:'regexp',qualityCategory:rule.qualityCategory||'style',qualityRisk:rule.qualityCategory==='grammar'?'safe':'review'}});
         }
       }
       return output;
@@ -862,7 +1242,7 @@
     annotateMultiwords(rows) {
       if(!this.multiwordTrie){
         const entries=new Map(this.filterResources.multiwordTags.map(([form,tag])=>[normal(form),tag]));
-        for(const [form,tag]of [...entries])for(const variant of [upperFirst(form),form.toLocaleUpperCase('ca')])if(!entries.has(variant))entries.set(variant,tag);
+      for(const [form,tag]of [...entries])for(const variant of [upperFirst(form,this.locale),form.toLocaleUpperCase(this.locale)])if(!entries.has(variant))entries.set(variant,tag);
         const root={children:new Map()};
         for(const [form,tag]of entries){let node=root;for(const char of form){if(!node.children.has(char))node.children.set(char,{children:new Map()});node=node.children.get(char);}node.value={tag,lemma:form};}
         this.multiwordTrie=root;
@@ -885,29 +1265,120 @@
         }
       }
     }
+    annotateFrenchChunkers(rows) {
+      const resource=this.filterResources.frenchChunker;if(!resource)return;
+      if(!this.frenchChunkerTries){
+        const makeEntries=(forms,allowFirstCapitalized,allowUppercase)=>{
+          const entries=new Map();
+          for(const source of forms){
+            const [form,value]=Array.isArray(source)?source:[source,null];
+            const variants=[form];
+            if(allowFirstCapitalized)variants.push(upperFirst(form,this.locale));
+            if(allowUppercase)variants.push(form.toLocaleUpperCase(this.locale));
+            const stored=Array.isArray(source)?{tag:value,lemma:form}:value;
+            for(const variant of variants)entries.set(normal(variant),stored);
+          }
+          const root={children:new Map()};
+          for(const [form,value]of entries){let node=root;for(const char of form){if(!node.children.has(char))node.children.set(char,{children:new Map()});node=node.children.get(char);}node.value=value;}
+          return root;
+        };
+        this.frenchChunkerTries={
+          phrases:makeEntries(resource.multiwords||[],true,true)
+        };
+        this.frenchGlobalSpellSet=new Set();
+        for(const form of resource.globalForms||[])for(const variant of [form,form.toLocaleUpperCase(this.locale)])this.frenchGlobalSpellSet.add(normal(variant));
+      }
+      const matchingEnd=(root,start)=>{
+        let node=root,best=null;
+        for(let j=start;j<rows.length&&j-start<20&&rows[j].sentence===rows[start].sentence;j++){
+          if(rows[j].sentenceStart)break;
+          const segment=(j>start&&rows[j].whitespaceBefore?' ':'')+normal(rows[j].token);
+          for(const char of segment){node=node.children.get(char);if(!node)break;}
+          if(!node)break;if(node.value!==undefined)best={end:j,value:node.value};
+        }
+        return best;
+      };
+      const matchingGlobalEnd=start=>{
+        let value='',best=null;
+        for(let j=start;j<rows.length&&j-start<20&&rows[j].sentence===rows[start].sentence;j++){
+          if(rows[j].sentenceStart)break;
+          value+=(j>start&&rows[j].whitespaceBefore?' ':'')+normal(rows[j].token);
+          if(this.frenchGlobalSpellSet.has(value))best={end:j};
+        }
+        return best;
+      };
+      // FrenchHybridDisambiguator applies spelling_global.txt first. Its
+      // entries carry the no-tag sentinel and only suppress spelling.
+      for(let i=0;i<rows.length;i++){
+        if(rows[i].sentenceStart)continue;
+        const found=matchingGlobalEnd(i);
+        if(found)for(let j=i;j<=found.end;j++)rows[j].ignoreSpelling=true;
+      }
+      // Then /fr/multiwords.txt adds a phrase reading. LanguageTool's
+      // removePreviousTags pass leaves only this POS sequence on the span.
+      const occupied=new Set();
+      for(let i=0;i<rows.length;i++){
+        if(rows[i].sentenceStart||occupied.has(i))continue;
+        const found=matchingEnd(this.frenchChunkerTries.phrases,i);if(!found)continue;
+        const tag=found.value?.tag;if(!tag)continue;
+        const end=found.end;
+        for(let j=i;j<=end;j++)occupied.add(j);
+        for(let j=i;j<=end;j++){
+          let projected=tag;
+          if(j>i&&tag.startsWith('N '))projected='J '+tag.slice(2);
+          rows[j].ltReadings=[{tag:projected,lemma:found.value.lemma},...this.readings(rows[j]).filter(r=>['SENT_END','PARA_END'].includes(r.tag))];
+        }
+      }
+    }
     annotateContext(rows) {
       // Dictionary readings remain untouched; only this contextual view changes.
       rows.forEach(row=>{row.chunks=[...(row.chunks||row.analysis?.chunks||[])];});
+      // Context rules often reuse the same literal first tokens across a large
+      // rule set. Reuse the runtime's existing candidate index so each rule
+      // does not rescan every row when its first token is an exact form.
+      const tokenIndexes={exact:new Map(),folded:new Map()};
+      rows.forEach((row,index)=>{
+        if(row.sentenceStart)return;
+        const exact=normal(row.token),folded=exact.toLocaleLowerCase(this.locale);
+        if(!tokenIndexes.exact.has(exact))tokenIndexes.exact.set(exact,[]);
+        tokenIndexes.exact.get(exact).push(index);
+        if(!tokenIndexes.folded.has(folded))tokenIndexes.folded.set(folded,[]);
+        tokenIndexes.folded.get(folded).push(index);
+      });
       for(const contextualRule of this.contextRules){
         this.steps=0;
         try{
           const {action,contextFilter,...rule}=contextualRule;
-          const matches=rows.flatMap((_,i)=>this.match(rows,i,rule));
+          // LanguageTool disambiguation actions such as FILTER_IF_PRESENT do
+          // not carry a replacement-word list. Treat that list as optional;
+          // only ADD/REPLACE-style actions need indexed words.
+          const actionWords=Array.isArray(action.words)?action.words:[];
+          const starts=this.candidateStarts(rows,rule.pattern,tokenIndexes)??rows.map((_,i)=>i);
+          const matches=starts.flatMap(i=>this.match(rows,i,rule));
           if(!matches.length)continue;
-          const anti=(rule.antipatterns||[]).flatMap(p=>rows.flatMap((_,i)=>this.match(rows,i,{...p,equivalences:rule.equivalences})));
+          const anti=(rule.antipatterns||[]).flatMap(p=>{
+            const starts=this.candidateStarts(rows,p.pattern,tokenIndexes)??rows.map((_,i)=>i);
+            return starts.flatMap(i=>this.match(rows,i,{...p,equivalences:rule.equivalences},{antipattern:true}));
+          });
           for(const match of matches){
             const flat=match.captures.flat();
             if(contextFilter&&!contextFilter.positions.every((position,i)=>{
               const word=match.captures[position-1]?.[0]?.row.token;if(!word)return false;
-              const tags=this.filterResources.englishPos?.[word]||this.filterResources.englishPos?.[word.toLowerCase()]||[];
+              let tags=this.filterResources.englishPos?.[word]||this.filterResources.englishPos?.[word.toLowerCase()]||[];
+              const morphology=this.filterResources.englishMorphology;
+              if(morphology&&globalThis.CorrectorEnglishTagger?.tagToken){
+                tags=globalThis.CorrectorEnglishTagger.tagToken({text:word,kind:'word'},morphology).readings
+                  .filter(reading=>reading.tag!=null).map(reading=>reading.tag);
+              }
+              if(contextFilter.type&&contextFilter.type!=='english-word')return false;
               return contextFilter.postags?tags.some(tag=>this.re(contextFilter.postags[i]).test(tag)):tags.length>0;
             }))continue;
             if(anti.some(a=>(a.marker?a.captures.slice(a.marker.start,a.marker.end):a.captures).flat().some(s=>flat.some(f=>f.index===s.index))))continue;
             const marker=rule.marker||{start:0,end:match.captures.length},marked=match.captures.slice(marker.start,marker.end).flat();
             if(!marked.length)continue;
-            if(action.words.length&&action.words.length!==marked.length)continue;
+            if(actionWords.length&&actionWords.length!==marked.length)continue;
             const keep=(row,values,force=false)=>{if(values.length||force)row.ltReadings=[...(values.length?values:[{tag:'UNKNOWN',lemma:null}]),...this.readings(row).filter(r=>['SENT_END','PARA_END'].includes(r.tag)&&!values.some(v=>v.tag===r.tag))];};
-            if(action.type==='addchunk'){marked.forEach((s,i)=>{const tag=action.words[i].tag;if(!s.row.chunks.includes(tag))s.row.chunks.push(tag);});continue;}
+            if(action.type==='addchunk'){marked.forEach((s,i)=>{const tag=actionWords[i].tag;if(!s.row.chunks.includes(tag))s.row.chunks.push(tag);});continue;}
             if(action.type==='immunize'||action.type==='ignore_spelling'){marked.forEach(s=>{s.row[action.type==='immunize'?'immunized':'ignoreSpelling']=true;});continue;}
             if(action.type==='filterall'){
               match.captures.slice(marker.start,marker.end).forEach((capture,i)=>{const spec=rule.pattern[marker.start+i];if(spec.postag)capture.forEach(s=>keep(s.row,this.readings(s.row).filter(r=>spec.postagRegexp?this.re(spec.postag).test(r.tag||''):r.tag===spec.postag)));});continue;
@@ -916,8 +1387,8 @@
               // Retain each reading only if it participates in a complete assignment.
               for(const s of marked){const values=s.readings.filter(r=>this.unifyAll(rule.unify||[],match.captures.map(c=>c.map(x=>x===s?{...x,readings:[r]}:x)),rule));keep(s.row,values);}continue;
             }
-            if(action.words.length){
-              marked.forEach((s,i)=>{const w=action.words[i],current=this.readings(s.row),value={tag:w.tag||null,lemma:w.lemma??(w.token||s.row.token)};
+            if(actionWords.length){
+              marked.forEach((s,i)=>{const w=actionWords[i],current=this.readings(s.row),value={tag:w.tag||null,lemma:w.lemma??(w.token||s.row.token)};
                 if(action.type==='remove')keep(s.row,current.filter(r=>!(w.tag==null||r.tag===w.tag)||!(w.lemma==null||r.lemma===w.lemma)),true);
                 else if(action.type==='add')keep(s.row,current.some(r=>r.tag===value.tag&&r.lemma===value.lemma)?current:[...current.filter(r=>r.tag!=='UNKNOWN'),value]);
                 else keep(s.row,[value]);
@@ -931,8 +1402,13 @@
               if(m.postagReplace)values=values.map(r=>({...r,tag:r.tag.replace(this.re(m.postag),m.postagReplace)}));
               if(m.literal)values=values.map(r=>({...r,lemma:m.literal}));keep(row,values);continue;
             }
+            if(action.type==='filterifpresent'){
+              const selected=current.filter(r=>this.re(action.postag).test(r.tag||''));
+              if(selected.length)keep(row,selected);
+              continue;
+            }
             if(action.type==='filter'){keep(row,current.filter(r=>this.re(action.postag).test(r.tag||'')));continue;}
-            keep(row,[{tag:action.postag||null,lemma:current.find(r=>r.tag===action.postag)?.lemma??current[0]?.lemma}]);
+            keep(row,[{tag:action.postag??null,lemma:current.find(r=>r.tag===action.postag)?.lemma??current[0]?.lemma}]);
           }
         }catch(error){this.diagnostics.push({ruleId:contextualRule.id,phase:'context',error:error.message});}
       }
@@ -941,7 +1417,7 @@
       for(const rule of this.posRules){
         this.steps=0;
         try{
-          const anti=(rule.antipatterns||[]).flatMap(p=>rows.flatMap((_,i)=>this.match(rows,i,{...p,equivalences:rule.equivalences})));
+          const anti=(rule.antipatterns||[]).flatMap(p=>rows.flatMap((_,i)=>this.match(rows,i,{...p,equivalences:rule.equivalences},{antipattern:true})));
           const updates=[];
           for(const match of rows.flatMap((_,i)=>this.match(rows,i,rule))){
             const flat=match.captures.flat();
@@ -958,7 +1434,7 @@
       for(const annotationRule of this.chunkRules){
         this.steps=0;
         try{
-          const antiMatches=(annotationRule.antipatterns||[]).flatMap(anti=>rows.flatMap((_,i)=>this.match(rows,i,{...anti,equivalences:annotationRule.equivalences})));
+          const antiMatches=(annotationRule.antipatterns||[]).flatMap(anti=>rows.flatMap((_,i)=>this.match(rows,i,{...anti,equivalences:annotationRule.equivalences},{antipattern:true})));
           const matches=rows.flatMap((_,i)=>this.match(rows,i,annotationRule));
           const updates=[];
           for(const match of matches){
@@ -975,7 +1451,7 @@
       const {verbEndings,wrongVerbs}=this.filterResources, wrong=new Set(wrongVerbs);
       for(const row of rows){
         if(this.dictionary.lookup(row.token).length)continue;
-        const lower=normal(row.token).toLocaleLowerCase('ca');let readings=[];
+      const lower=normal(row.token).toLocaleLowerCase(this.locale);let readings=[];
         if(lower.startsWith('en')){
           readings=this.dictionary.lookup(lower.slice(2)).filter(r=>r.tag.startsWith('V')&&['enfotre','enriure'].includes('en'+r.lemma)).map(r=>({...r,lemma:'en'+r.lemma}));
         }

@@ -40,10 +40,21 @@
   class SpanishChunker {
     constructor(resource) {
       if (resource?.schema !== 1 || resource?.profile !== "es-ES" || !Array.isArray(resource.multiwords) || !Array.isArray(resource.globalEntries)) throw new Error("Los recursos de chunking no pertenecen a es-ES.");
+      this.referenceTables = { multiwords: resource.multiwords, globalEntries: resource.globalEntries };
       this.spanish = expandRows(resource.multiwords, resource.behavior.spanish);
       this.global = expandRows(resource.globalEntries.map(phrase => [phrase]), resource.behavior.global, "NPCN000");
       this.counts = { spanishEntries: resource.multiwords.length, globalEntries: resource.globalEntries.length };
     }
+
+    resolveSharedReference(reference) {
+      if (!Number.isSafeInteger(reference) || reference === 0 || !this.referenceTables) throw new Error("Referencia compartida es-ES inválida o fuera de su fase de carga.");
+      const index = Math.abs(reference) - 1;
+      const value = reference > 0 ? this.referenceTables.multiwords[index]?.[0] : this.referenceTables.globalEntries[index];
+      if (typeof value !== "string") throw new Error("Referencia compartida es-ES fuera de rango.");
+      return value;
+    }
+
+    releaseReferenceTables() { this.referenceTables = null; }
 
     disambiguate(tokens) {
       const matches = [];

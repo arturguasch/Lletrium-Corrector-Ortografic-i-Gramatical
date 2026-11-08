@@ -4,14 +4,13 @@
   const normalize = value => String(value ?? "").normalize("NFC");
 
   class EnglishMorphology {
-    constructor(entries, manifest, manualTags) {
-      if (!entries || typeof entries !== "object" || Array.isArray(entries)
-          || manifest?.schemaVersion !== 1 || manifest.profile !== "en-US"
+    constructor(dictionary, manifest, manualTags) {
+      if (!dictionary || manifest?.schemaVersion !== 1 || manifest.profile !== "en-US"
           || manualTags?.schemaVersion !== 1 || manualTags.profile !== "en-US"
           || manualTags.source !== "LanguageTool 6.9-SNAPSHOT English BaseTagger manual additions/removals") {
         throw new Error("English POS entries do not belong to the independent en-US profile.");
       }
-      this.entries = new Map(Object.entries(entries));
+      this.dictionary = dictionary;
       this.manualAdditions = new Map();
       this.manualRemovals = new Map();
       for (const [rows, target] of [[manualTags.additions, this.manualAdditions], [manualTags.removals, this.manualRemovals]]) {
@@ -28,12 +27,13 @@
 
     lookup(form, { lowercaseFallback = true } = {}) {
       const value = normalize(form);
-      const exact = this.entries.get(value) || [];
-      const selected = exact.length || !lowercaseFallback ? exact : this.entries.get(value.toLocaleLowerCase("en")) || [];
+      const exact = this.dictionary.lookup(value);
+      const selected = exact.length || !lowercaseFallback ? exact : this.dictionary.lookup(value.toLocaleLowerCase("en"));
       const additions = this.manualAdditions.get(value) || [];
       const removals = new Set((this.manualRemovals.get(value) || []).map(([lemma, tag]) => `${lemma}\0${tag}`));
       const output = [];
-      for (const [lemma, tag] of [...additions, ...selected]) {
+      for (const reading of [...additions.map(([lemma, tag]) => ({ lemma, tag })), ...selected]) {
+        const { lemma, tag } = reading;
         const key = `${lemma}\0${tag}`;
         if (removals.has(key) || output.some(reading => `${reading.lemma}\0${reading.tag}` === key)) continue;
         output.push({ form: value, lemma, tag });
@@ -41,11 +41,12 @@
       return output;
     }
 
-    hasForm(form) { return (this.entries.get(normalize(form)) || []).length > 0; }
+    hasForm(form) { return this.dictionary.lookup(normalize(form)).length > 0; }
 
     getStats() {
-      return { forms: this.manifest.posIndex.forms, readings: this.manifest.posIndex.entries,
-        compressedBytes: this.manifest.posIndex.compressedBytes, profile: "en-US", storage: "LanguageTool English POS dictionary" };
+      return { forms: this.manifest.posDictionary.forms ?? this.manifest.posDictionary.entries,
+        readings: this.manifest.posDictionary.entries, compressedBytes: this.manifest.posDictionary.compressedBytes,
+        profile: "en-US", storage: "LanguageTool English POS dictionary (CFSA2)" };
     }
 
     static async load({ baseUrl, fetcher = globalThis.fetch } = {}) {
@@ -55,25 +56,32 @@
       if (!manifestResponse.ok) throw new Error(`Could not load the en-US resource manifest (${manifestResponse.status}).`);
       const manifest = await manifestResponse.json();
       if (manifest?.profile !== "en-US" || manifest.source !== "LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6") throw new Error("The resources are not the pinned independent en-US profile.");
-      const resource = manifest.posIndex, manualResource = manifest.manualTags;
+      const resource = manifest.posDictionary, manualResource = manifest.manualTags;
       const response = await fetcher(new URL(resource.file, base));
       const manualResponse = await fetcher(new URL(manualResource?.file || "en-manual-tags.json", base));
       if (!response.ok || !manualResponse.ok || typeof DecompressionStream !== "function" || !globalThis.crypto?.subtle) throw new Error("Could not load or verify the local en-US POS entries.");
-      const [bytes, manualBytes] = await Promise.all([
-        new Response(response.body.pipeThrough(new DecompressionStream("gzip"))).arrayBuffer(), manualResponse.arrayBuffer()
+      const [compressedBytes, manualBytes] = await Promise.all([
+        response.arrayBuffer(), manualResponse.arrayBuffer()
       ]);
-      const posBytes = new Uint8Array(bytes), overlayBytes = new Uint8Array(manualBytes);
-      if (posBytes.byteLength !== resource.rawBytes) throw new Error("The en-US POS resource has an invalid length.");
-      const [posDigest, manualDigest] = await Promise.all([
-        globalThis.crypto.subtle.digest("SHA-256", posBytes), globalThis.crypto.subtle.digest("SHA-256", overlayBytes)
+      const overlayBytes = new Uint8Array(manualBytes);
+      const posBytes = new Uint8Array(await new Response(new Blob([compressedBytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+      if (resource?.format !== "CFSA2" || posBytes.byteLength !== resource.rawBytes) throw new Error("The en-US POS CFSA2 resource has an invalid format or length.");
+      const [posDigest, compressedDigest, manualDigest] = await Promise.all([
+        globalThis.crypto.subtle.digest("SHA-256", posBytes),
+        globalThis.crypto.subtle.digest("SHA-256", compressedBytes),
+        globalThis.crypto.subtle.digest("SHA-256", overlayBytes)
       ]);
       const hex = digest => Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
-      if (hex(posDigest) !== resource.rawSha256 || hex(manualDigest) !== manualResource?.sha256) throw new Error("The en-US POS resources do not match their manifest hashes.");
-      const entries = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(posBytes));
+      if (hex(posDigest) !== resource.rawSha256 || hex(compressedDigest) !== resource.compressedSha256
+          || hex(manualDigest) !== manualResource?.sha256) throw new Error("The en-US POS resources do not match their manifest hashes.");
+      if (typeof globalThis.CorrectorCatalanCfsa2Dictionary !== "function") throw new Error("The CFSA2 dictionary reader is unavailable.");
+      const dictionary = new globalThis.CorrectorCatalanCfsa2Dictionary(posBytes, {
+        separator: resource.separator, encoding: resource.encoding, encoderType: resource.encoder
+      });
       const manualTags = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(overlayBytes));
       if (manualTags.additions?.length !== manualResource.additions || manualTags.removals?.length !== manualResource.removals
           || JSON.stringify(manualTags.sourceHashes) !== JSON.stringify(manualResource.sourceHashes)) throw new Error("The en-US manual POS overlay differs from its manifest.");
-      return new EnglishMorphology(entries, manifest, manualTags);
+      return new EnglishMorphology(dictionary, manifest, manualTags);
     }
   }
   globalThis.CorrectorEnglishMorphology = EnglishMorphology;

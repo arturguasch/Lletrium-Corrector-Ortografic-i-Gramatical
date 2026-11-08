@@ -16,14 +16,19 @@ for (const [name, expected] of Object.entries(expectedHashes)) if (sourceHashes[
 function lines(text) { return [...new Set(text.split(/\r?\n/u).map(line => line.split("#", 1)[0].trim()).filter(Boolean))]; }
 const multiwords = lines(sourceTexts["es/multiwords.txt"]).map(line => line.split(/[\t;]/u)[0].trim());
 const globalEntries = lines(sourceTexts["spelling_global.txt"]);
+const globalEntryIndexes = new Map(globalEntries.map((value, index) => [value, -(index + 1)]));
+const acceptedWords = [...new Set([...lines(sourceTexts["es/hunspell/spelling.txt"],), ...globalEntries, ...multiwords])];
 const resource = {
   schemaVersion: 1,
   profile: "es-ES",
   sourceHashes,
-  acceptedWords: [...new Set([...lines(sourceTexts["es/hunspell/spelling.txt"],), ...globalEntries, ...multiwords])],
+  acceptedWordsReferenceFormat: "es-multiword-index-v1",
+  // Keep the original word order: it feeds the spelling suggestion trie.
+  // Negative indexes refer losslessly to the shared globalEntries table.
+  acceptedWords: acceptedWords.map(value => globalEntryIndexes.get(value) ?? value),
   ignoreWords: lines(sourceTexts["es/hunspell/ignore.txt"]),
   prohibitedWords: lines(sourceTexts["es/hunspell/prohibit.txt"])
 };
 const out = resolve(root, "engine-src/resources/es-ES/es-spelling-data.json");
 await writeFile(out, `${JSON.stringify(resource)}\n`, "utf8");
-console.log(JSON.stringify({ output: out, acceptedWords: resource.acceptedWords.length, ignoredWords: resource.ignoreWords.length, prohibitedWords: resource.prohibitedWords.length, sourceHashes }, null, 2));
+console.log(JSON.stringify({ output: out, acceptedWords: resource.acceptedWords.length, sharedReferences: resource.acceptedWords.filter(value => typeof value === "number").length, ignoredWords: resource.ignoreWords.length, prohibitedWords: resource.prohibitedWords.length, sourceHashes }, null, 2));

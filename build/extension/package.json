@@ -1,6 +1,6 @@
 {
   "name": "corrector-catala",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "verify:phase8": "node tests/phase8-milestone2-capture-contract.mjs && node tests/phase8-scroll-geometry.mjs && node tests/phase8-editor-decorations.mjs && node tests/phase8-editor-replacement.mjs && node tests/phase8-editor-persistence.mjs && node tests/phase8-mail-regions.mjs && node tests/phase8-gdocs-replacement.mjs && node tests/phase8-gdocs-scroll-anchors.mjs && node tests/phase8-gdocs-scroll-burst.mjs && node tests/phase8-gdocs-frame-edit-relay.mjs && node tests/phase8-gdocs-viewport-fallback.mjs && node tests/phase8-gdocs-snapshot-freshness.mjs && node tests/phase8-gdocs-stale-result.mjs && node tests/phase8-viewport-scheduling.mjs && node tests/phase8-viewport-check-trace.mjs && node tests/phase8-paint-evidence.mjs && node tests/phase8-paint-runtime-browser.mjs",

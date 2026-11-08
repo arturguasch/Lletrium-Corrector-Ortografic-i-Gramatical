@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(root, 'build/extension');
 const outputDir = resolve(root, 'build/releases');
-const version = '1.0.0';
+const version = '1.0.1';
 const destination = resolve(outputDir, `Corrector-Catala-${version}.zip`);
 const requiredFiles = [
   'manifest.json',
@@ -93,10 +93,10 @@ try {
   $nestedManifests = @($names | Where-Object { $_ -match '(^|/)manifest\.json$' -and $_ -ne 'manifest.json' })
   if ($nestedManifests.Count -gt 0) { throw "Chrome Web Store rejects extra manifest.json files: $($nestedManifests -join ', ')" }
   if ($names | Where-Object { $_.StartsWith('src/dictionaries/', [System.StringComparison]::OrdinalIgnoreCase) }) { throw 'Unused legacy Catalan dictionaries found in release ZIP' }
-  foreach ($required in @('src/background.js', 'src/popup.html', 'src/popup.js', 'src/ui-localization.js', 'src/en-explanation-translations.js', 'src/en-explanation-translations-extra.js', 'src/es-explanation-translations.js', '_locales/ca/messages.json', '_locales/es/messages.json', '_locales/en/messages.json', 'build/resources/ca-filter-data.json', 'build/resources/central/ca-central.bin.gz', 'build/resources/central/resource-index.json', 'build/resources/en-US/resource-index.json', 'build/resources/es-ES/resource-index.json', 'build/resources/synthesis/resource-index.json', 'build/engine-build.json')) {
+  foreach ($required in @('src/background.js', 'src/popup.html', 'src/popup.js', 'src/ui-localization.js', 'src/en-explanation-translations.js', 'src/en-explanation-translations-extra.js', 'src/es-explanation-translations.js', '_locales/ca/messages.json', '_locales/es/messages.json', '_locales/en/messages.json', 'build/resources/ca-filter-data.json', 'build/resources/central-cfsa2/ca-analysis.cfsa2.gz', 'build/resources/central-cfsa2/ca-synthesis.cfsa2.gz', 'build/resources/central-cfsa2/ca-synthesis-overlays.json.gz', 'build/resources/central-cfsa2/resource-index.json', 'build/resources/en-US/resource-index.json', 'build/resources/es-ES/resource-index.json', 'build/resources/es-ES/es-ES-synthesis-cfsa2.dict.gz', 'build/resources/synthesis/resource-index.json', 'build/engine-build.json')) {
     if ($names -notcontains $required) { throw "Required runtime entry missing from release ZIP: $required" }
   }
-  foreach ($required in @('PRIVACY.md', 'licenses/THIRD_PARTY_NOTICES.md', 'licenses/morfologik/COPYING.txt', 'licenses/languagetool-runtime/COPYING.txt', 'licenses/languagetool-runtime/english-pos-readme.txt', 'licenses/opennlp/Apache-2.0.txt', 'licenses/opennlp/NOTICE.txt')) {
+  foreach ($required in @('PRIVACY.md', 'licenses/THIRD_PARTY_NOTICES.md', 'licenses/lletrium/GPL-3.0-or-later.txt', 'licenses/morfologik/COPYING.txt', 'licenses/languagetool-runtime/COPYING.txt', 'licenses/languagetool-runtime/english-pos-readme.txt', 'licenses/opennlp/Apache-2.0.txt', 'licenses/opennlp/NOTICE.txt')) {
     if ($names -notcontains $required) { throw "Required legal notice missing from release ZIP: $required" }
   }
   $stream = $archive.GetEntry('manifest.json').Open()

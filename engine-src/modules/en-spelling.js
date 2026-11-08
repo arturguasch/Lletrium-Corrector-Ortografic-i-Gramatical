@@ -6,12 +6,23 @@
 
   class EnglishSpeller {
     constructor(buffer, manifest) {
-      if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || manifest?.format !== "CFAS1"
+      if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || !["CFAS1", "CFSA2"].includes(manifest?.format)
           || manifest?.profile !== "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6"
           || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not belong to the pinned English dictionaries.");
-      const view = new DataView(buffer);
-      if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
-      this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
+      this.cfsa2 = null;
+      if (manifest.format === "CFSA2") {
+        if (manifest.encoding !== "utf-8" || manifest.sequenceEncoder !== "SUFFIX"
+            || !globalThis.CorrectorCatalanCfsa2Dictionary) throw new Error("The English CFSA2 spelling reader is unavailable or incompatible.");
+        this.cfsa2 = new globalThis.CorrectorCatalanCfsa2Dictionary(buffer, {
+          separator: String.fromCodePoint(manifest.separator), encoding: manifest.encoding, encoderType: manifest.sequenceEncoder
+        });
+        this.root = this.cfsa2.root;
+      } else {
+        const view = new DataView(buffer);
+        if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
+        this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
+        this.root = 0;
+      }
       this.manifest = manifest; this.cache = new Map(); this.characterCache = new Map(); this.frequencyCache = new Map();
       this.one = new Map(); this.two = new Map(); this.rest = new Map();
       for (const [source, targets] of Object.entries(manifest.replacementPairs || {})) for (const target of targets) {
@@ -22,13 +33,22 @@
       }
     }
 
-    getArc(node, label) { for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) if (this.graph.arcs[arc * 3] === label) return arc; return -1; }
-    next(arc) { return this.graph.arcs[arc * 3 + 2]; }
-    terminal(arc) { return Boolean(this.graph.arcs[arc * 3 + 1] & 2); }
-    final(arc) { return Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
+    *outgoing(node) {
+      if (this.cfsa2) { for (let arc = this.cfsa2.firstArc(node); arc !== 0; arc = this.cfsa2.nextArc(arc)) yield arc; return; }
+      for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) yield arc;
+    }
+    label(arc) { return this.cfsa2 ? this.cfsa2.arcLabel(arc) : this.graph.arcs[arc * 3]; }
+    getArc(node, label) {
+      if (this.cfsa2) { const arc = this.cfsa2.findArc(node, label); return arc === 0 ? -1 : arc; }
+      for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) if (this.label(arc) === label) return arc;
+      return -1;
+    }
+    next(arc) { return this.cfsa2 ? (this.cfsa2.isTerminal(arc) ? -1 : this.cfsa2.destinationNode(arc)) : this.graph.arcs[arc * 3 + 2]; }
+    terminal(arc) { return this.cfsa2 ? this.cfsa2.isTerminal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 2); }
+    final(arc) { return this.cfsa2 ? this.cfsa2.isFinal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
 
     exact(word) {
-      let node = 0; const bytes = encoder.encode(String(word));
+      let node = this.root; const bytes = encoder.encode(String(word));
       let lastArc = -1;
       for (let index = 0; index < bytes.length; index++) {
         const arc = this.getArc(node, bytes[index]);
@@ -39,7 +59,13 @@
       }
       // Morfologik can encode a final word as a terminal final character arc,
       // or as a separator arc followed by its frequency payload. Accept both.
-      return lastArc >= 0 && (this.final(lastArc) || node >= 0 && this.getArc(node, this.manifest.separator) >= 0);
+      if (lastArc < 0) return false;
+      // English en_US CFSA2 entries always store a word followed by its
+      // separator and frequency payload. An FSA final arc can mark a longer
+      // encoded key, so it is not sufficient evidence that the word is valid.
+      return this.cfsa2
+        ? node >= 0 && this.getArc(node, this.manifest.separator) >= 0
+        : this.final(lastArc) || node >= 0 && this.getArc(node, this.manifest.separator) >= 0;
     }
 
     isMisspelled(word, { personalWords = null } = {}) {
@@ -67,9 +93,10 @@
       if (separatorArc < 0 || this.final(separatorArc) || this.terminal(separatorArc)) { this.frequencyCache.set(node, 0); return 0; }
       let current = this.next(separatorArc);
       let result = 0;
-      while (current >= 0 && this.graph.offsets[current] < this.graph.offsets[current + 1]) {
-        const arc = this.graph.offsets[current];
-        if (this.final(arc)) { result = Math.max(0, this.graph.arcs[arc * 3] - 65); break; }
+      while (current >= 0) {
+        const arc = this.outgoing(current).next().value;
+        if (arc == null) break;
+        if (this.final(arc)) { result = Math.max(0, this.label(arc) - 65); break; }
         if (this.terminal(arc)) break;
         current = this.next(arc);
       }
@@ -80,8 +107,8 @@
       if (this.characterCache.has(startNode)) return this.characterCache.get(startNode);
       const transitions = [];
       const walk = (node, bytes, firstArc) => {
-        for (let arc = this.graph.offsets[node]; arc < this.graph.offsets[node + 1]; arc++) {
-          const label = this.graph.arcs[arc * 3];
+        for (const arc of this.outgoing(node)) {
+          const label = this.label(arc);
           if (!bytes.length && label === this.manifest.separator) continue;
           const sequence = [...bytes, label], length = codepointLength(sequence[0]);
           if (sequence.length < length) {
@@ -92,7 +119,9 @@
           try {
             const char = decoder.decode(new Uint8Array(sequence));
             const target = this.terminal(arc) ? -1 : this.next(arc);
-            transitions.push({ char, target, terminal: this.terminal(arc), final: this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
+            transitions.push({ char, target, terminal: this.terminal(arc), final: this.cfsa2
+              ? target >= 0 && this.getArc(target, this.manifest.separator) >= 0
+              : this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
               frequency: target >= 0 ? this.frequency(target) : 0 });
           } catch { /* invalid UTF-8 arc sequences cannot be dictionary characters */ }
         }
@@ -179,12 +208,12 @@
         if (this.rest.size && word.length > 1) for (const query of queries) {
           const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase("en"), query.toLocaleUpperCase("en"), query.length > 1 ? query[0].toLocaleUpperCase("en") + query.slice(1).toLocaleLowerCase("en") : ""];
           for (const form of forms) if (form && this.exact(form)) {
-            let state = 0; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
+            let state = this.root; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
             if (state >= 0) results.push({word: form, distance: 0, score: 25 - this.frequency(state)});
           }
         }
         let index = 1;
-        for (const query of queries) { index++; if (index > 15 || query.length < 4 && index > 2) break; processed = query; candidate = []; distance = query.length <= 1 ? query.length - 1 : max; walk(0, 0, 0, 0); }
+        for (const query of queries) { index++; if (index > 15 || query.length < 4 && index > 2) break; processed = query; candidate = []; distance = query.length <= 1 ? query.length - 1 : max; walk(this.root, 0, 0, 0); }
       }
       if (this.manifest.spellerFlags.supportRunOnWords && (!word || !this.exact(word))) for (let split = 1; split < word.length; split++) {
         const prefix = word.slice(0, split), suffix = word.slice(split);

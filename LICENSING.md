@@ -21,7 +21,7 @@ Els fitxers afectats són el codi font del motor (`engine-src/modules/`, `engine
 
 Els manifests de recursos (`manifest.json`, `*.manifest.json`) i `references/upstream.lock.json` fixen procedència, versions i hashes quan hi són disponibles. Si un manifest específic és més restrictiu o identifica una llicència diferent, prevalen aquell manifest i els avisos de l’origen per al recurs corresponent.
 
-Els inventaris `analysis/reference-oracle/outputs/ca-*` deriven de regles/dades de LanguageTool; els resultats `*-oracle-*.json` són sortides de l’oracle LanguageTool. No s’identifiquen com a codi GPL de Lletrium. Les comparacions, resultats de rendiment i corpus són materials de prova, no codi: aquesta llicència de programari no concedeix automàticament drets per reutilitzar-ne el text.
+Els inventaris `analysis/reference-oracle/outputs/ca-*` deriven de regles/dades de LanguageTool; els resultats `*-oracle-*.json` són sortides de l’oracle LanguageTool. No s’identifiquen com a codi GPL de Lletrium. Les comparacions, resultats de rendiment i corpus són materials de prova, no codi: aquesta llicència de programari no concedeix automàticament drets per reutilitzar-ne el text. Els benchmarks independents i els seus resultats no formen part del ZIP públic de fonts 1.0.1 perquè no són necessaris per compilar ni executar l’extensió.
 
 ## Altres continguts
 
@@ -30,3 +30,9 @@ La GPL d’aquest paquet cobreix programari, no concedeix drets sobre la marca L
 La carpeta local `analysis/extension-9.6.93/` i altres materials no enumerats no formen part d’aquest ZIP. Aquesta delimitació no és una declaració de llicència per a una còpia diferent o més àmplia del workspace.
 
 La concessió GPL d’aquest paquet la fa Artur Guasch per al codi original del projecte i per a les adaptacions locals identificades que s’ofereixen sota aquesta opció. Les llicències dels components de tercers només es poden usar segons els seus termes; aquesta declaració no concedeix drets sobre cap marca ni substitueix assessorament legal.
+
+
+## Paquets d’idioma externs
+
+Els paquets binaris .pack es publiquen separadament a la branca language-packs; no s’inclouen en aquest ZIP font. Els paquets incorporen dades de tercers amb llicències pròpies. Consulteu build/extension/licenses/french-data/RESOURCE-MAP.md: hi consten recursos francesos amb drets o procedència encara no resolts. La seva presència a la branca externa no constitueix una confirmació que aquests termes estiguin aclarits.
+
