@@ -2985,8 +2985,20 @@
     panel.className = "corrector-local-panel";
     panel.setAttribute("aria-label", ui("reviewSummary"));
     panel.innerHTML = `<header><span>${escapeHtml(ui("reviewSummary"))}</span><button type="button" data-close aria-label="${escapeHtml(ui("closeSummary"))}">×</button></header><div class="corrector-local-panel-body"></div>`;
+    const closeButton = panel.querySelector("[data-close]");
+    const popupButton = document.createElement("button");
+    popupButton.type = "button";
+    popupButton.className = "corrector-local-docs-popup-button corrector-local-popup-settings-button";
+    popupButton.dataset.openExtensionPopup = "";
+    popupButton.setAttribute("aria-label", ui("openExtensionPopup"));
+    popupButton.title = ui("openExtensionPopup");
+    popupButton.innerHTML = '<svg viewBox="0 -1.5 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2.5h4l.55 2.2c.5.17.96.44 1.4.74l2.14-.8 2 3.46-1.6 1.6c.06.52.06 1.06 0 1.58l1.6 1.6-2 3.46-2.14-.8c-.44.3-.9.57-1.4.74L14 18.5h-4l-.55-2.2c-.5-.17-.96-.44-1.4-.74l-2.14.8-2-3.46 1.6-1.6a6.8 6.8 0 0 1 0-1.58l-1.6-1.6 2-3.46 2.14.8c.44.3.9.57 1.4.74z"/><circle cx="12" cy="10.5" r="3.1"/></svg>';
+    popupButton.addEventListener("click", () => {
+      chrome.runtime.sendMessage({ type: "CL_OPEN_ACTION_POPUP" }).catch(() => {});
+    });
+    panel.querySelector("header").insertBefore(popupButton, closeButton);
     addReviewPanelControls(panel);
-    panel.querySelector("[data-close]").addEventListener("click", () => { panel.remove(); if (STATE.panel === panel) STATE.panel = null; });
+    closeButton.addEventListener("click", () => { panel.remove(); if (STATE.panel === panel) STATE.panel = null; });
     renderNormalReviewSummary(panel);
     document.documentElement.appendChild(panel); STATE.panel = panel;
     scheduleReviewToolbarPosition();
@@ -7371,6 +7383,10 @@
     {
       id: "x-composer",
       matchesHost: host => host === "x.com" || host === "twitter.com",
+      // X paints its rich-text editor through layered React surfaces. The
+      // underline can be visible while its transparent hit button is covered,
+      // so route trusted clicks by the measured issue rectangle as on Canva.
+      useGeometricIssueHitTesting: () => true,
       isElementCompatible(editor) {
         return (editor?.matches?.(X_COMPOSER_EDITABLE_SELECTOR) || editor?.isContentEditable === true)
           && !!editor?.closest?.(X_COMPOSER_CONTEXT_SELECTOR);
@@ -7390,11 +7406,6 @@
           || editor?.closest?.('[data-testid$="RichTextInputContainer"]')
           || editor?.closest?.('[data-testid="GrokDrawer"]');
         return alignmentRoot ? getLanguageToolScrollPositioningAnchor(editor) || editor : editor;
-      },
-      getCardAlignmentElement(editor) {
-        return editor?.closest?.('[aria-modal="true"]')
-          || editor?.closest?.('[data-testid$="RichTextInputContainer"]')
-          || editor?.closest?.('[data-testid="GrokDrawer"]') || null;
       },
       getToolbarPlacement({ editor, anchor, rect, clip, rtl }) {
         const width = 52, size = 28, gap = 6;
@@ -13978,7 +13989,7 @@
       const b = document.createElement("button");
       b.className = "corrector-local-suggestion";
       b.textContent = suggestion;
-      keepGoogleDocsFocusOnControl(b);
+      keepGoogleDocsFocusOnControl(b, true);
       b.addEventListener("click", async event => {
         event.preventDefault();
         event.stopPropagation();
@@ -14413,14 +14424,14 @@
     }, 12000);
   }
 
-  function keepGoogleDocsFocusOnControl(el) {
-    if (!el || !STATE.isGoogleDocs) return;
+  function keepGoogleDocsFocusOnControl(el, preserveEditorFocus = STATE.isGoogleDocs) {
+    if (!el || !preserveEditorFocus) return;
     // En Google Docs, si el botó de la nostra UI rep el focus, Docs perd la
     // selecció interna. Llavors insertText pot retornar true però no substitueix res.
     // Evitem que els controls de la nostra extensió siguin focusables mentre
     // preservem igualment el click real de l'usuari.
     el.tabIndex = -1;
-    el.addEventListener("pointerdown", ev => {
+    if (STATE.isGoogleDocs) el.addEventListener("pointerdown", ev => {
       ev.preventDefault();
     }, { capture: true });
     el.addEventListener("mousedown", ev => {

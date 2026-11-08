@@ -241,6 +241,8 @@
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
   padding: 12px;
   font: 13px/1.4 Arial, Helvetica, sans-serif;
+  pointer-events: auto !important;
+  isolation: isolate !important;
 }
 .corrector-local-card-title {
   font-weight: 700;
@@ -259,6 +261,7 @@
   background: #f8fafd;
   color: #202124;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .corrector-local-suggestion:hover {
   background: #e8f0fe;
@@ -1099,6 +1102,8 @@ html[data-corrector-local-theme="dark"] .corrector-local-panel {
 .corrector-local-panel .corrector-local-docs-popup-button svg { display: block !important; width: 18px !important; height: 18px !important; }
 .corrector-local-panel .corrector-local-docs-popup-button:hover { border-color: #bac6ef !important; background: #edf1ff !important; }
 .corrector-local-panel .corrector-local-docs-popup-button:focus-visible { outline: 2px solid #526bd6 !important; outline-offset: 1px !important; }
+.corrector-local-panel:not(:has([data-docs-detection-toggle])) > header > span:first-child { flex: 1 1 auto !important; min-width: 0 !important; }
+.corrector-local-panel .corrector-local-popup-settings-button { pointer-events: auto !important; }
 .corrector-local-docs-switch-label { display: inline-block !important; min-width: 34px !important; text-align: center !important; }
 .corrector-local-docs-switch-track {
   display: inline-block !important;
