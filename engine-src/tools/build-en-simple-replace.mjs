@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourceRoot = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/rules/en");
+const sourceRoot = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/rules/en");
 const sources = [
   { profile: "en-US", family: "EN_SIMPLE_REPLACE", files: ["replace.txt", "replace_custom.txt"],
     hashes: ["0441eed8b4143cae9e9ef2cc213da65eb3c9602f1f8dd970a90ac197488083a0", "5746fe9aedececf1874ec080035c043e490c3f8cff4aa175ed0dc5007e6b27b3"] },

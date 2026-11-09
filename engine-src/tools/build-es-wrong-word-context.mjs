@@ -4,7 +4,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/wrongWordInContext.txt");
+const sourcePath = resolve(root, "references/languagetool-es-ES/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/wrongWordInContext.txt");
 const source = await readFile(sourcePath, "utf8");
 const sourceSha256 = createHash("sha256").update(source).digest("hex");
 const expectedSha256 = "0f0472a6364601e60825088ac73cb4959500a26ce5b3fdf0185f21d1d873a7a5";

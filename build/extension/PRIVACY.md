@@ -1,4 +1,4 @@
-# Privacitat — Lletrium! 1.0.1 (paquet de proves)
+# Privacitat — Lletrium! 1.0.1 (paquet instal·lable)
 
 **Responsable:** Artur Guasch Capella · **Contacte de privacitat:** [upfcalendarexporter@gmail.com](mailto:upfcalendarexporter@gmail.com). Aquest fitxer descriu el comportament tècnic de la versió 1.0.1; completa també els camps de privacitat que demani la Chrome Web Store.
 
@@ -29,4 +29,5 @@ La lectura només serveix per detectar incidències lingüístiques i mostrar o 
 ## Abast i contacte
 
 La revisió s'activa quan l'usuari visita una pàgina amb un camp editable compatible. L'extensió necessita accés als llocs on funciona aquesta característica. Per consultes o sol·licituds de privacitat, escriu a [upfcalendarexporter@gmail.com](mailto:upfcalendarexporter@gmail.com).
+
 

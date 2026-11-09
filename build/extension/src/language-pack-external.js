@@ -377,7 +377,18 @@
     if (port.name !== PORT_NAME || !validSender(port.sender)) { port.disconnect(); return; }
     receiveManagerPort(port);
   });
-chrome.storage.onChanged.addListener((changes, area) => {
+  // BEGIN DEV_ONLY_LOCAL_HTML — remove this block from definitive packages.
+  const isLocalPreview = sender => sender?.id === chrome.runtime.id && sender?.url?.split(/[?#]/)[0] === chrome.runtime.getURL("dev-only/index.html");
+  chrome.runtime.onMessage.addListener((message, sender, reply) => {
+    if (!isLocalPreview(sender)) return false;
+    return receiveManagerMessage(message, sender, reply);
+  });
+  chrome.runtime.onConnect.addListener(port => {
+    if (port.name !== PORT_NAME || !isLocalPreview(port.sender)) return;
+    receiveManagerPort(port);
+  });
+  // END DEV_ONLY_LOCAL_HTML
+  chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "sync" || !changes.uiLanguage) return;
     const language = changes.uiLanguage.newValue;
     if (!["ca", "es", "en", "fr"].includes(language)) return;

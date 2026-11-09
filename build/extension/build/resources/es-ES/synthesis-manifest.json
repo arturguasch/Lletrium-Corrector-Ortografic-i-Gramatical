@@ -1,12 +1,14 @@
 {
   "schema": 1,
-  "format": "CFSA2",
+  "format": "CACFSA1",
   "profile": "es-ES LanguageTool 6.9-SNAPSHOT / spanish-pos-dict 2.5",
-  "dataFile": "es-ES-synthesis-cfsa2.dict.gz",
-  "rawBytes": 1895870,
-  "compressedBytes": 1157023,
-  "rawSha256": "25665f3ab9690f8c15e7c6efddf2973bd887545b79e43f08545554813a3c4c95",
-  "compressedSha256": "84e585996488a6328471a47b9c44e301ce65d4d14c076083db1692df63d79f43",
+  "dataFile": "es-ES-synthesis-fsa.bin.gz",
+  "rawBytes": 14594876,
+  "compressedBytes": 4159217,
+  "rawSha256": "64987ff80873ed0608f83196373138a2bab14296de6feaf5dd4cdcb48a5044b4",
+  "compressedSha256": "65afedc381afac7ace7d20dcba0c848c7d6766fbd0491e06982abaada2e85b1e",
+  "nodes": 761581,
+  "arcs": 962378,
   "forms": 0,
   "lemmas": 0,
   "readings": 0,
@@ -133,7 +135,5 @@
     }
   ],
   "license": "LGPL-2.1; preserve spanish-pos-dict notices and source availability obligations.",
-  "dictionary": "es-ES_synth.dict",
-  "encoderType": "SUFFIX",
-  "optimizedFrom": "LanguageTool spanish-pos-dict 2.5 Morfologik CFSA2, original synthesis dictionary bytes"
+  "dictionary": "es-ES_synth.dict"
 }

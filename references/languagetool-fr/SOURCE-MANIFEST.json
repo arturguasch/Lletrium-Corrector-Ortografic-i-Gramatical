@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "upstream": "LanguageTool 6.9-SNAPSHOT",
+  "sourceArchiveSha256": "C880AED34682796EB89436E31D6C5A9D713EECE708DA70B055281665314C0581",
+  "sourceRevision": null,
+  "sourceRevisionStatus": "The supplied source archive does not identify an immutable Git commit.",
+  "notice": "Reference snapshot only. Resource redistribution rights and exact provenance remain as recorded in build/extension/licenses/french-data/RESOURCE-MAP.md.",
+  "files": [
+    {
+      "path": "COPYING.txt",
+      "bytes": 26432,
+      "sha256": "95a62130965bddc821631fcec03abe97246f9130f11a8be6f47579f8bc016fc8"
+    },
+    {
+      "path": "languagetool-language-modules/fr/pom.xml",
+      "bytes": 2757,
+      "sha256": "501552f17268f361f8c01147330e19d979bcf9020032fbfa9fa7d704efe5bb4f"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/language/BelgianFrench.java",
+      "bytes": 1658,
+      "sha256": "c56a665120dd8bcc4d36ee0f379671dd141b7f0d5bcade506fdfe3588622ece8"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/language/CanadianFrench.java",
+      "bytes": 1659,
+      "sha256": "d2f704e78d831c25027316f0481ab3cea812c0da8cbc64acc6650f6296dbfa0e"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/language/French.java",
+      "bytes": 27533,
+      "sha256": "8845118e2b246abcecd5e7bd26148df8511fce7b93e3630ef9b91613593d5d7e"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/language/SwissFrench.java",
+      "bytes": 1658,
+      "sha256": "a25430071fa7b6066f993cee83314a92bd18e8111f8742bcab43d7c36717b682"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/AdvancedSynthesizerFilter.java",
+      "bytes": 1296,
+      "sha256": "64d5dcf49282d9816d84b8a4efbd7bd49a032ccb220129a16b8b0c79c47109f9"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/CompoundRule.java",
+      "bytes": 2570,
+      "sha256": "de61e385f06469e8354d37b364474a8f4aea23c5d7ccef2a98564ad7303ef814"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/DateCheckFilter.java",
+      "bytes": 1885,
+      "sha256": "06b26c4614fa371204776c187c1243d5df966ebc6b02d485b6a2271e8079016b"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/DateFilterHelper.java",
+      "bytes": 2805,
+      "sha256": "e636a1c34f47a40a7c9cd9d9c0924bb93f210148f348a6736293a33e9d1b3383"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/DMYDateCheckFilter.java",
+      "bytes": 2004,
+      "sha256": "a968a2d57f2916e97a5e331ab8d613467ade9352af64ff2c03356465ddb5e8ce"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FindSuggestionsFilter.java",
+      "bytes": 3450,
+      "sha256": "440c08d3146c8e15baaa958b3ae7f86cefcf8aa2be372cd6252acb1b8ae8bb38"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchConfusionProbabilityRule.java",
+      "bytes": 1923,
+      "sha256": "bbab80b85f2aa25cabe825fa0d80bc355ad8b8afd2179a724d93558fc79d864a"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchMultitokenSpeller.java",
+      "bytes": 1348,
+      "sha256": "692f7f52218b88108cd95d1bb834e1e5ca1a2af6ad59b9eac2c52c592fb26b04"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchNumberInWordFilter.java",
+      "bytes": 1637,
+      "sha256": "b0d7b5c1161910dcb6c7b00faa1ac5d79a128c3add031f498cdf893b7cbe0105"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchPartialPosTagFilter.java",
+      "bytes": 2117,
+      "sha256": "a5bdca911817cdf9ceebb6773be439f0ce0e330af9430a8a513d734c49928018"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchRepeatedWordsRule.java",
+      "bytes": 3616,
+      "sha256": "67dadbb2552cc625370c4a6749344dc0d608837267d18bc15128cac5520eedc3"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/FrenchSuppressMisspelledSuggestionsFilter.java",
+      "bytes": 1168,
+      "sha256": "35621cc1e0b79bdb9995356c1aa14eb6f5f0ee33782c82eedf10942eca9a2ae6"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/GrammalecteRule.java",
+      "bytes": 27859,
+      "sha256": "20db8a02ef30e171abea02becdeadf887495d729cc130fae3d1862c2775586c1"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/InterrogativeVerbFilter.java",
+      "bytes": 9168,
+      "sha256": "da12bde31c1d7caf371ee3c3bccb5d1b75eca48997c4f7e855e7e04d81779d95"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/MakeContractionsFilter.java",
+      "bytes": 2156,
+      "sha256": "b69b5da3075892e7143fe067b3905d15672f3a684617e1504442b32bf5c915ff"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/MorfologikFrenchSpellerRule.java",
+      "bytes": 14673,
+      "sha256": "6b554ce82b0553c921f3495320fa74e4e99f56d13ca6f92e42d20fe94581697f"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/NewYearDateFilter.java",
+      "bytes": 1445,
+      "sha256": "a8b47cf8a14f37fe7895230ccc5ba13b9f663cb4c7d44ae32abbaa6483544ad8"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/PostponedAdjectiveConcordanceFilter.java",
+      "bytes": 23891,
+      "sha256": "531874e16c9b2066aa40ed9c499f0f509d42e89c89fb29b2a94b371a07b973ab"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/QuestionWhitespaceRule.java",
+      "bytes": 9024,
+      "sha256": "07d6c8c52b4928c0d9bf712088dd90ba8e4f3cc9648eaeca065bc14048115997"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/QuestionWhitespaceStrictRule.java",
+      "bytes": 2332,
+      "sha256": "ac3b951e03288b37746d810474dc323991d5c40a5363b850a562cfc82d5ad62d"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/SimpleReplaceRule.java",
+      "bytes": 2745,
+      "sha256": "cf4425eb4edaabc84d90eef4c277890e693be7c346015e001ed284e0f189430b"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/SuggestionsFilter.java",
+      "bytes": 2054,
+      "sha256": "d0a0a870304261b1ad259e05b2ab56ef7b9a06449f30ad30e0ee7142e84d1b15"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/rules/fr/WordWithDeterminerFilter.java",
+      "bytes": 8343,
+      "sha256": "ab5fc2002f5f75bb7aebb837791dc2987d78aa0287e2cf41b91c0d27e3d71542"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/synthesis/FrenchSynthesizer.java",
+      "bytes": 1791,
+      "sha256": "0831297d1ca35cb381fd79dceb334373b673a009c4314b513fa1fe4cce329255"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/tagging/disambiguation/fr/FrenchHybridDisambiguator.java",
+      "bytes": 2636,
+      "sha256": "5b0a2bc89a2bfa3b57ea46557b8b7acc2809e56e5f015d7578fba76c33f14dd1"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/tagging/fr/FrenchTagger.java",
+      "bytes": 9534,
+      "sha256": "4d5fe17af7eb42371202811b5dcd2e7f22c19394e423df7396432abc0df26393"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/java/org/languagetool/tokenizers/fr/FrenchWordTokenizer.java",
+      "bytes": 10221,
+      "sha256": "448ecb2ecf7a3887dc7a24ea1b483dfdd1f0cf401f89101843cf81df915a200d"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/META-INF/org/languagetool/language-module.properties",
+      "bytes": 168,
+      "sha256": "3bde25738e5a143cb8b99decd42d8fd84135ca55beaaaee17b757ca1c80c88fa"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/MessagesBundle_fr.properties",
+      "bytes": 17334,
+      "sha256": "faedbdc77ddd20b6cea2375b43e7b79959d2341cec3946077acbd301890fb80c"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/added_custom.txt",
+      "bytes": 260,
+      "sha256": "30c7602fe9a69730e194dbe5f5b332fba6adf00f49af85d8c5358055c17d339b"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/added.txt",
+      "bytes": 13554,
+      "sha256": "39a32c755ccd6f4ee3127f839c02128f9b3b7a2d8a4092e05b3c69894c079065"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/common_words.txt",
+      "bytes": 84948,
+      "sha256": "0f60c1bbe150eb13ae08bdd7c5d7a2688a46d8531110543208bef6a2712703c0"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/compounds.txt",
+      "bytes": 22328,
+      "sha256": "f7095d04e9e8a2ed077a9a33930f779a77ee6f7b003a6db3cf7953b52e79ec27"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/confusion_sets.txt",
+      "bytes": 11545,
+      "sha256": "89843ed11e36eb9e95909fe4145c525880434e855e5a56bbd47ad0e00007b065"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/disambiguation.xml",
+      "bytes": 443255,
+      "sha256": "d65c0691d8daf44f164d15d6cea80a86a7ea37c6a143e6787787c7f5d6195013"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/fr.sor",
+      "bytes": 5345,
+      "sha256": "cdfc3e44a23f648958b981571c8ae0c7b4d174c58cd050f4cb90063406f2a048"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hunspell/ignore.txt",
+      "bytes": 17915,
+      "sha256": "2502204c9b99266b83456a03f27bb99581b7119280ecf3b8d9705b18bdedb018"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hunspell/prohibit.txt",
+      "bytes": 180,
+      "sha256": "95aaf021f6584cbcdb5d38d209711f4e233e3bd176fff863e14cf61bcb5dabf2"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hunspell/README_fr.txt",
+      "bytes": 3099,
+      "sha256": "4e5c0991ead7f84107e6b2ea8e7063a40dc58fb21561f86fbc7ab12c8371eed7"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hunspell/spelling_custom.txt",
+      "bytes": 104,
+      "sha256": "450257ba28a2cde9f4e05dd2a4b52c0027dd49cb7d906519311451d98818752e"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hunspell/spelling.txt",
+      "bytes": 454321,
+      "sha256": "5f3b8ab8cc2ae43f86bc5acb38a2a191af1854ad6a1b358c86d74cd37e7a4008"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/hyphenated_words.txt",
+      "bytes": 200016,
+      "sha256": "3624d33bc441483fe0ce2b8f2ac07f38d257c65474ae9a0fd3d0a3d317a5f3c3"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/multiwords.txt",
+      "bytes": 109925,
+      "sha256": "8ab8c070d0eb2e139b62cce023e9bb619fe652cbad82b7c319c24fa77081a2e4"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/README_lexique.txt",
+      "bytes": 1137,
+      "sha256": "4c0cc7f6078cf77de852487d7f3bddd26ae50f2f088c5325cf55af94fac95f04"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/removed_custom.txt",
+      "bytes": 223,
+      "sha256": "b840a31465a40eaf6401e4262db9d9980cd81246e7ef23357cbc54bb6e8da31c"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/removed.txt",
+      "bytes": 242,
+      "sha256": "d7fa0762b46de7747567b5f8691d91a6e9d202434b426b78e9a9549f243dc837"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/resource/fr/tagset.txt",
+      "bytes": 3577,
+      "sha256": "9e7a694dbe0ea3357280fcbe44dbfc4d63b9abfc62c3de9f987000916ac0e45b"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/grammar.xml",
+      "bytes": 9061250,
+      "sha256": "5fa75d4e2d089d1f666d32d1fd50f79e839560df473db2b1fdc3242c1c5be934"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/remote-rule-filters.xml",
+      "bytes": 42748,
+      "sha256": "31d2ee616f74af6fd54309e750483681faf1b992bc96d014422921a0b57c96ee"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/replace_custom.txt",
+      "bytes": 432,
+      "sha256": "5746fe9aedececf1874ec080035c043e490c3f8cff4aa175ed0dc5007e6b27b3"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/replace.txt",
+      "bytes": 1098,
+      "sha256": "0aa0f938d87952d58882934a9e72f93b668cd0ff240c19f814f053a9c563e9c7"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/style.xml",
+      "bytes": 1437680,
+      "sha256": "b9b26c87eddf6dfa1a273bcb642a4f74a1367c7d30e7ab380e3c50d8650fc565"
+    },
+    {
+      "path": "languagetool-language-modules/fr/src/main/resources/org/languagetool/rules/fr/synonyms.txt",
+      "bytes": 12139,
+      "sha256": "384bf8e7a69a4e1bdc8509ebfda4372b9ab1a4bcb7df02893380aac2dfbfd4db"
+    }
+  ]
+}

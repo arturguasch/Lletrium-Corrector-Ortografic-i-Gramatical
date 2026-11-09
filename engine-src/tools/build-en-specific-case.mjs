@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/specific_case.txt");
+const sourcePath = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/specific_case.txt");
 const outputPath = resolve(root, "engine-src/resources/en-US/en-specific-case.json");
 const source = await readFile(sourcePath);
 const entries = source.toString("utf8").split(/\r?\n/u)

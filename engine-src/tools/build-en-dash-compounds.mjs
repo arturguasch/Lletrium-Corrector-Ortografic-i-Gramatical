@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/compounds.txt");
+const sourcePath = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/compounds.txt");
 const bytes = await readFile(sourcePath);
 const sourceSha256 = createHash("sha256").update(bytes).digest("hex");
 if (sourceSha256 !== "be0a491fba8bf0b8c8c4d5e4b5b3f8c6cc4bef6264c69dc3a5d918691fc1657d") throw new Error("Pinned LanguageTool en compounds.txt changed; audit dash-rule semantics before rebuilding.");

@@ -4,7 +4,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/es/src/main/resources/org/languagetool/resource/es/compounds.txt");
+const sourcePath = resolve(root, "references/languagetool-es-ES/languagetool-language-modules/es/src/main/resources/org/languagetool/resource/es/compounds.txt");
 const source = await readFile(sourcePath, "utf8");
 const sourceSha256 = createHash("sha256").update(source).digest("hex");
 const expectedSha256 = "25918e9cd40a23a5db5746b885b454cdbfc88d55797eccaadbb577c194bbc939";

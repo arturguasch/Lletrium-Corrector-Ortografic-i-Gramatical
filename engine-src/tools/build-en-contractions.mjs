@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const relative = "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/rules/en/contractions.txt";
+const relative = "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/rules/en/contractions.txt";
 const bytes = await readFile(resolve(root, relative));
 const sourceSha256 = createHash("sha256").update(bytes).digest("hex");
 if (sourceSha256 !== "8244e543b9743c5e53b830c3e788a7b50098960c73011c0252ee1cda79daebe0") {

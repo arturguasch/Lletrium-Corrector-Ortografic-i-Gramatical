@@ -192,6 +192,7 @@
     }
   ],
   "sourceTreeLocations": {
+    "languagetoolFrenchModule": "references/languagetool-fr/languagetool-language-modules/fr/",
     "languagetoolCatalanModule": "references/languagetool-ca-central/",
     "languagetoolCoreAndSupport": "references/languagetool-audit/",
     "softcatalaInitialSelection": "references/softcatala-dict-tools/",

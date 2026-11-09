@@ -1,10 +1,10 @@
-# Components i dades de tercers — runtime 1.0.1 (paquet font)
+# Components i dades de tercers - runtime 1.0.1 (extensio instal·lable)
 
-Aquest inventari descriu els components de tercers del runtime 1.0.1 inclòs a build/extension/. Les llicències completes i els avisos de procedència són a build/extension/licenses/. Els paquets binaris .pack es publiquen separadament a la branca language-packs i no formen part del ZIP font.
+Aquest inventari descriu els components de tercers inclosos en el paquet Lletrium! 1.0.1. Les llicències completes i els avisos de procedència són a licenses/. Els paquets binaris .pack es publiquen separadament a la branca language-packs i queden fora del ZIP instal·lable.
 
-Els camins `references/`, `engine-src/` i `analysis/` d'aquest inventari i dels avisos detallats corresponen a l'arrel del ZIP de fonts complementari. Els camins `licenses/` i `build/resources/` corresponen al ZIP instal·lable.
+Els camins build/resources/ i licenses/ indicats en aquest inventari són relatius al directori principal dins del ZIP. Les referències a engine-src/, references/ i analysis/ apunten al ZIP font GPL, no a fitxers inclosos en aquest paquet instal·lable.
 
-El ZIP de fonts no conté el snapshot multilingüe complet de LanguageTool. Inclou les fonts pertinents, els recursos exportats i els generadors necessaris per a les llengües que incorpora l'extensió.
+La documentacio de fonts, eines de reconstruccio i copies upstream pertinents s'inclou al ZIP font GPL, no en aquest paquet instal·lable.
 
 ## LanguageTool
 

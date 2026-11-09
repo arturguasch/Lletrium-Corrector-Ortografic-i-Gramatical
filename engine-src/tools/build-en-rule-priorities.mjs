@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/java/org/languagetool/language/English.java");
+const sourcePath = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/java/org/languagetool/language/English.java");
 const bytes = await readFile(sourcePath);
 const sourceSha256 = createHash("sha256").update(bytes).digest("hex");
 if (sourceSha256 !== "f90350bf9571ba6b754ce455015ce50905de895d9d915eecd4ea21559d09fb7f") throw new Error("Pinned LanguageTool English.java changed; audit en-US rule priorities before rebuilding.");

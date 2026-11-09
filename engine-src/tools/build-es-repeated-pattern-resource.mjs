@@ -5,7 +5,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const inventoryPath = resolve(root, "analysis/reference-oracle/outputs/spanish-repeated-pattern-inventory.json.gz");
+const inventoryPath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/spanish-repeated-pattern-inventory.json.gz");
 const outputPath = resolve(root, "engine-src/resources/es-ES/es-repeated-pattern-rules.json");
 const inventoryBytes = await readFile(inventoryPath);
 const inventory = JSON.parse(gunzipSync(inventoryBytes).toString("utf8"));

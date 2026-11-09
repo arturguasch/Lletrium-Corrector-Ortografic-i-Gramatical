@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 
 const root = process.cwd();
-const source = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/confusion_pairs.txt");
+const source = resolve(root, "references/languagetool-es-ES/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/confusion_pairs.txt");
 const output = resolve(root, "engine-src/resources/es-ES/es-confusion-pairs.json");
 const expectedHash = "1fd1fe134e54961e7a6ed8272c5f99874440841298a0e33b66595705d236ef6a";
 const sourceText = await readFile(source, "utf8");

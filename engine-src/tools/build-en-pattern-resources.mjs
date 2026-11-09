@@ -4,9 +4,9 @@ import { gunzipSync } from "node:zlib";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "../..");
-const inventoryPath = resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rules.json.gz");
-const candidatePath = resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rule-candidates.json");
-const repeatedPath = resolve(root, "analysis/reference-oracle/outputs/en-US-repeated-pattern-rules.json");
+const inventoryPath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-pattern-rules.json.gz");
+const candidatePath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-pattern-rule-candidates.json");
+const repeatedPath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-repeated-pattern-rules.json");
 const inventoryBytes = await readFile(inventoryPath);
 const inventory = JSON.parse(gunzipSync(inventoryBytes));
 const inventorySha256 = createHash("sha256").update(inventoryBytes).digest("hex");

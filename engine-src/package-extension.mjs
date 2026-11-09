@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(root, 'build/extension');
 const outputDir = resolve(root, 'build/releases');
-const version = '1.0.1';
+const version = '1.0.0';
 const destination = resolve(outputDir, `Corrector-Catala-${version}.zip`);
 const requiredFiles = [
   'manifest.json',

@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-const source = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/synonyms.txt");
+const source = resolve(root, "references/languagetool-es-ES/languagetool-language-modules/es/src/main/resources/org/languagetool/rules/es/synonyms.txt");
 const output = resolve(root, "engine-src/resources/es-ES/es-synonyms.json");
 const expectedHash = "9d5201f80c303bde34ef956c5211c58163fce247db15f5d3dd8051cd12aeaba8";
 const sourceText = await readFile(source, "utf8");

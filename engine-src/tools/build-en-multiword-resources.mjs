@@ -3,8 +3,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "../..");
-const englishPath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/multiwords.txt");
-const globalPath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-core/src/main/resources/org/languagetool/resource/spelling_global.txt");
+const englishPath = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/multiwords.txt");
+const globalPath = resolve(root, "references/languagetool-audit/languagetool-core/src/main/resources/org/languagetool/resource/spelling_global.txt");
 const outputPath = resolve(root, "engine-src/resources/en-US/en-multiwords.json");
 const [englishBytes, globalBytes] = await Promise.all([readFile(englishPath), readFile(globalPath)]);
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");

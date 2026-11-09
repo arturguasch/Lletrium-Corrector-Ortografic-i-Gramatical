@@ -1,4 +1,4 @@
-import { copyFile, cp, mkdir, readFile, rm, writeFile, access } from "node:fs/promises";
+import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile, access } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
@@ -7,29 +7,7 @@ import { fileURLToPath } from "node:url";
 import { isSupportedDisambiguationRule } from "./tools/disambiguation-rule-gate.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-// The focused source ZIP carries only the LanguageTool language/core sources
-// needed by Lletrium, under references/. Recreate the legacy analysis checkout
-// layout on demand so existing conversion tools work without shipping the full
-// multi-language LanguageTool repository.
-const ltCheckout = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master");
-const ltSourceMappings = [
-  ["references/languagetool-en-US/languagetool-language-modules/en/src/main", "languagetool-language-modules/en/src/main"],
-  ["references/languagetool-es-ES/languagetool-language-modules/es/src/main", "languagetool-language-modules/es/src/main"],
-  ["references/languagetool-audit/languagetool-core/src/main", "languagetool-core/src/main"],
-  ["references/languagetool-audit/languagetool-language-modules/ca/src/main", "languagetool-language-modules/ca/src/main"]
-];
-for (const [packagedRelative, checkoutRelative] of ltSourceMappings) {
-  const destination = resolve(ltCheckout, checkoutRelative);
-  try { await access(destination); }
-  catch {
-    const packagedSource = resolve(root, packagedRelative);
-    try { await access(packagedSource); }
-    catch { throw new Error(`Missing pinned LanguageTool source: ${packagedRelative}`); }
-    await mkdir(dirname(destination), { recursive: true });
-    await cp(packagedSource, destination, { recursive: true });
-  }
-}
-const englishSrxBuild = spawnSync(process.execPath, [resolve(root, "analysis/reference-oracle/build-english-srx.mjs")], { encoding: "utf8" });
+const englishSrxBuild = spawnSync(process.execPath, [resolve(root, "engine-src/tools/build-english-srx.mjs")], { encoding: "utf8" });
 if (englishSrxBuild.status !== 0) throw new Error(englishSrxBuild.stderr || englishSrxBuild.stdout || "Could not build the English SRX resource.");
 const englishDisambiguationBuild = spawnSync(process.execPath, [resolve(root, "engine-src/tools/build-en-disambiguation.mjs")], { encoding: "utf8" });
 if (englishDisambiguationBuild.status !== 0) throw new Error(englishDisambiguationBuild.stderr || englishDisambiguationBuild.stdout || "Could not build the English disambiguation resource.");
@@ -152,8 +130,8 @@ const taggerResourceDir = resolve(root, "references/languagetool-ca-central/src/
 const globalChunkerSource = resolve(root, "references/languagetool-audit/languagetool-core/src/main/resources/org/languagetool/resource/spelling_global.txt");
 const catalanChunkerSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/multiwords.txt");
 const catalanHyphenatedSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/hyphenated_words.txt");
-const disambiguationInventorySource = resolve(root, "analysis/reference-oracle/outputs/ca-disambiguation-inventory.json");
-const patternRuleCandidatesSource = resolve(root, "analysis/reference-oracle/outputs/ca-pattern-rule-candidates.json");
+const disambiguationInventorySource = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/ca-disambiguation-inventory.json");
+const patternRuleCandidatesSource = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/ca-pattern-rule-candidates.json");
 const disambiguationXmlSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/disambiguation.xml");
 const multitokenWordsSource = resolve(root, "engine-src/resources/central/ca-spelling-multitoken-words.txt");
 const spellingWordsSource = resolve(root, "engine-src/resources/central/ca-spelling-words.txt");
@@ -161,7 +139,7 @@ const caSpellingListSource = resolve(root, "references/languagetool-ca-central/s
 const caSpellingSpecialSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/spelling-special.txt");
 const globalSpellingListSource = resolve(root, "references/languagetool-audit/languagetool-core/src/main/resources/org/languagetool/resource/spelling_global.txt");
 const caProhibitSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/resource/ca/hunspell/prohibit.txt");
-const spellingInfoSource = resolve(root, "analysis/reference-oracle/artifacts/catalan-pos-dict-3.3/extracted/org/languagetool/resource/ca/ca-ES_spelling.info");
+const spellingInfoSource = resolve(root, "engine-src/build-inputs/reference-oracle/artifacts/catalan-pos-dict-3.3/extracted/org/languagetool/resource/ca/ca-ES_spelling.info");
 const multiwordReplaceSource = resolve(root, "references/languagetool-ca-central/src/main/resources/org/languagetool/rules/ca/replace_multiwords.txt");
 
 await mkdir(dirname(output), { recursive: true });
@@ -234,7 +212,7 @@ if (spanishRepeatedPatterns?.schemaVersion !== 1 || spanishRepeatedPatterns.prof
     || spanishRepeatedPatterns.groupCount !== 13 || spanishRepeatedPatterns.groups?.length !== 13
     || spanishRepeatedPatterns.ruleCount !== spanishRepeatedPatterns.groups.reduce((sum, group) => sum + group.rules.length, 0)) throw new Error("Spanish repeated-pattern rules differ from the pinned LanguageTool style.xml snapshot.");
 await copyFile(resolve(spanishResourceSource, "es-srx.json"), resolve(spanishResourceOutput, "es-srx.json"));
-const spanishPatternRulesPath = resolve(root, "analysis/reference-oracle/outputs/spanish-pattern-rule-candidates.json");
+const spanishPatternRulesPath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/spanish-pattern-rule-candidates.json");
 const spanishPatternRulesBytes = await readFile(spanishPatternRulesPath);
 const spanishPatternRules = JSON.parse(spanishPatternRulesBytes.toString("utf8"));
 if (spanishPatternRules?.schemaVersion !== 1 || spanishPatternRules.language !== "es-ES"
@@ -288,12 +266,12 @@ delete englishRuntimeManifest.posIndex;
 delete englishRuntimeManifest.synthesis;
 delete englishRuntimeManifest.synthesisIndex;
 await writeFile(resolve(englishResourceOutput, "resource-index.json"), `${JSON.stringify(englishRuntimeManifest, null, 2)}\n`, "utf8");
-const englishPatternCandidatesBytes = await readFile(resolve(root, "analysis/reference-oracle/outputs/en-US-pattern-rule-candidates.json"));
+const englishPatternCandidatesBytes = await readFile(resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-pattern-rule-candidates.json"));
 const englishPatternCandidatesGzip = gzipSync(englishPatternCandidatesBytes, { level: 9, mtime: 0 });
 await writeFile(resolve(englishResourceOutput, "en-pattern-rule-candidates.json.gz"), englishPatternCandidatesGzip);
 await rm(resolve(englishResourceOutput, "en-pattern-rule-candidates.json"), { force: true });
-await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-repeated-pattern-rules.json"), resolve(englishResourceOutput, "en-repeated-pattern-rules.json"));
-await copyFile(resolve(root, "analysis/reference-oracle/outputs/en-US-regex-rules.json"), resolve(englishResourceOutput, "en-regex-rules.json"));
+await copyFile(resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-repeated-pattern-rules.json"), resolve(englishResourceOutput, "en-repeated-pattern-rules.json"));
+await copyFile(resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-regex-rules.json"), resolve(englishResourceOutput, "en-regex-rules.json"));
 const englishAdverbMap = JSON.parse(await readFile(resolve(root, "engine-src/resources/en-US-adverb-to-adjective.json"), "utf8"));
 if (englishAdverbMap?.schemaVersion !== 1 || englishAdverbMap.profile !== "en-US"
     || englishAdverbMap.sourceSha256 !== "d1b53f4cd0d8fc91413d866a6a4dd3c7aa96682e43cc1a18256801685d42ae78"
@@ -335,7 +313,7 @@ if (spellingOverlayGraphSha256 !== "1ed33eaf0d1f27b131e1031bd3c3569adb7c5f6c83dc
   throw new Error(`Unexpected LanguageTool plain-text spelling FSA: ${spellingOverlayGraphSha256}`);
 }
 spellerMetadata.spellingOverlayGraphSha256 = spellingOverlayGraphSha256;
-const multitokenSpellerSource = resolve(root, "analysis/reference-oracle/artifacts/catalan-pos-dict-3.3/extracted/org/languagetool/resource/ca/ca-ES_spelling_multitoken.dict");
+const multitokenSpellerSource = resolve(root, "engine-src/build-inputs/reference-oracle/artifacts/catalan-pos-dict-3.3/extracted/org/languagetool/resource/ca/ca-ES_spelling_multitoken.dict");
 const multitokenSpellerSourceSha256 = createHash("sha256").update(await readFile(multitokenSpellerSource)).digest("hex");
 if (multitokenSpellerSourceSha256 !== "08f66266d060ac5fc04da32a66f077f74a5016e9118ef75fba9bcd64b2a829f7") {
   throw new Error(`Unexpected LanguageTool Morfologik multitoken dictionary: ${multitokenSpellerSourceSha256}`);
@@ -798,4 +776,16 @@ for (const resourceRoot of [resolve(root, "build/resources"), resolve(stagedExte
 await copyFile(output, resolve(stagedExtension, "src/language-engine.js"));
 await copyFile(manifestPath, resolve(stagedExtension, "build/engine-build.json"));
 await cp(resolve(root, "build/resources"), resolve(stagedExtension, "build/resources"), { recursive: true, force: true });
+// French adapters/resources are maintained as source under engine-src, but
+// remain a distinct proof-stage runtime and do not change the shared engine's
+// advertised profile set or the pending French data-rights status.
+const frenchModuleSource = resolve(root, "engine-src/modules/french");
+for (const name of await readdir(frenchModuleSource)) {
+  if (!name.startsWith("french-") || !name.endsWith(".js")) continue;
+  await copyFile(resolve(frenchModuleSource, name), resolve(stagedExtension, "src", name));
+}
+await cp(resolve(root, "engine-src/resources/fr"), resolve(stagedExtension, "build/resources/fr"), { recursive: true, force: true });
+const frenchRuleCandidates = resolve(root, "engine-src/resources/fr/french-pattern-rule-candidates.json");
+await mkdir(resolve(stagedExtension, "src/dictionaries/french"), { recursive: true });
+await copyFile(frenchRuleCandidates, resolve(stagedExtension, "src/dictionaries/french/french-pattern-rule-candidates.json"));
 process.stdout.write(`Engine build ready: ${manifest.output} (${manifest.bytes} bytes); staged extension refreshed.\n`);

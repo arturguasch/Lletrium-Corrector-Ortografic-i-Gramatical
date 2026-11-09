@@ -4,8 +4,8 @@ import { resolve } from "node:path";
 import "../modules/en-xml-disambiguation.js";
 
 const root = resolve(import.meta.dirname, "../..");
-const sourcePath = resolve(root, "analysis/reference-oracle/outputs/en-US-disambiguation.json");
-const xmlPath = resolve(root, "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/disambiguation.xml");
+const sourcePath = resolve(root, "engine-src/build-inputs/reference-oracle/outputs/en-US-disambiguation.json");
+const xmlPath = resolve(root, "references/languagetool-en-US/languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/disambiguation.xml");
 const outputPath = resolve(root, "engine-src/resources/en-US/en-disambiguation-rules.json");
 const source = JSON.parse(await readFile(sourcePath, "utf8"));
 const xml = await readFile(xmlPath, "utf8");
