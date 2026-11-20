@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "languageToolVersion": "6.9-SNAPSHOT",
+  "morfologikVersion": "2.2.0",
+  "serialization": "CFSA2",
+  "sourceRepresentation": "UTF-8, one original FSA sequence per line, including the literal frequency bucket after the info-defined + separator.",
+  "roundTripTest": "FSABuilder + CFSA2Serializer in Morfologik 2.2.0; enumerated sequence count and SHA-256 are identical before and after rebuild.",
+  "dictionaries": [
+    {
+      "profile": "de-DE",
+      "sourceTextGzipPath": "source/morfologik/de_DE.source.txt.gz",
+      "sourceTextBytes": 39437785,
+      "sourceTextSha256": "48be3326ad3e153844c4fe3f316edc3d350c8dcef66dd240d501ba510e963abf",
+      "sourceArchiveBytes": 7374540,
+      "sourceArchiveSha256": "0a283e2e728c9d6891b22c12ac3c2a1ac1eb97070239033032aeb7e31d47eb29",
+      "entryCount": 2226828,
+      "sequenceDigest": "2226828:48be3326ad3e153844c4fe3f316edc3d350c8dcef66dd240d501ba510e963abf",
+      "sourceInfoPath": "source/morfologik/de_DE.info",
+      "sourceInfoSha256": "d5282d2fe1ec9db5253bcae5d3c03144c353fcebdef7951eb72b8814ecdcb2a2",
+      "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_DE.dict",
+      "languageToolDictionarySha256": "bb2f4fddc7061e7f165a218736794b45fd69970775008c1af981e2550e988670",
+      "roundTripEntriesMatch": true
+    },
+    {
+      "profile": "de-AT",
+      "sourceTextGzipPath": "source/morfologik/de_AT.source.txt.gz",
+      "sourceTextBytes": 39431112,
+      "sourceTextSha256": "77ee80d3c5cff4c89cf1d87a8c832e2b5ca58b194a3e7b1502f07095399b0663",
+      "sourceArchiveBytes": 7372197,
+      "sourceArchiveSha256": "6717c01c7b26866e5d95130e35158904c144c85b04937098d1b16c7a29019c4e",
+      "entryCount": 2226620,
+      "sequenceDigest": "2226620:77ee80d3c5cff4c89cf1d87a8c832e2b5ca58b194a3e7b1502f07095399b0663",
+      "sourceInfoPath": "source/morfologik/de_AT.info",
+      "sourceInfoSha256": "2d545a300583ed53b762679d3723629ac73fb9d653bcea2ff975e3645ffc07bd",
+      "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_AT.dict",
+      "languageToolDictionarySha256": "8ca6733266822928e67ba99cb429e0e105a40cb637b2bea620a2fc2bc126e515",
+      "roundTripEntriesMatch": true
+    },
+    {
+      "profile": "de-CH",
+      "sourceTextGzipPath": "source/morfologik/de_CH.source.txt.gz",
+      "sourceTextBytes": 38965715,
+      "sourceTextSha256": "991f7c0599b00d86b82961bda114cc05f8ef5f2bad092626243fc1b4407f0295",
+      "sourceArchiveBytes": 7278395,
+      "sourceArchiveSha256": "fbcff348bef952053a251fe154c678cf2dbf1c306a9e2c9065e1e6d809904289",
+      "entryCount": 2202059,
+      "sequenceDigest": "2202059:991f7c0599b00d86b82961bda114cc05f8ef5f2bad092626243fc1b4407f0295",
+      "sourceInfoPath": "source/morfologik/de_CH.info",
+      "sourceInfoSha256": "526f286b8bec80492a2edd759393d6184c99608f3c36a1c8b9faeea65641b91d",
+      "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_CH.dict",
+      "languageToolDictionarySha256": "69ec318782b472f8421c6f80920261f41dcb6caaa5d7bca90b0be9e722d6c235",
+      "roundTripEntriesMatch": true
+    }
+  ]
+}

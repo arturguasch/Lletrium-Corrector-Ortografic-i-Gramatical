@@ -78,3 +78,12 @@ El paquet candidat de reducció inclou `build/resources/central-cfsa2/ca-analysi
 `ca-synthesis-overlays.json.gz` conserva, en ordre, les operacions de `added.txt`, `removed.txt` i `do-not-synthesize.txt` de LanguageTool 6.9-SNAPSHOT. Són dades derivades dels recursos catalans de LanguageTool i se'ls aplica l'opció LGPL-2.1-or-later indicada pels avisos locals de `licenses/languagetool-runtime/`.
 
 `src/language-engine.js` del candidat incorpora una implementació local JavaScript del lector del format binari Morfologik CFSA2 i de la descodificació SUFFIX. No inclou ni executa codi Java ni un JAR de Morfologik. Es conserva `licenses/morfologik/COPYING.txt` amb l'avís BSD de tres clàusules de l'origen tècnic emprat per documentar el format i el comportament.
+
+
+## Italian language-pack (1.0.2 candidate)
+
+Italian resources include LanguageTool LGPL material, Morph-it! data (LGPL/CC BY-SA dual license; LGPL route documented), and Hunspell/Morfologik-derived spelling data associated with GPL-3.0-or-later upstream notices. The source-to-binary recipe for the Italian spelling dictionary and parts of the POS/synthesis chain remains pending; see licenses/italian-data/README.md. Preserve all upstream notices. This candidate does not claim the unresolved correspondence has been cleared.
+
+### Italian LanguageTool core-rule adapters
+
+The Italian pipeline adapts the unconditional LanguageTool core rules registered by Italian.java for punctuation spacing, comma spacing, repeated punctuation, unpaired brackets, sentence-start capitalization, and repeated whitespace. The source classes and attribution are listed in languagetool-runtime/NOTICE.md; they remain LGPL-2.1-or-later. Local adapters do not claim full Java parity. The optional Italian confusion-probability rule is not included because it requires a language model not shipped by this extension.

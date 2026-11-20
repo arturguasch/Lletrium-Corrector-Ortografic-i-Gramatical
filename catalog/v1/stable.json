@@ -1,14 +1,15 @@
 {
   "catalogSchema": 1,
-  "generatedAt": "2026-11-05T21:37:33.087Z",
+  "generatedAt": "2026-11-20T22:31:20.555Z",
   "channel": "stable",
   "packs": [
     {
       "id": "ca",
       "labels": {
-        "ca": "Català (central, valencià i balear)",
-        "es": "Catalán (central, valenciano y balear)",
-        "en": "Catalan (central, Valencian and Balearic)"
+        "ca": "Català",
+        "es": "Catalán",
+        "en": "Catalan",
+        "fr": "Catalan"
       },
       "flag": "ca",
       "packVersion": "1.0.1",
@@ -30,7 +31,8 @@
       "labels": {
         "ca": "Espanyol",
         "es": "Español",
-        "en": "Spanish"
+        "en": "Spanish",
+        "fr": "Espagnol"
       },
       "flag": "es",
       "packVersion": "1.0.1",
@@ -52,7 +54,8 @@
       "labels": {
         "ca": "Anglès americà",
         "es": "Inglés estadounidense",
-        "en": "American English"
+        "en": "American English",
+        "fr": "Anglais américain"
       },
       "flag": "us",
       "packVersion": "1.0.1",
@@ -74,7 +77,8 @@
       "labels": {
         "ca": "Francès",
         "es": "Francés",
-        "en": "French"
+        "en": "French",
+        "fr": "Français"
       },
       "flag": "fr",
       "packVersion": "1.0.1",
@@ -90,6 +94,52 @@
       "size": 1884929,
       "sha256": "4007b4ac43a400a9728e6c8f88daff2b8f2bd9c1e4aae0ba7760442c7dfd446a",
       "licensePath": "licenses/french-data/"
+    },
+    {
+      "id": "it",
+      "labels": {
+        "ca": "Italià",
+        "es": "Italiano",
+        "en": "Italian",
+        "fr": "Italien"
+      },
+      "flag": "it",
+      "packVersion": "1.0.2",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.2",
+        "resourceApi": 1,
+        "resourceSetId": "it-data-1",
+        "capabilities": []
+      },
+      "path": "packs/it/1.0.2/it-IT.pack",
+      "size": 794678,
+      "sha256": "aafad2ed452d6cce0dcabfb1c5022f89f859ff57cc287f4c782a0d6bcf6eec6e",
+      "licensePath": "licenses/italian-data/"
+    },
+    {
+      "id": "de",
+      "labels": {
+        "ca": "Alemany",
+        "es": "Alemán",
+        "en": "German",
+        "fr": "Allemand"
+      },
+      "flag": "de",
+      "packVersion": "1.0.2",
+      "releaseState": "published",
+      "channel": "stable",
+      "requires": {
+        "minExtensionVersion": "1.0.2",
+        "resourceApi": 1,
+        "resourceSetId": "de-lt69-1",
+        "capabilities": []
+      },
+      "path": "packs/de/1.0.2/de.pack",
+      "size": 13808549,
+      "sha256": "43c7f53321f68a44bd1ee8a4f1b93b9bc9203022349c631defca271f869e0a24",
+      "licensePath": "licenses/german-data/"
     }
   ]
 }

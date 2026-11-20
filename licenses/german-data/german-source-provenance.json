@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "languageToolVersion": "6.9-SNAPSHOT",
+  "languageToolGitRevision": null,
+  "note": "The local LanguageTool checkout has no exposed Git HEAD; hashes pin the inspected source files.",
+  "profiles": [
+    "de-DE",
+    "de-AT",
+    "de-CH"
+  ],
+  "resources": [
+    {
+      "path": "build/resources/de/german.dict.gz",
+      "sha256": "d513a4d06bbdddcc3a7bdddf618c1dcec50cb86ab1585d72f83856bdc2d8e2e0"
+    },
+    {
+      "path": "build/resources/de/german.info",
+      "sha256": "836d85cd34282b15a7a553e46246f1e42ed934d03d07f512a9a1079407257725"
+    },
+    {
+      "path": "build/resources/de/german_synth.dict.gz",
+      "sha256": "0d20accf1e4d290ed16a635d2a161366963043b71c1a4091368235f9235a64d9"
+    },
+    {
+      "path": "build/resources/de/german_synth.info",
+      "sha256": "82fc3a8220009ebb2000f4b1f9e08a724de313b7c066024ac63f46c421b3010d"
+    },
+    {
+      "path": "build/resources/de/german_tags.txt.gz",
+      "sha256": "b3ae89ff709b0d8a2f418b513b4982f2bd613aadec5ad0e38af6dca787b72785"
+    },
+    {
+      "path": "build/resources/de/addedCompound.txt.gz",
+      "sha256": "c33f21ffdcbeb01cdc4a570ec2f90fa2352fb4c3eecbcc22ffd2529a5c80983b"
+    },
+    {
+      "path": "build/resources/de/multitoken-suggest.txt.gz",
+      "sha256": "26ba8a4f9ade5ba558c1d01a54cf275ffeda9a3d0cc236e91b491dcabe5b077e"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_DE.dict.gz",
+      "sha256": "e427a5b3a3477213d0397fee54ffd3de5334f487df3da02eed87fe2d135c134f"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_DE.info",
+      "sha256": "d5282d2fe1ec9db5253bcae5d3c03144c353fcebdef7951eb72b8814ecdcb2a2"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_AT.dict.gz",
+      "sha256": "5011bacad75a2b6c91d74d0cc195d27a99344066a059971b64a7e28a8f916e04"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_AT.info",
+      "sha256": "2d545a300583ed53b762679d3723629ac73fb9d653bcea2ff975e3645ffc07bd"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_CH.dict.gz",
+      "sha256": "7bfa0fb2514e5bd012461ec6a7249288fa354372370efa55d91d95db3f33998f"
+    },
+    {
+      "path": "build/resources/de/hunspell/de_CH.info",
+      "sha256": "526f286b8bec80492a2edd759393d6184c99608f3c36a1c8b9faeea65641b91d"
+    }
+  ],
+  "upstreamSources": [
+    {
+      "path": "licenses/german-data/source/addedCompound.txt",
+      "bytes": 1726651,
+      "sha256": "d25c21e7c7d9292fcffb8a86727714fd4edd751b2fabd5198c7ae01874ab6fa0"
+    },
+    {
+      "path": "licenses/german-data/source/multitoken-suggest.txt",
+      "bytes": 58951,
+      "sha256": "14704a47318caacbc78fbf9db6db14e66731cb43d082231b5ea51a0929125a47"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_DE.aff",
+      "bytes": 19214,
+      "sha256": "da86cd216f65794d55bb5792cf9a85167165b0c2dabde70752ad95c10798fe52"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_DE.dic",
+      "bytes": 4868438,
+      "sha256": "c2513afd7a1f0c8ec95ed84d843342038d0638af057bef8d3c0feaff26363a43"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_DE.README",
+      "bytes": 572,
+      "sha256": "bf44f18b26328f95d2474b418a786c6cb76c57c705d9b9145ba5a64dcc09b4f3"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_DE_frami_README.txt",
+      "bytes": 855,
+      "sha256": "655dde74239eee73e6e884e57b631461292c65aeabc214e7202532ee8aca2634"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_AT.aff",
+      "bytes": 19214,
+      "sha256": "7be1c17433aeea1004bd5348f57dcd2bda8ab63fe0e3edd8516bbf774c5d4b96"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_AT.dic",
+      "bytes": 4872380,
+      "sha256": "9ff828ca02dcb9102374af6dc3025c3db54be0dd9f4850edb62d10166a1f32de"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_AT_frami_README.txt",
+      "bytes": 855,
+      "sha256": "c2086f1a1fd0f04cf66f484edc4b7c155214c32d7645f29405d2a2353c3703e7"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_CH.aff",
+      "bytes": 19214,
+      "sha256": "748283620b8e965f3888d0c14e765707d424aff651557f0a182877e5c45fccd6"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_CH.dic",
+      "bytes": 4866486,
+      "sha256": "91f37503c9e3ba9ae7839e1f2ddef788df011be743f5e8d9c8d670a1ed663795"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/de_CH_frami_README.txt",
+      "bytes": 855,
+      "sha256": "041e5a75ee810ec0fe03dd4801992d9cda083099c19c4e727f6f78583737dc9f"
+    },
+    {
+      "path": "licenses/german-data/source/hunspell/create_dict.sh",
+      "bytes": 3715,
+      "sha256": "f0b324d24c7752e0d962aed6452b373870f9df9e562053bb291807e384f0efe1"
+    }
+  ],
+  "compiledDictionarySources": {
+    "schemaVersion": 1,
+    "languageToolVersion": "6.9-SNAPSHOT",
+    "morfologikVersion": "2.2.0",
+    "serialization": "CFSA2",
+    "sourceRepresentation": "UTF-8, one original FSA sequence per line, including the literal frequency bucket after the info-defined + separator.",
+    "roundTripTest": "FSABuilder + CFSA2Serializer in Morfologik 2.2.0; enumerated sequence count and SHA-256 are identical before and after rebuild.",
+    "dictionaries": [
+      {
+        "profile": "de-DE",
+        "sourceTextGzipPath": "source/morfologik/de_DE.source.txt.gz",
+        "sourceTextBytes": 39437785,
+        "sourceTextSha256": "48be3326ad3e153844c4fe3f316edc3d350c8dcef66dd240d501ba510e963abf",
+        "sourceArchiveBytes": 7374540,
+        "sourceArchiveSha256": "0a283e2e728c9d6891b22c12ac3c2a1ac1eb97070239033032aeb7e31d47eb29",
+        "entryCount": 2226828,
+        "sequenceDigest": "2226828:48be3326ad3e153844c4fe3f316edc3d350c8dcef66dd240d501ba510e963abf",
+        "sourceInfoPath": "source/morfologik/de_DE.info",
+        "sourceInfoSha256": "d5282d2fe1ec9db5253bcae5d3c03144c353fcebdef7951eb72b8814ecdcb2a2",
+        "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_DE.dict",
+        "languageToolDictionarySha256": "bb2f4fddc7061e7f165a218736794b45fd69970775008c1af981e2550e988670",
+        "roundTripEntriesMatch": true
+      },
+      {
+        "profile": "de-AT",
+        "sourceTextGzipPath": "source/morfologik/de_AT.source.txt.gz",
+        "sourceTextBytes": 39431112,
+        "sourceTextSha256": "77ee80d3c5cff4c89cf1d87a8c832e2b5ca58b194a3e7b1502f07095399b0663",
+        "sourceArchiveBytes": 7372197,
+        "sourceArchiveSha256": "6717c01c7b26866e5d95130e35158904c144c85b04937098d1b16c7a29019c4e",
+        "entryCount": 2226620,
+        "sequenceDigest": "2226620:77ee80d3c5cff4c89cf1d87a8c832e2b5ca58b194a3e7b1502f07095399b0663",
+        "sourceInfoPath": "source/morfologik/de_AT.info",
+        "sourceInfoSha256": "2d545a300583ed53b762679d3723629ac73fb9d653bcea2ff975e3645ffc07bd",
+        "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_AT.dict",
+        "languageToolDictionarySha256": "8ca6733266822928e67ba99cb429e0e105a40cb637b2bea620a2fc2bc126e515",
+        "roundTripEntriesMatch": true
+      },
+      {
+        "profile": "de-CH",
+        "sourceTextGzipPath": "source/morfologik/de_CH.source.txt.gz",
+        "sourceTextBytes": 38965715,
+        "sourceTextSha256": "991f7c0599b00d86b82961bda114cc05f8ef5f2bad092626243fc1b4407f0295",
+        "sourceArchiveBytes": 7278395,
+        "sourceArchiveSha256": "fbcff348bef952053a251fe154c678cf2dbf1c306a9e2c9065e1e6d809904289",
+        "entryCount": 2202059,
+        "sequenceDigest": "2202059:991f7c0599b00d86b82961bda114cc05f8ef5f2bad092626243fc1b4407f0295",
+        "sourceInfoPath": "source/morfologik/de_CH.info",
+        "sourceInfoSha256": "526f286b8bec80492a2edd759393d6184c99608f3c36a1c8b9faeea65641b91d",
+        "languageToolDictionaryPath": "analysis/reference-oracle/languagetool/languagetool-master/languagetool-language-modules/de/src/main/resources/org/languagetool/resource/de/hunspell/de_CH.dict",
+        "languageToolDictionarySha256": "69ec318782b472f8421c6f80920261f41dcb6caaa5d7bca90b0be9e722d6c235",
+        "roundTripEntriesMatch": true
+      }
+    ]
+  },
+  "licenseTexts": [
+    {
+      "path": "licenses/german-data/hunspell/COPYING_GPLv2.txt",
+      "bytes": 17992,
+      "sha256": "e7431ac20e815b6797369e802f9e4bb1b0082485060d8b096235f035d741bd89"
+    },
+    {
+      "path": "licenses/german-data/hunspell/COPYING_GPLv3.txt",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "licenses/german-data/languagetool/COPYING.txt",
+      "bytes": 26432,
+      "sha256": "95a62130965bddc821631fcec03abe97246f9130f11a8be6f47579f8bc016fc8"
+    },
+    {
+      "path": "licenses/german-data/apache/Apache-License.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    }
+  ]
+}
