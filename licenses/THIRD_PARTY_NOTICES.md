@@ -1,11 +1,8 @@
-# Components i dades de tercers — versió 1.0.0
+# Avisos de tercers — catàleg estable language-packs 1.0.2
 
-Aquest inventari correspon als fitxers inclosos a l'extensió. Les llicències completes i els avisos d'origen estan a les subcarpetes de `licenses/`. El paquet `Corrector-Catala-1.0.0-source.zip` acompanya la mateixa versió amb el codi runtime, els recursos exactes, els scripts de construcció/paquetització i les fonts upstream catalanes pertinents; s'ha d'oferir al mateix lloc de descàrrega que l'extensió.
+Aquest inventari acompanya els paquets .pack del catàleg estable i els seus recursos de tercers. Els paquets d’idioma es publiquen per separat dels ZIP Source i Instal·lable. Les llicències i les fonts conservades per a cada paquet són a les carpetes corresponents de licenses/.
 
-Els camins `references/`, `engine-src/` i `analysis/` d'aquest inventari i dels avisos detallats corresponen a l'arrel del ZIP de fonts complementari. Els camins `licenses/` i `build/resources/` corresponen al ZIP instal·lable.
-
-El ZIP de fonts no conté el snapshot multilingüe complet de LanguageTool. Inclou les fonts pertinents, els recursos exportats i els generadors necessaris per a les llengües que incorpora l'extensió.
-
+La versió exacta, el hash, els perfils i la ruta de cada paquet estan fixats a catalog/v1/stable.json. Els avisos del codi runtime de l’extensió es mantenen als seus propis paquets.
 ## LanguageTool
 
 - **Regles i recursos catalans:** `src/lt-pattern-runtime.js`, `src/lt-catalan-filters.js`, parts identificades de `src/language-engine.js` i `build/resources/ca-filter-data.json`, `ca-table-rules.json`, `ca-pattern-rule-candidates.json`, `ca-dialect-pattern-rules.json`, `ca-dialect-profile-overrides.json` i `ca-multitoken-candidates.json`. Són adaptacions o dades derivades de LanguageTool i de recursos catalans de Softcatalà. Aplica LGPL-2.1-or-later a les adaptacions cobertes; els avisos originals i la llicència són a `licenses/languagetool-runtime/`.
@@ -16,9 +13,9 @@ El ZIP de fonts no conté el snapshot multilingüe complet de LanguageTool. Incl
 - **Perfil castellà `es-ES`:** `build/resources/es-ES/es-ES-pos-fsa.bin.gz` i `es-ES-synthesis-fsa.bin.gz` deriven de `org.softcatala:spanish-pos-dict:2.5` (LGPL-2.1); `es-disambiguation-rules.json` deriva de les regles castellanes de LanguageTool 6.9-SNAPSHOT (LGPL-2.1); el mapa POS anglès local que requereix `IsEnglishWordFilter` deriva de `org.languagetool:english-pos-dict:0.6` (LGPL-2.1). Es conserva `build/resources/es-ES/LICENSE-LGPL-2.1.txt`; el paquet de fonts ha d'oferir els scripts, dades exactes, avisos i fonts necessaris per reconstruir aquestes derivacions.
 - **Perfil anglès americà `en-US`:** les regles adaptades i les dades de `build/resources/en-US/` provenen del mòdul anglès de LanguageTool 6.9-SNAPSHOT i de `org.languagetool:english-pos-dict:0.6`. El POM del mòdul anglès declara LGPL-2.1 per al codi i avisa que alguns recursos tenen llicències pròpies. Les fonts del mòdul, el POM i l'artefacte/dades originals del diccionari es lliuren al ZIP de fonts sota `references/languagetool-en-US/` i `analysis/reference-oracle/artifacts/english-pos-dict-0.6/`. Preserveu els avisos del recurs de POS a `licenses/languagetool-runtime/english-pos-readme.txt` (Moby/WordNet) i els metadades `.info`; no s'ha d'interpretar la declaració LGPL del POM com si substituís les condicions de les fonts de dades.
 
-### Recurs francès experimental (només ZIP de proves)
+### Recursos francesos del catàleg estable i recursos auxiliars
 
-El ZIP de proves inclou recursos francesos i un candidat de regles que no estan connectats a cap perfil ni preparats per publicar-se com a paquet d’idioma. El mapa de procedència inclòs al ZIP és `licenses/french-data/RESOURCE-MAP.md`; l’inventari complet i els SHA-256 de les fonts són al projecte font, a `analysis/french-adaptation/inventory.json` i `references/upstream.lock.json`.
+El perfil francès i el seu paquet figurent al catàleg estable. Aquesta secció identifica els recursos publicats i distingeix els recursos auxiliars locals que encara tenen punts de procedència pendents. El mapa francès i els avisos complets són a licenses/french-data/.
 
 - Els binaris `build/resources/fr/french.dict.gz`, `french_synth.dict.gz` i `french_tags.txt` deriven de `org.languagetool:french-pos-dict:0.7`. El POM inclòs a l’artefacte declara CC BY-SA 4.0 i indica que les dades es basen originalment en Morphy. Cal conservar aquesta atribució i la llicència CC BY-SA en qualsevol redistribució d’aquestes dades.
 - Les llistes `spelling.txt`, `spelling_custom.txt`, `ignore.txt` i `prohibit.txt` provenen del lèxic francès Hunspell de Dicollecte, versió 6.4.1, amb avís MPL 2.0 i atribucions dels contribuïdors reproduïdes a `licenses/french-data/README_fr.txt`.
@@ -37,7 +34,7 @@ El ZIP de proves inclou recursos francesos i un candidat de regles que no estan 
 - El mapa per recurs, les transformacions i les limitacions per a una possible publicació són a `licenses/french-data/RESOURCE-MAP.md`. El text oficial de MPL 2.0 és a <https://mozilla.org/MPL/2.0/>.
 - Les adaptacions de codi de regles/filtres franceses mantenen els avisos LGPL-2.1-or-later detallats a `licenses/languagetool-runtime/NOTICE.md`.
 
-No pugeu cap recurs francès al canal públic `language-packs` fins que es tanqui la revisió de llicències per fitxer i es publiquin els avisos complets corresponents.
+El paquet francès estable només inclou els recursos fixats pel seu descriptor. Manteniu fora del paquet els recursos auxiliars que aquest inventari encara marca com a pendents.
 
 ## Apache OpenNLP
 
@@ -80,10 +77,13 @@ El paquet candidat de reducció inclou `build/resources/central-cfsa2/ca-analysi
 `src/language-engine.js` del candidat incorpora una implementació local JavaScript del lector del format binari Morfologik CFSA2 i de la descodificació SUFFIX. No inclou ni executa codi Java ni un JAR de Morfologik. Es conserva `licenses/morfologik/COPYING.txt` amb l'avís BSD de tres clàusules de l'origen tècnic emprat per documentar el format i el comportament.
 
 
-## Italian language-pack (1.0.2 candidate)
+## Paquet italià it-IT (1.0.2, catàleg estable)
 
-Italian resources include LanguageTool LGPL material, Morph-it! data (LGPL/CC BY-SA dual license; LGPL route documented), and Hunspell/Morfologik-derived spelling data associated with GPL-3.0-or-later upstream notices. The source-to-binary recipe for the Italian spelling dictionary and parts of the POS/synthesis chain remains pending; see licenses/italian-data/README.md. Preserve all upstream notices. This candidate does not claim the unresolved correspondence has been cleared.
+Les dades italianes provenen de LanguageTool, Morph-it! i recursos Morfologik. Els avisos i termes de cada font es mantenen. La recepta d’origen a binari de part del diccionari ortogràfic/POS encara no s’ha reproduït independentment; vegeu licenses/italian-data/README.md. La publicació al catàleg estable no elimina aquest punt pendent.
 
-### Italian LanguageTool core-rule adapters
+### Adaptacions italianes de regles de LanguageTool
 
 The Italian pipeline adapts the unconditional LanguageTool core rules registered by Italian.java for punctuation spacing, comma spacing, repeated punctuation, unpaired brackets, sentence-start capitalization, and repeated whitespace. The source classes and attribution are listed in languagetool-runtime/NOTICE.md; they remain LGPL-2.1-or-later. Local adapters do not claim full Java parity. The optional Italian confusion-probability rule is not included because it requires a language model not shipped by this extension.
+## Paquet alemany de-DE, de-AT i de-CH (1.0.2, catàleg estable)
+
+El paquet alemany publicat a packs/de/1.0.2/de.pack conté recursos de diverses fonts amb llicències diferents; cap llicència cobreix tot el paquet. german-pos-dict 1.2.4 identifica les seves dades POS com a CC BY-SA 4.0. Els diccionaris Morfologik regionals conserven els termes GPLv2/v3 dels avisos d’origen. Els recursos de LanguageTool mantenen els avisos LGPL-2.1-or-later. Les atribucions de fonts auxiliars de domini públic i Apache-2.0 també es preserven. La documentació per recurs, les còpies de llicències, els exports reconstruïbles i els hashes són a licenses/german-data/; manteniu-los amb l’entrada del catàleg.
