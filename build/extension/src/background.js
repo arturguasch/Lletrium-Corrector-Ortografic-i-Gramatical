@@ -4,10 +4,7 @@ import "./language-pack-runtime.js";
 import "./language-pack-external.js";
 
 function openLanguageManager() {
-  const url = new URL("https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html");
-  url.searchParams.set("extensionId", chrome.runtime.id);
-  url.hash = "languages";
-  return chrome.tabs.create({ url: url.href, active: true });
+  return chrome.tabs.create({ url: chrome.runtime.getURL("dev-only/index.html#languages"), active: true });
 }
 
 const BG_GDOCS_ENGINE = {
@@ -1008,13 +1005,13 @@ function detectInitialUiLanguage() {
   let locale = "";
   try { locale = String(chrome.i18n?.getUILanguage?.() || ""); } catch (_) {}
   const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
-  return ["ca", "es", "en", "fr"].includes(primary) ? primary : "en";
+  return ["ca", "es", "en", "fr", "it", "de"].includes(primary) ? primary : "en";
 }
 
 chrome.runtime.onInstalled.addListener(async details => {
   const stored = await chrome.storage.sync.get(null);
   const current = { ...DEFAULT_SETTINGS, ...stored };
-  if (!["ca", "es", "en", "fr"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
+  if (!["ca", "es", "en", "fr", "it", "de"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
   await chrome.storage.sync.remove(["debounceMs", "maxTextLength"]);
   if (current.language === "ca") current.language = "ca-ES";
   if (current.language === "es") current.language = "es-ES";
@@ -1379,3 +1376,4 @@ async function resetExtensionToFactoryDefaults() {
     throw error;
   }
 }
+

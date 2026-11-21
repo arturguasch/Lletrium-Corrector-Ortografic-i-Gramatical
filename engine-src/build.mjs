@@ -701,17 +701,17 @@ const srxTokenizer = new globalThis.CorrectorCatalanSentenceTokenizer(srxResourc
 const manifest = {
   schemaVersion: 1,
   apiVersion: 1,
-  sources: sourceFiles.map(path => path.replace(`${root}\\`, "").replaceAll("\\", "/")),
+  sources: [...sourceFiles.map(path => path.replace(`${root}\\`, "").replaceAll("\\", "/")), "engine-src/modules/italian-pattern-pipeline.js", "engine-src/modules/german/german-pattern-pipeline.js", "engine-src/modules/german/german-direct-rules.js", "engine-src/modules/german/german-pattern-filters.js"],
   output: "build/language-engine.js",
   bytes: Buffer.byteLength(sourceText, "utf8"),
   runtime: "classic-script; browser globals only",
   linguisticPipelineImplemented: true,
   publicCheckApiImplemented: true,
-  extensionWorkerIntegrated: false,
+  extensionWorkerIntegrated: true,
   parityComplete: true,
   parityScope: "finite-regression-benchmark; not a claim of universal equivalence",
   missingStages: [],
-  activeStages: ["ca-srx-sentence-segmentation", "ca-tokenization", "softcatala-pos-lookup", "surface-form-tagger", "languagetool-derived-tagging", "contextual-reading-view", "global-multiword-chunker", "catalan-multiword-chunker", `languagetool-central-profile-xml:${supportedDisambiguationRules.length}`, "softcatala-catalan-multitoken-disambiguation", "languagetool-morfologik-multitoken-suggestions", `languagetool-check-case:${checkCaseEntries.size}`, "languagetool-trim-match-ends", "softcatala-3.3-spelling", "languagetool-spelling-overlays", "unified-local-issue-arbitration", "public-checkText-checkBatch"],
+  activeStages: ["ca-srx-sentence-segmentation", "ca-tokenization", "softcatala-pos-lookup", "surface-form-tagger", "languagetool-derived-tagging", "contextual-reading-view", "global-multiword-chunker", "catalan-multiword-chunker", `languagetool-central-profile-xml:${supportedDisambiguationRules.length}`, "softcatala-catalan-multitoken-disambiguation", "languagetool-morfologik-multitoken-suggestions", `languagetool-check-case:${checkCaseEntries.size}`, "languagetool-trim-match-ends", "softcatala-3.3-spelling", "languagetool-spelling-overlays", "italian-pattern-pipeline-with-versioned-pack", "german-pattern-pipeline-with-versioned-pack", "unified-local-issue-arbitration", "public-checkText-checkBatch"],
   sentenceRules: srxTokenizer.rules.length,
   sentenceRulesSha256: srxResource.sourceSha256,
   morphology: {
@@ -788,4 +788,23 @@ await cp(resolve(root, "engine-src/resources/fr"), resolve(stagedExtension, "bui
 const frenchRuleCandidates = resolve(root, "engine-src/resources/fr/french-pattern-rule-candidates.json");
 await mkdir(resolve(stagedExtension, "src/dictionaries/french"), { recursive: true });
 await copyFile(frenchRuleCandidates, resolve(stagedExtension, "src/dictionaries/french/french-pattern-rule-candidates.json"));
+
+// Italian's worker pipeline is code shipped with the extension; the larger
+// Italian language data itself is installed from a versioned external pack.
+await copyFile(resolve(root, "engine-src/modules/italian-pattern-pipeline.js"), resolve(stagedExtension, "src/italian-pattern-pipeline.js"));
+const extensionWorker = await readFile(resolve(stagedExtension, "src/engine-worker.js"), "utf8");
+if (!extensionWorker.includes('"italian-pattern-pipeline.js"')) {
+  throw new Error("The 1.0.2 extension worker does not load the Italian pipeline module.");
+}
+// German uses the same separate-worker pattern: code and compact rule data
+// ship with the extension, while the larger regional dictionaries are fetched
+// from the versioned external language pack.
+const germanModuleSource = resolve(root, "engine-src/modules/german");
+for (const name of ["german-pattern-pipeline.js", "german-direct-rules.js", "german-pattern-filters.js"]) {
+  await copyFile(resolve(germanModuleSource, name), resolve(stagedExtension, "src", name));
+}
+await cp(resolve(root, "engine-src/resources/german"), resolve(stagedExtension, "src/dictionaries/german"), { recursive: true, force: true });
+for (const name of ["german-pattern-filters.js", "german-direct-rules.js", "german-pattern-pipeline.js"]) {
+  if (!extensionWorker.includes(`"${name}"`)) throw new Error(`The extension worker does not load the German runtime module ${name}.`);
+}
 process.stdout.write(`Engine build ready: ${manifest.output} (${manifest.bytes} bytes); staged extension refreshed.\n`);

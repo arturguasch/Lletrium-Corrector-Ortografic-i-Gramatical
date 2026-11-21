@@ -1,36 +1,42 @@
 # Lletrium! Corrector ortogràfic i gramatical
 
-**Extensió gratuïta i de codi obert per corregir text en temps real, amb una atenció especial al català.** Aquesta còpia del codi font correspon al runtime 1.0.1.
+**Una extensió gratuïta i de codi obert per corregir text en temps real, amb una atenció especial al català.**
 
-Vaig començar Lletrium! perquè no trobava una extensió gratuïta que corregís el català mentre escrius en editors web. El projecte vol continuar sent gratuït i obert, útil per a estudiants i per a qualsevol persona que vulgui escriure amb més confiança.
+Vaig començar Lletrium perquè no trobava una extensió gratuïta que oferís aquest tipus de correcció del català mentre escrius dins dels editors web. Vull que el projecte continuï sent gratuït i obert, i que sigui útil tant per al català com per a altres llengües.
 
+## Novetats de la versió 1.0.2
+
+- S’hi afegeixen l’italià i l’alemany, amb els perfils regionals alemanys d’Alemanya, Àustria i Suïssa.
+- La pàgina de gestió permet afegir paquets d’idioma per separat i seleccionar les variants dialectals disponibles.
+- Els menús i missatges es poden mostrar en italià o alemany, a més dels idiomes d’interfície existents.
 ## Instal·lació
 
 ### Automàtica (recomanada)
 
-Instal·la **Lletrium!** des de la [Chrome Web Store](https://chromewebstore.google.com/detail/lletrium-corrector-ortogr/ecfanealnoplhjapaimncnhmogpijhkm?authuser=1&hl=es).
+Pots instal·lar **Lletrium!** directament des de la [Chrome Web Store](https://chromewebstore.google.com/detail/lletrium-corrector-ortogr/ecfanealnoplhjapaimncnhmogpijhkm?authuser=1&hl=es) amb un sol clic a **Afegir a Chrome**. Aquesta és l’opció recomanada per a la majoria d’usuaris.
 
-### Manual (des d’aquest codi font)
+### Manual (des del codi font)
 
-Descomprimeix aquest ZIP. A Chrome, activa el mode de desenvolupador a `chrome://extensions` i carrega `build/extension` com a extensió desempaquetada. El motor, el codi runtime i les eines font són aquí mateix. Els paquets de dades `.pack` es publiquen a part a la branca `language-packs` i s’afegeixen des de la interfície de gestió d’idiomes; no són dins d’aquest ZIP.
+Si vols provar o estudiar el codi font, descarrega el ZIP del repositori amb **Code → Download ZIP** i descomprimeix-lo. Carrega la carpeta [`build/extension`](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension), que conté `manifest.json`, des de la pàgina d’extensions de Chrome amb el mode de desenvolupador activat. El ZIP complementari de fonts GPL també inclou els recursos perquè puguis carregar aquesta carpeta directament. Si vols reconstruir els pipelines compartits, el source inclou els inputs necessaris per executar `node engine-src/build.mjs` amb Node.js 20 o posterior, sense haver de descarregar `analysis/`.
 
-Per reconstruir els recursos compilats, cal Node.js 20 o posterior i executar `node engine-src/build.mjs` des de l’arrel descomprimida. La build distribuïda a `build/extension` es pot carregar directament.
+## Llengües
 
-## Idiomes
+Actualment, Lletrium ofereix català central, valencià i balear; castellà; anglès americà; francès; italià; i alemany d’Alemanya, Àustria i Suïssa. Els paquets es trien des de la pàgina de gestió i funcionen localment després de descarregar-se.
 
-El runtime 1.0.1 inclou suport per a català central, valencià i balear, espanyol, anglès americà i francès. Els paquets de dades s’obtenen per separat i després funcionen sense connexió. Les variants disponibles depenen dels paquets instal·lats i dels perfils compatibles amb la versió de l’extensió.
+Lletrium revisa el text localment al navegador. La compatibilitat depèn de l’editor; hi ha adaptacions per a Google Docs, Google Slides i altres editors web compatibles.
 
-La revisió s’executa localment al navegador. La compatibilitat varia segons l’editor; hi ha adaptacions per a Google Docs, Google Slides i altres camps web compatibles.
+## Agraïments
 
-## Llicències i agraïments
+Estic molt agraït a les persones i als projectes de programari lliure que han creat els codis, diccionaris, regles i altres recursos que han fet possible Lletrium. En particular, a **LanguageTool** i **Softcatalà**, i també als altres projectes i contribuïdors identificats als avisos de tercers.
 
-El codi original de Lletrium! identificat com a tal es distribueix sota **GPL-3.0-or-later**. Els components, les regles, les dades i els diccionaris de tercers mantenen les seves llicències i avisos propis. Consulta [`LICENSING.md`](LICENSING.md), [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) i `build/extension/licenses/` abans de reutilitzar o redistribuir materials.
+Lletrium no està afiliat ni està avalat per aquests projectes. Cada component conserva els seus avisos i les condicions de llicència corresponents. Consulta els [avisos de tercers](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/blob/main/build/extension/licenses/THIRD_PARTY_NOTICES.md) i la [carpeta de llicències](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension/licenses).
 
-Estic molt agraït a LanguageTool, Softcatalà i a les altres persones i projectes de programari lliure que han contribuït els recursos que fan possible Lletrium!. Lletrium! no està afiliat ni avalat per aquests projectes.
+## Procedència de les dades franceses
 
-**Avís específic del francès:** encara no hem pogut verificar tota la procedència ni identificar l’autoria d’alguns recursos. Estem oberts a rebre informació verificable i actualitzarem els crèdits quan la puguem confirmar. Si pots ajudar, contacta’ns a través de [GitHub Issues](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues). Aquesta invitació no confirma els permisos de redistribució; consulta el mapa de llicències i l’estat de publicació.
+Encara no hem pogut verificar la procedència exacta ni identificar l’autoria de tots els recursos francesos. Estem oberts a rebre informació verificable i a completar els crèdits quan la puguem confirmar. Si pots ajudar a identificar-ne la font o l’autoria, obre una [incidència a GitHub](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues). Aquesta invitació no confirma per si mateixa els permisos de redistribució; consulta els avisos de tercers.
+## Codi obert i privacitat
 
-## Privacitat
+El codi propi de Lletrium es distribueix sota **GPL-3.0-or-later**. El paquet de fonts inclou el text complet de la llicència de Lletrium i la documentació dels components de tercers, que mantenen les seves pròpies llicències. Els avisos i les llicències dels recursos de l’extensió es poden consultar a la [carpeta de llicències](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/tree/main/build/extension/licenses).
 
 La revisió s’executa localment al navegador; consulta la [política de privacitat](https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html#privacy).
 
@@ -38,9 +44,4 @@ La revisió s’executa localment al navegador; consulta la [política de privac
 
 Per informar d’un problema o proposar una millora, [obre una incidència a GitHub](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues).
 
-## Novetats de la versió 1.0.1
 
-- **Paquets d’idioma a la carta:** el paquet principal s’ha optimitzat; cada usuari pot afegir des de la pàgina de gestió allotjada a GitHub només els idiomes que vol. Un cop afegits, funcionen sense connexió.
-- **Variants dialectals:** es poden seleccionar les variants disponibles d’un idioma.
-- **Millores a Google Docs:** s’han corregit errors relacionats amb els subratllats de Lletrium! i la impressió dels documents.
-- **Francès:** s’incorpora com a nou idioma de correcció, amb variants regionals disponibles.

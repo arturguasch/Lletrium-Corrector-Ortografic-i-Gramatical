@@ -12,21 +12,22 @@ Els fitxers afectats són el codi font del motor (`engine-src/modules/`, `engine
 
 | Material | Camins principals del paquet | Condicions que es mantenen |
 | --- | --- | --- |
-| Snapshots de LanguageTool | `references/languagetool-*`, `references/languagetool-audit/`, `analysis/reference-oracle/languagetool/` | LGPL i avisos upstream inclosos als snapshots. No s’aplica la GPL de Lletrium als fitxers upstream originals. |
-| Recursos derivats de LanguageTool i etiquetatge castellà/anglès | `build/extension/build/resources/`, `engine-src/resources/` i els artefactes corresponents a `analysis/reference-oracle/artifacts/` | La llicència i procedència indicades als manifests i a `THIRD_PARTY_NOTICES.md`; es manté LGPL quan així ho declara l’origen. |
-| Diccionaris i dades de Softcatalà | `references/softcatala-*`, `references/softcatala-audit/`, recursos catalans a `build/extension/build/resources/` i `engine-src/resources/`, i `analysis/reference-oracle/artifacts/catalan-pos-dict-3.3/` | Es preserva la llicència dual d’origen. Per als recursos derivats on s’ha seleccionat aquesta opció, es manté LGPL-2.1. |
-| Models Apache OpenNLP | Recursos anglesos derivats i `analysis/reference-oracle/artifacts/opennlp-*-models-1.5.jar` | Apache-2.0 i els avisos NOTICE. |
-| Morfologik | `analysis/reference-oracle/src/Speller.java`, `analysis/reference-oracle/src/HMatrix.java` i l’adaptació indicada als avisos | BSD-3-Clause i atribucions; el codi adaptat pot distribuir-se sota GPL quan ho permeten els termes BSD, preservant-ne els avisos. |
+| Snapshots de LanguageTool inclosos | `references/languagetool-*` i `references/languagetool-audit/` | LGPL i avisos upstream inclosos als snapshots. No s’aplica la GPL de Lletrium als fitxers upstream originals. |
+| Recursos derivats de LanguageTool i etiquetatge castellà/anglès | `build/extension/build/resources/` i `engine-src/resources/` | La llicència i procedència indicades als manifests i a `THIRD_PARTY_NOTICES.md`; es manté LGPL quan així ho declara l’origen. Les còpies de treball i artefactes d’auditoria no inclosos al ZIP no es presenten com a contingut distribuït. |
+| Paquets d’idioma italià i alemany | Paquets versionats a la branca externa `language-packs` | Llicències i atribucions per recurs; no s’assigna una llicència comuna al paquet alemany. Consulteu els avisos i les fonts del catàleg extern. |
+| Diccionaris i dades de Softcatalà | `references/softcatala-*`, `references/softcatala-audit/` i recursos catalans a `build/extension/build/resources/` i `engine-src/resources/` | Es preserva la llicència dual d’origen. Per als recursos derivats on s’ha seleccionat aquesta opció, es manté LGPL-2.1. |
+| Models Apache OpenNLP | Recursos anglesos derivats i els avisos a `build/extension/licenses/opennlp/` | Apache-2.0 i els avisos NOTICE. |
+| Morfologik | L’adaptació `engine-src/modules/ca-morfologik-speller.js` i els avisos a `build/extension/licenses/morfologik/` | BSD-3-Clause i atribucions; el codi adaptat pot distribuir-se sota GPL quan ho permeten els termes BSD, preservant-ne els avisos. |
 | Dades Moby/WordNet | Recursos POS anglesos i `licenses/languagetool-runtime/english-pos-readme.txt` | Es mantenen els avisos i condicions propis de les dades, independentment de la LGPL del codi LanguageTool. |
 
 Els manifests de recursos (`manifest.json`, `*.manifest.json`) i `references/upstream.lock.json` fixen procedència, versions i hashes quan hi són disponibles. Si un manifest específic és més restrictiu o identifica una llicència diferent, prevalen aquell manifest i els avisos de l’origen per al recurs corresponent.
 
-Els inventaris `analysis/reference-oracle/outputs/ca-*` deriven de regles/dades de LanguageTool; els resultats `*-oracle-*.json` són sortides de l’oracle LanguageTool. No s’identifiquen com a codi GPL de Lletrium. Les comparacions, resultats de rendiment i corpus són materials de prova, no codi: aquesta llicència de programari no concedeix automàticament drets per reutilitzar-ne el text. Els benchmarks independents i els seus resultats no formen part del ZIP públic de fonts 1.0.0 perquè no són necessaris per compilar ni executar l’extensió.
+La carpeta de treball `analysis/` —incloent-hi inventaris, sortides d’oracles, comparacions, resultats de rendiment, corpus i còpies de desenvolupament— queda exclosa del ZIP públic de fonts. Aquests materials no s’identifiquen com a codi GPL de Lletrium i aquesta llicència de programari no concedeix automàticament drets per reutilitzar textos o dades que no formen part del paquet.
 
 ## Altres continguts
 
 La GPL d’aquest paquet cobreix programari, no concedeix drets sobre la marca Lletrium i no converteix automàticament informes, corpus de prova, pàgines web, captures ni documentació en programari GPL. Aquests materials només es poden reutilitzar segons els avisos que els acompanyin i els drets que en corresponguin.
 
-La carpeta local `analysis/extension-9.6.93/` i altres materials no enumerats no formen part d’aquest ZIP. Aquesta delimitació no és una declaració de llicència per a una còpia diferent o més àmplia del workspace.
+La carpeta local `analysis/` i altres materials no enumerats no formen part d’aquest ZIP. Aquesta delimitació no és una declaració de llicència per a una còpia diferent o més àmplia del workspace.
 
 La concessió GPL d’aquest paquet la fa Artur Guasch per al codi original del projecte i per a les adaptacions locals identificades que s’ofereixen sota aquesta opció. Les llicències dels components de tercers només es poden usar segons els seus termes; aquesta declaració no concedeix drets sobre cap marca ni substitueix assessorament legal.

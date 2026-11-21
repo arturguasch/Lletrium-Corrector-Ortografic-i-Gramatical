@@ -6,6 +6,7 @@
 
 - Català central (`ca-ES`), valencià (`ca-ES-valencia`) i balear (`ca-ES-balear`), amb recursos compartits i ajustos de perfil.
 - Castellà (`es-ES`) i anglès americà (`en-US`) amb pipelines locals.
+- Alemany d’Alemanya (`de-DE`), d’Àustria (`de-AT`) i de Suïssa (`de-CH`), amb adaptadors a `engine-src/modules/german/` i regles locals a `engine-src/resources/german/`. Els diccionaris grans s’instal·len des del paquet versionat de `language-packs`.
 - El perfil francès té adaptadors font a `engine-src/modules/french/` i recursos a `engine-src/resources/fr/`. `engine-src/build.mjs` els copia al runtime de `build/extension/`; el perfil continua separat del pipeline compartit i aquesta còpia no implica que les dades tinguin drets resolts. La font upstream seleccionada és a `references/languagetool-fr/`. La procedència i els termes de redistribució dels recursos francesos continuen pendents segons `build/extension/licenses/french-data/RESOURCE-MAP.md`.
 
 ## API del motor
@@ -23,7 +24,7 @@ Requereix Node.js 20 o posterior. Des de l'arrel del projecte:
 node engine-src/build.mjs
 ```
 
-El procés genera `build/language-engine.js`, `build/engine-build.json` i els recursos dels pipelines que gestiona; també actualitza les còpies runtime de Català, Castellà, Anglès i els mòduls/recursos francesos dins `build/extension/`. Els fitxers font francesos es mantenen a `engine-src/modules/french/` i `engine-src/resources/fr/`; el generador no declara el francès com a perfil general ni altera la seva situació legal pendent. El build principal és reconstruïble des del ZIP sense `analysis/`: les entrades generades mínimes que encara necessita són a `engine-src/build-inputs/`, i les fonts upstream són a `references/`. Les eines auxiliars de comparació amb oracles de desenvolupament no formen part del build principal.
+El procés genera `build/language-engine.js`, `build/engine-build.json` i els recursos dels pipelines que gestiona; també actualitza els adaptadors i dades runtime de català, castellà, anglès, francès, italià i alemany dins `build/extension/`. Els fitxers font francesos es mantenen a `engine-src/modules/french/` i `engine-src/resources/fr/`; el generador no altera la seva situació legal pendent. El codi del pipeline alemany i les dades de regles són a `engine-src/modules/german/` i `engine-src/resources/german/`; els diccionaris grans continuen al paquet extern versionat. El build principal és reconstruïble des del ZIP sense `analysis/`: les entrades generades mínimes que encara necessita són a `engine-src/build-inputs/`, i les fonts upstream són a `references/`. Les eines auxiliars de comparació amb oracles de desenvolupament no formen part del build principal.
 
 ## Llicències
 

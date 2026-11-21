@@ -92,9 +92,9 @@
       supportedPackSchemas: [...new Set([...PACKS.values()].map(pack => pack.schema))],
       engineApiVersion: ENGINE_API_VERSION,
       capabilities: ["language-variant-selection-v1", "language-pack-manager-v1", "immutable-pack-revisions-v1", "indexeddb-candidate-activation-v1"],
-      supportedPacks, installed: packs.map(pack => pack.id), installedPacks,
+      supportedPacks, supportedUiLanguages: ["ca", "es", "en", "fr", "it", "de"], installed: packs.map(pack => pack.id), installedPacks,
       enabledLanguageProfiles: settings.enabledLanguageProfiles,
-      uiLanguage: ["ca", "es", "en", "fr"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca"
+      uiLanguage: ["ca", "es", "en", "fr", "it", "de"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca"
     };
   }
   async function readBounded(response, spec, report) {
@@ -127,7 +127,9 @@
     const timer = setTimeout(() => controller.abort(), 120000);
     try {
       const url = new URL(spec.path, BASE);
-      if (url.origin !== new URL(BASE).origin || !url.pathname.includes(`/packs/${spec.id}/${spec.version}/`)) throw fail("PACK_NOT_FOUND", "La ruta del paquet no està autoritzada.");
+      if (url.origin !== new URL(BASE).origin || !url.pathname.includes(`/packs/${spec.id}/${spec.version}/`)) {
+        throw fail("PACK_NOT_FOUND", "La ruta del paquet no està autoritzada.");
+      }
       let response;
       try { response = await fetch(url, { cache: "no-store", credentials: "omit", redirect: "error", signal: controller.signal }); }
       catch (error) { throw fail("NETWORK_ERROR", error?.name === "AbortError" ? "La descàrrega del paquet ha superat el temps d’espera." : "No s’ha pogut connectar amb el repositori d’idiomes."); }
@@ -240,11 +242,15 @@
           const settings = await chrome.storage.sync.get({ language: "ca-ES", enabledLanguageProfiles: {} });
           const lang = String(settings.language || "ca-ES");
           const selected = packIdForProfile(lang);
-          if (!installedNow.includes(selected) && installedNow.length) {
+          if (!installedNow.includes(selected) && installedNow.length && type === "REMOVE" && ids.includes(selected)) {
             const fallback = [...PACKS.keys()].find(value => installedNow.includes(value));
             const preferred = settings.enabledLanguageProfiles[fallback]?.find(profile => PACKS.get(fallback)?.profiles?.includes(profile));
             const fallbackProfile = preferred || defaultProfileForPack(fallback);
             if (fallbackProfile) await chrome.storage.sync.set({ language: fallbackProfile });
+          } else if (!installedNow.includes(selected) && type === "REMOVE" && ids.includes(selected)) {
+            // Removing the last externally stored pack must not leave its
+            // profile selected after that profile's resources are gone.
+            await chrome.storage.sync.set({ language: defaultProfileForPack("ca") || "ca-ES" });
           }
         }
         if (changed) await bumpPackRevision();
@@ -298,7 +304,7 @@
     }
     if (message.type === "LIST") {
       const [packs, settings] = await Promise.all([list(), chrome.storage.sync.get({ uiLanguage: "ca", enabledLanguageProfiles: {} })]);
-      return { ok: true, installed: packs.map(pack => pack.id), uiLanguage: ["ca", "es", "en", "fr"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca" };
+      return { ok: true, installed: packs.map(pack => pack.id), uiLanguage: ["ca", "es", "en", "fr", "it", "de"].includes(settings.uiLanguage) ? settings.uiLanguage : "ca" };
     }
     if (message.type === "SET_PROFILES") {
       validateProtocol(message, false);
@@ -324,7 +330,7 @@
     }
     if (message.type === "SET_UI_LANGUAGE") {
       validateProtocol(message, false);
-      if (!["ca", "es", "en", "fr"].includes(message.language)) throw fail("INVALID_REQUEST", "L’idioma de la interfície no és vàlid.");
+      if (!["ca", "es", "en", "fr", "it", "de"].includes(message.language)) throw fail("INVALID_REQUEST", "L’idioma de la interfície no és vàlid.");
       await chrome.storage.sync.set({ uiLanguage: message.language });
       return { ok: true, uiLanguage: message.language };
     }
@@ -391,10 +397,12 @@
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "sync" || !changes.uiLanguage) return;
     const language = changes.uiLanguage.newValue;
-    if (!["ca", "es", "en", "fr"].includes(language)) return;
+    if (!["ca", "es", "en", "fr", "it", "de"].includes(language)) return;
     for (const port of uiLanguageManagerPorts) {
       try { port.postMessage({ type: "UI_LANGUAGE_CHANGED", language }); }
       catch (_) { uiLanguageManagerPorts.delete(port); }
     }
   });
 })();
+
+

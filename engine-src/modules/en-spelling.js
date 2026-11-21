@@ -7,17 +7,19 @@
   class EnglishSpeller {
     constructor(buffer, manifest) {
       if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || !["CFAS1", "CFSA2"].includes(manifest?.format)
-          || manifest?.profile !== "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6"
+          || !["en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6", "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7", "LanguageTool 6.9-SNAPSHOT / Italian Hunspell it_IT"].includes(manifest?.profile)
           || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not belong to the pinned English dictionaries.");
       this.cfsa2 = null;
       if (manifest.format === "CFSA2") {
-        if (manifest.encoding !== "utf-8" || manifest.sequenceEncoder !== "SUFFIX"
+        if (!new Set(["utf-8", "UTF-8", "ISO-8859-15", "iso-8859-15"]).has(manifest.encoding) || manifest.sequenceEncoder !== "SUFFIX"
             || !globalThis.CorrectorCatalanCfsa2Dictionary) throw new Error("The English CFSA2 spelling reader is unavailable or incompatible.");
         this.cfsa2 = new globalThis.CorrectorCatalanCfsa2Dictionary(buffer, {
           separator: String.fromCodePoint(manifest.separator), encoding: manifest.encoding, encoderType: manifest.sequenceEncoder
         });
+        this.codec = this.cfsa2.codec;
         this.root = this.cfsa2.root;
       } else {
+        this.codec = { encode: value => encoder.encode(value), decode: bytes => decoder.decode(bytes), singleByte: false };
         const view = new DataView(buffer);
         if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
         this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
@@ -48,7 +50,12 @@
     final(arc) { return this.cfsa2 ? this.cfsa2.isFinal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
 
     exact(word) {
-      let node = this.root; const bytes = encoder.encode(String(word));
+      const value = String(word);
+      if (this.cfsa2) {
+        const matched = this.cfsa2.match(this.codec.encode(value));
+        return Boolean(matched && (this.cfsa2.isFinal(matched.lastArc) || this.cfsa2.isTerminal(matched.lastArc)));
+      }
+      let node = this.root; const bytes = this.codec.encode(value);
       let lastArc = -1;
       for (let index = 0; index < bytes.length; index++) {
         const arc = this.getArc(node, bytes[index]);
@@ -110,17 +117,17 @@
         for (const arc of this.outgoing(node)) {
           const label = this.label(arc);
           if (!bytes.length && label === this.manifest.separator) continue;
-          const sequence = [...bytes, label], length = codepointLength(sequence[0]);
+          const sequence = [...bytes, label], length = this.codec.singleByte ? 1 : codepointLength(sequence[0]);
           if (sequence.length < length) {
             if (!this.terminal(arc)) walk(this.next(arc), sequence, firstArc < 0 ? arc : firstArc);
             continue;
           }
           if (sequence.length !== length) continue;
           try {
-            const char = decoder.decode(new Uint8Array(sequence));
+            const char = this.codec.decode(new Uint8Array(sequence));
             const target = this.terminal(arc) ? -1 : this.next(arc);
             transitions.push({ char, target, terminal: this.terminal(arc), final: this.cfsa2
-              ? target >= 0 && this.getArc(target, this.manifest.separator) >= 0
+              ? this.terminal(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0
               : this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
               frequency: target >= 0 ? this.frequency(target) : 0 });
           } catch { /* invalid UTF-8 arc sequences cannot be dictionary characters */ }
@@ -208,7 +215,7 @@
         if (this.rest.size && word.length > 1) for (const query of queries) {
           const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase("en"), query.toLocaleUpperCase("en"), query.length > 1 ? query[0].toLocaleUpperCase("en") + query.slice(1).toLocaleLowerCase("en") : ""];
           for (const form of forms) if (form && this.exact(form)) {
-            let state = this.root; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
+            let state = this.root; for (const byte of this.codec.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
             if (state >= 0) results.push({word: form, distance: 0, score: 25 - this.frequency(state)});
           }
         }

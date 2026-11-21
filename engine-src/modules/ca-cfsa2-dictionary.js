@@ -14,8 +14,36 @@
   const BIT_LAST_ARC = 0x40;
   const BIT_FINAL_ARC = 0x20;
   const LABEL_MASK = 0x1f;
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder("utf-8", { fatal: true });
+  const utf8Encoder = new TextEncoder();
+
+  function createCodec(encoding) {
+    const name = String(encoding || "utf-8").toLowerCase().replaceAll("_", "-");
+    if (name === "utf-8" || name === "utf8") {
+      const decoder = new TextDecoder("utf-8", { fatal: true });
+      return { name: "utf-8", encode: value => utf8Encoder.encode(value), decode: bytes => decoder.decode(bytes), singleByte: false };
+    }
+    if (["iso-8859-15", "iso8859-15", "latin-9", "latin9"].includes(name)) {
+      const decoder = new TextDecoder("iso-8859-15", { fatal: true });
+      const reverse = new Map();
+      for (let byte = 0; byte < 256; byte++) {
+        const value = decoder.decode(Uint8Array.of(byte));
+        if ([...value].length === 1 && !reverse.has(value)) reverse.set(value, byte);
+      }
+      return {
+        name: "iso-8859-15", singleByte: true, decode: bytes => decoder.decode(bytes),
+        encode(value) {
+          const output = [];
+          for (const character of String(value)) {
+            const byte = reverse.get(character);
+            if (byte === undefined) fail(`caràcter no representable a ${name}.`);
+            output.push(byte);
+          }
+          return Uint8Array.from(output);
+        }
+      };
+    }
+    fail(`codificació no admesa (${encoding}).`);
+  }
 
   function fail(message) {
     throw new Error(`CFSA2: ${message}`);
@@ -34,9 +62,10 @@
       if (bytes.length < 9) fail("fitxer massa curt.");
       for (let i = 0; i < MAGIC.length; i++) if (bytes[i] !== MAGIC[i]) fail("signatura incorrecta.");
       if (bytes[4] !== VERSION_CFSA2) fail(`versió no compatible (0x${bytes[4].toString(16)}).`);
-      if (encoding.toLowerCase() !== "utf-8" || encoderType !== "SUFFIX") fail("només s'admeten UTF-8 i SUFFIX.");
-      const separatorBytes = encoder.encode(separator);
-      if (separatorBytes.length !== 1) fail("el separador ha de ser un byte UTF-8.");
+      if (encoderType !== "SUFFIX") fail("només s'admet SUFFIX.");
+      this.codec = createCodec(encoding);
+      const separatorBytes = this.codec.encode(separator);
+      if (separatorBytes.length !== 1) fail("el separador ha de ser un byte en la codificació del diccionari.");
 
       this.bytes = bytes;
       this.flags = (bytes[5] << 8) | bytes[6];
@@ -165,12 +194,12 @@
         lemma.set(keyBytes.subarray(0, keyBytes.length - trim), 0);
         lemma.set(encoded.subarray(1, delimiter), keyBytes.length - trim);
         const tag = hasTag ? encoded.subarray(delimiter + 1) : new Uint8Array(0);
-        yield { lemma: decoder.decode(lemma), tag: decoder.decode(tag) };
+        yield { lemma: this.codec.decode(lemma), tag: this.codec.decode(tag) };
       }
     }
 
     lookup(value) {
-      const key = encoder.encode(String(value));
+      const key = this.codec.encode(String(value));
       return Array.from(this.lookupBytes(key), reading => ({ form: String(value), ...reading }));
     }
 
@@ -193,7 +222,7 @@
         const lemmaBytes = new Uint8Array(formBytes.length - trim + delimiter - 1);
         lemmaBytes.set(formBytes.subarray(0, formBytes.length - trim), 0);
         lemmaBytes.set(outputBytes.subarray(1, delimiter), formBytes.length - trim);
-        yield { form: decoder.decode(formBytes), lemma: decoder.decode(lemmaBytes), tag: hasTag ? decoder.decode(outputBytes.subarray(delimiter + 1)) : "" };
+        yield { form: this.codec.decode(formBytes), lemma: this.codec.decode(lemmaBytes), tag: hasTag ? this.codec.decode(outputBytes.subarray(delimiter + 1)) : "" };
       }
     }
 
