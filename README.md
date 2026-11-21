@@ -4,11 +4,6 @@
 
 Vaig començar Lletrium perquè no trobava una extensió gratuïta que oferís aquest tipus de correcció del català mentre escrius dins dels editors web. Vull que el projecte continuï sent gratuït i obert, i que sigui útil tant per al català com per a altres llengües.
 
-## Novetats de la versió 1.0.2
-
-- S’hi afegeixen l’italià i l’alemany, amb els perfils regionals alemanys d’Alemanya, Àustria i Suïssa.
-- La pàgina de gestió permet afegir paquets d’idioma per separat i seleccionar les variants dialectals disponibles.
-- Els menús i missatges es poden mostrar en italià o alemany, a més dels idiomes d’interfície existents.
 ## Instal·lació
 
 ### Automàtica (recomanada)
@@ -43,5 +38,16 @@ La revisió s’executa localment al navegador; consulta la [política de privac
 ## Contacte
 
 Per informar d’un problema o proposar una millora, [obre una incidència a GitHub](https://github.com/arturguasch/Lletrium-Corrector-Ortografic-i-Gramatical/issues).
+
+## Novetats de la versió 1.0.2
+
+- S’hi afegeixen l’italià i l’alemany, amb els perfils regionals alemanys d’Alemanya, Àustria i Suïssa.
+
+## Versió 1.0.1
+
+- **Paquets d’idioma a la carta:** el paquet principal s’ha optimitzat; cada usuari pot afegir des de la pàgina de gestió allotjada a GitHub només els idiomes que vol. Un cop afegits, funcionen sense connexió.
+- **Variants dialectals:** es poden seleccionar les variants disponibles d’un idioma.
+- **Millores a Google Docs:** s’han corregit errors relacionats amb els subratllats de Lletrium! i la impressió dels documents.
+- **Francès:** s’incorpora com a nou idioma de correcció, amb variants regionals disponibles.
 
 
