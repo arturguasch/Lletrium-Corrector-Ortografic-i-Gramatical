@@ -73,10 +73,11 @@ const sourceFiles = [
   "engine-src/modules/en-text.js",
   "engine-src/modules/en-sentences.js",
   "engine-src/modules/en-pipeline.js",
-  "engine-src/modules/ca-morphology.js",
+  "engine-src/modules/ca-morphology-cfsa2.js",
   "engine-src/modules/es-morphology.js",
   "engine-src/modules/es-tagger.js",
   "engine-src/modules/es-synthesis.js",
+  "engine-src/modules/es-synthesis-cfsa2.js",
   "engine-src/modules/es-spelling.js",
   "engine-src/modules/es-filter-morfologik-speller.js",
   "engine-src/modules/es-chunker.js",
@@ -98,7 +99,8 @@ const sourceFiles = [
   "engine-src/modules/es-pattern-rule-matcher.js",
   "engine-src/modules/es-pipeline.js",
   "engine-src/modules/ca-soros.js",
-  "engine-src/modules/ca-synthesis.js",
+  "engine-src/modules/ca-synthesis-cfsa2.js",
+  "engine-src/modules/ca-compact-runtime.js",
   "engine-src/modules/ca-morfologik-speller.js",
   "engine-src/modules/ca-multitoken-speller.js",
   "engine-src/modules/ca-rule-filters.js",
@@ -698,6 +700,7 @@ await import(new URL("./modules/ca-sentences.js", import.meta.url));
 const srxResource = JSON.parse(await readFile(srxSource, "utf8"));
 const srxTokenizer = new globalThis.CorrectorCatalanSentenceTokenizer(srxResource);
 
+const catalanCompact = JSON.parse(await readFile(resolve(root, "engine-src/resources/central-cfsa2/resource-index.json"), "utf8"));
 const manifest = {
   schemaVersion: 1,
   apiVersion: 1,
@@ -715,9 +718,8 @@ const manifest = {
   sentenceRules: srxTokenizer.rules.length,
   sentenceRulesSha256: srxResource.sourceSha256,
   morphology: {
-    sourceJarSha256: posManifest.sourceJar.sha256,
-    rawSha256: posManifest.rawSha256,
-    counts: posManifest.counts
+    format: "CFSA2",
+    ...catalanCompact.dictionaries.analysis
   },
   taggerResource: {
     sourceHashes: taggerResource.sourceHashes,
@@ -732,7 +734,11 @@ const manifest = {
   },
   multitokenResource,
   spellingResource,
-  synthesisResource: JSON.parse(await readFile(resolve(root, "engine-src/resources/synthesis/manifest.json"), "utf8")),
+  synthesisResource: {
+    format: "CFSA2",
+    ...catalanCompact.dictionaries.synthesis,
+    overlays: catalanCompact.resources.find(resource => resource.id === "synthesis-overlays")
+  },
   morfologikSpellerResource: { graphSha256: spellerMetadata.graphSha256, nodes: 317366, arcs: 804587, upstreamVersion: "2.2.0", prohibitedWords: spellerMetadata.prohibitedWords.length, prohibitedWordsSha256: caProhibitHash, purpose: "FindSuggestionsFilter" },
   morfologikMultitokenSpellerResource: { sourceDictionary: "org.softcatala:catalan-pos-dict:3.3!/org/languagetool/resource/ca/ca-ES_spelling_multitoken.dict", sourceDictionarySha256: multitokenSpellerSourceSha256, graphSha256: multitokenSpellerGraphSha256, nodes: 1758774, arcs: 2569902, compressedBytes: gzipSync(multitokenSpellerGraph).byteLength, maxEditDistance: 1, upstreamVersion: "LanguageTool 6.9-SNAPSHOT / Morfologik 2.2.0", purpose: "CatalanMultitokenSpeller.getAdditionalSuggestions" },
   filterResource: { sha256: createHash("sha256").update(await readFile(resolve(root, "engine-src/resources/ca-filter-data.json"))).digest("hex"), sources: JSON.parse(await readFile(resolve(root, "engine-src/resources/ca-filter-data.json"), "utf8")).sources },
@@ -763,7 +769,9 @@ const manifest = {
   },
   resourceManifests: ["build/resources/en-US/resource-index.json", "build/resources/en-US/en-srx.json", "build/resources/en-US/en-disambiguation-rules.json", "build/resources/en-US/en-multiwords.json", "build/resources/en-US/en-word-coherency.json", "build/resources/en-US/en-synonyms.json", "build/resources/en-US/en-compounds.json", "build/resources/en-US/en-wrong-word-context.json", "build/resources/en-US/en-contractions.json", "build/resources/en-US/en-pattern-rule-candidates.json.gz", "build/resources/en-US/en-repeated-pattern-rules.json", "build/resources/central/resource-index.json", "build/resources/es-ES/resource-index.json", "build/resources/es-ES/synthesis-manifest.json", "build/resources/es-ES/es-srx.json", "build/resources/es-ES/es-multiword.json", "build/resources/es-ES/es-multitoken-speller.json", "build/resources/es-ES/es-disambiguation-rules.json", "build/resources/es-ES/es-spelling-data.json", "build/resources/es-ES/es-manual-tags.json", "build/resources/es-ES/es-simple-replace.json", "build/resources/es-ES/es-wrong-word-context.json", "build/resources/es-ES/es-compounds.json", "build/resources/es-ES/es-synonyms.json", "build/resources/es-ES/es-confusion-pairs.json", "build/resources/es-ES/es-repeated-pattern-rules.json", "build/resources/ca-srx.json", "build/resources/ca-tagger-data.json", "build/resources/ca-chunker-data.json", "build/resources/ca-disambiguation-rules.json", "build/resources/ca-pattern-rule-candidates.json", "build/resources/ca-dialect-pattern-rules.json", "build/resources/ca-dialect-profile-overrides.json", "build/resources/ca-simple-replace-multiwords.json", "build/resources/ca-spelling-multitoken-words.txt.gz", "build/resources/ca-spelling-words.txt.gz", "build/resources/ca-spelling-overlays.txt.gz", "build/resources/synthesis/resource-index.json", "build/resources/synthesis/ca-synthesis.bin.gz", "build/resources/ca-speller-metadata.json", "build/resources/ca-speller-multitoken-metadata.json", "build/resources/ca-speller-multitoken-graph.bin.gz", "build/resources/ca-speller-graph.bin.gz", "build/resources/ca-spelling-overlay-graph.bin.gz", "build/resources/ca-filter-data.json", "build/resources/ca-table-rules.json"]
 };
-manifest.resourceManifests.push("build/resources/en-US/en-regex-rules.json");
+manifest.resourceManifests = manifest.resourceManifests.filter(path =>
+  !["build/resources/central/resource-index.json", "build/resources/synthesis/ca-synthesis.bin.gz"].includes(path));
+manifest.resourceManifests.push("build/resources/en-US/en-regex-rules.json", "build/resources/central-cfsa2/resource-index.json");
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 await mkdir(resolve(stagedExtension, "src"), { recursive: true });
 await mkdir(resolve(stagedExtension, "build"), { recursive: true });
@@ -775,6 +783,8 @@ for (const resourceRoot of [resolve(root, "build/resources"), resolve(stagedExte
 }
 await copyFile(output, resolve(stagedExtension, "src/language-engine.js"));
 await copyFile(manifestPath, resolve(stagedExtension, "build/engine-build.json"));
+await cp(resolve(root, "engine-src/resources/central-cfsa2"), resolve(root, "build/resources/central-cfsa2"), { recursive: true, force: true });
+await copyFile(resolve(root, "engine-src/resources/es-ES/synthesis-cfsa2-manifest.json"), resolve(root, "build/resources/es-ES/synthesis-manifest.json"));
 await cp(resolve(root, "build/resources"), resolve(stagedExtension, "build/resources"), { recursive: true, force: true });
 // French adapters/resources are maintained as source under engine-src, but
 // remain a distinct proof-stage runtime and do not change the shared engine's

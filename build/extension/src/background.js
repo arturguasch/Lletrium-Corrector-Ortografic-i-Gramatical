@@ -4,7 +4,10 @@ import "./language-pack-runtime.js";
 import "./language-pack-external.js";
 
 function openLanguageManager() {
-  return chrome.tabs.create({ url: chrome.runtime.getURL("dev-only/index.html#languages"), active: true });
+  const managerUrl = new URL("https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html");
+  managerUrl.searchParams.set("extensionId", chrome.runtime.id);
+  managerUrl.hash = "languages";
+  return chrome.tabs.create({ url: managerUrl.href, active: true });
 }
 
 const BG_GDOCS_ENGINE = {
@@ -547,9 +550,12 @@ async function refreshEngineAfterLanguagePackChange() {
       percent: result.readiness?.percent || 0,
       error: result.error || ""
     };
-    const ready = result.ok && result.readiness?.phase === "worker-ready-full" && result.readiness?.loaded === true
-      && result.readiness?.workerLoaded === true && result.readiness?.worker?.workerAlive === true
-      && Number(result.readiness?.percent) >= 100;
+    const readiness = result.readiness;
+    const workerReady = readiness?.phase === "worker-ready-full" && readiness.workerLoaded === true
+      && readiness.worker?.workerAlive === true && Number(readiness.percent) >= 100;
+    const directReady = ["ready-full", "ready-saving-cache"].includes(readiness?.phase)
+      && readiness.engineAvailable === true;
+    const ready = result.ok && readiness?.loaded === true && (workerReady || directReady);
     if (!ready) {
       GDOCS_OFFSCREEN.eagerPreloadStarted = false;
       return { ok: false, language, error: result.error || result.readiness?.error || "El motor no ha confirmat que estigui preparat.", readiness: result.readiness || null };

@@ -7,8 +7,15 @@
   class EnglishSpeller {
     constructor(buffer, manifest) {
       if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || !["CFAS1", "CFSA2"].includes(manifest?.format)
-          || !["en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6", "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7", "LanguageTool 6.9-SNAPSHOT / Italian Hunspell it_IT"].includes(manifest?.profile)
-          || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not belong to the pinned English dictionaries.");
+          || ![
+            "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+            "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7",
+            "LanguageTool 6.9-SNAPSHOT / Italian Hunspell it_IT",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_DE",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_AT",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_CH"
+          ].includes(manifest?.profile)
+          || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not match a supported dictionary profile.");
       this.cfsa2 = null;
       if (manifest.format === "CFSA2") {
         if (!new Set(["utf-8", "UTF-8", "ISO-8859-15", "iso-8859-15"]).has(manifest.encoding) || manifest.sequenceEncoder !== "SUFFIX"

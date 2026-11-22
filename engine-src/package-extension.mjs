@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyReleaseDictionaryLayout } from './tools/verify-release-dictionary-layout.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = resolve(root, 'build/extension');
@@ -36,6 +37,7 @@ const packDescriptorText = await readFile(join(source, 'src/language-pack-descri
 const packDescriptorMatch = packDescriptorText.match(/Object\.freeze\((\[.*\])\.map\(item/s);
 if (!packDescriptorMatch) throw new Error('Could not parse the generated GitHub pack descriptors.');
 const packDescriptors = JSON.parse(packDescriptorMatch[1]);
+await verifyReleaseDictionaryLayout(source, packDescriptors);
 const packedResourcePaths = [...new Set(packDescriptors.flatMap(pack => pack.files || []))];
 const italianPack = packDescriptors.find(pack => pack.id === 'it');
 const germanPack = packDescriptors.find(pack => pack.id === 'de');

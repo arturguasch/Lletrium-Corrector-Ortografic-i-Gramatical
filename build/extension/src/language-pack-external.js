@@ -196,6 +196,14 @@
     report(1);
     return { removed };
   }
+  async function refreshEngineAfterMutation() {
+    try {
+      return await globalThis.LletriumRefreshEngineAfterLanguagePackChange?.() || { ok: false };
+    } catch (error) {
+      console.warn("[Lletrium] Engine refresh after pack activation failed", error);
+      return { ok: false };
+    }
+  }
   async function runMutation(message, report) {
     const modern = validateProtocol(message, false);
     const type = message?.type;
@@ -242,7 +250,16 @@
           const settings = await chrome.storage.sync.get({ language: "ca-ES", enabledLanguageProfiles: {} });
           const lang = String(settings.language || "ca-ES");
           const selected = packIdForProfile(lang);
-          if (!installedNow.includes(selected) && installedNow.length && type === "REMOVE" && ids.includes(selected)) {
+          if (type === "ADD" && !installedNow.includes(selected)) {
+            // If the saved proofing profile has no installed pack, make the
+            // newly added language usable immediately. Respect the variants
+            // selected for that pack, falling back to its declared default.
+            const fallback = ids.find(value => installedNow.includes(value));
+            const spec = PACKS.get(fallback);
+            const preferred = settings.enabledLanguageProfiles?.[fallback]?.find(profile => spec?.profiles?.includes(profile));
+            const fallbackProfile = preferred || defaultProfileForPack(fallback);
+            if (fallbackProfile) await chrome.storage.sync.set({ language: fallbackProfile });
+          } else if (!installedNow.includes(selected) && installedNow.length && type === "REMOVE" && ids.includes(selected)) {
             const fallback = [...PACKS.keys()].find(value => installedNow.includes(value));
             const preferred = settings.enabledLanguageProfiles[fallback]?.find(profile => PACKS.get(fallback)?.profiles?.includes(profile));
             const fallbackProfile = preferred || defaultProfileForPack(fallback);
@@ -254,12 +271,11 @@
           }
         }
         if (changed) await bumpPackRevision();
-        const refresh = changed ? await globalThis.LletriumRefreshEngineAfterLanguagePackChange?.() || { ok: false, skipped: "refresh-unavailable", error: "El gestor del motor no respon." } : { ok: true, unchanged: true };
-        if (type === "ADD" && refresh.ok !== true && !refresh.skipped) {
-          throw fail("ENGINE_RELOAD_FAILED", refresh.error || "El motor no ha confirmat la càrrega dels idiomes.");
-        }
+        // Pack activation has already succeeded. Reloading the active engine
+        // can fail independently, including when it uses a different pack.
+        const refresh = changed ? await refreshEngineAfterMutation() : { ok: true };
         if (type === "ADD") for (const packId of ids) await runtime().pruneInactiveRevisions(packId, PACKS.get(packId).version).catch(() => {});
-        const engineState = refresh.ok === true || refresh.unchanged ? "ready" : "deferred";
+        const engineState = refresh.ok === true ? "ready" : "deferred";
         const installed = (await list()).map(pack => pack.id);
         const result = { ok: true, installed, engineReady: engineState === "ready", engineState, message: engineState === "ready" ? "Els idiomes estan preparats." : "Els paquets s’han desat. El motor s’actualitzarà quan el perfil actiu estigui disponible." };
         if (id) await runtime().saveOperation({ requestId: id, signature, type, ids, state: "complete", result, completedAt: Date.now() });

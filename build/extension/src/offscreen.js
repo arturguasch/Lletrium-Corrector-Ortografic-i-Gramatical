@@ -200,6 +200,17 @@
     "src/french-simple-replace-rule.js",
     "src/french-pattern-pipeline.js"
   ];
+  const DIRECT_ENGINE_PROFILE_SCRIPTS = {
+    fr: DIRECT_ENGINE_FRENCH_SCRIPTS,
+    it: ["src/lt-catalan-filters.js", "src/lt-pattern-runtime.js", "src/italian-pattern-pipeline.js"],
+    de: [
+      "src/lt-catalan-filters.js",
+      "src/lt-pattern-runtime.js",
+      "src/german-pattern-filters.js",
+      "src/german-direct-rules.js",
+      "src/german-pattern-pipeline.js"
+    ]
+  };
 
   function loadDirectEngineScript(path) {
     return new Promise((resolve, reject) => {
@@ -212,8 +223,8 @@
   }
 
   async function ensureDirectEngineScript(language = "ca-ES") {
-    const scripts = [...DIRECT_ENGINE_BASE_SCRIPTS];
-    if (String(language).startsWith("fr-")) scripts.push(...DIRECT_ENGINE_FRENCH_SCRIPTS);
+    const languageFamily = String(language).split("-")[0];
+    const scripts = [...DIRECT_ENGINE_BASE_SCRIPTS, ...(DIRECT_ENGINE_PROFILE_SCRIPTS[languageFamily] || [])];
     if (!STATE.directScriptsLoaded) STATE.directScriptsLoaded = new Set();
 
     const loadMissingScripts = async () => {
@@ -325,9 +336,9 @@
       return globalThis.CorrectorLocalEngine;
     }
     if (STATE.loading) {
-      await STATE.loading;
-      setPreloadStatus(currentReadiness(language));
-      return globalThis.CorrectorLocalEngine;
+      const activeLoad = STATE.loading;
+      try { await activeLoad; } catch (_) {}
+      return ensureEngineTracked(language);
     }
 
     const started = Date.now();

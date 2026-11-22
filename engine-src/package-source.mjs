@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyReleaseDictionaryLayout } from './tools/verify-release-dictionary-layout.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = resolve(root, 'build/releases');
@@ -39,6 +40,7 @@ const extensionManifest = JSON.parse(await readFile(resolve(root, 'build/extensi
 const descriptorText = await readFile(resolve(root, 'build/extension/src/language-pack-descriptors.generated.js'), 'utf8');
 const descriptorMatch = descriptorText.match(/Object\.freeze\((\[.*\])\.map\(item/s);
 const extensionDescriptors = descriptorMatch ? JSON.parse(descriptorMatch[1]) : [];
+await verifyReleaseDictionaryLayout(resolve(root, 'build/extension'), extensionDescriptors);
 const packedResourcePaths = [...new Set(extensionDescriptors.flatMap(pack => pack.files || []))];
 const italianDescriptor = extensionDescriptors.find(pack => pack.id === 'it');
 const germanDescriptor = extensionDescriptors.find(pack => pack.id === 'de');

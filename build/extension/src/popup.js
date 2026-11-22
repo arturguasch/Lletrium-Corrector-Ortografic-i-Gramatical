@@ -388,8 +388,8 @@ async function initialize() {
         installedPackIds = new Set(packs.filter(pack => globalThis.LletriumLanguagePacks.isPackCompatible(pack)).map(pack => pack.id));
         syncLanguageProfileOptions();
         const languageControl = document.getElementById("language");
-        // Installing a pack only makes it available. Preserve the user's
-        // selected proofing language until they choose another profile.
+        // Refresh the picker after installation; the manager selects a newly
+        // added profile if the previous selection still has no installed pack.
         refreshPackAvailability();
         renderLanguagePicker();
         renderDictionaryLanguagePicker();
@@ -682,8 +682,10 @@ async function refreshEngineStatus() {
     const response = await chrome.runtime.sendMessage({ type: "CL_ENGINE_READINESS", language: document.getElementById("language").value || "ca-ES" });
     const readiness = response?.readiness || {};
     const phase = String(readiness.phase || "");
-    if (phase === "worker-ready-full" && readiness.loaded === true && readiness.workerLoaded === true
-      && readiness.worker?.workerAlive === true && Number(readiness.percent) >= 100) {
+    const workerReady = phase === "worker-ready-full" && readiness.workerLoaded === true
+      && readiness.worker?.workerAlive === true && Number(readiness.percent) >= 100;
+    const directReady = ["ready-full", "ready-saving-cache"].includes(phase) && readiness.engineAvailable === true;
+    if (readiness.loaded === true && (workerReady || directReady)) {
       status.dataset.state = "ready";
       status.title = "";
       message.textContent = tr("ready");
