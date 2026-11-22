@@ -4,10 +4,10 @@ import "./language-pack-runtime.js";
 import "./language-pack-external.js";
 
 function openLanguageManager() {
-  const url = new URL("https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html");
-  url.searchParams.set("extensionId", chrome.runtime.id);
-  url.hash = "languages";
-  return chrome.tabs.create({ url: url.href, active: true });
+  const managerUrl = new URL("https://arturguasch.github.io/Lletrium-Corrector-Ortografic-i-Gramatical/index.html");
+  managerUrl.searchParams.set("extensionId", chrome.runtime.id);
+  managerUrl.hash = "languages";
+  return chrome.tabs.create({ url: managerUrl.href, active: true });
 }
 
 const BG_GDOCS_ENGINE = {
@@ -550,9 +550,12 @@ async function refreshEngineAfterLanguagePackChange() {
       percent: result.readiness?.percent || 0,
       error: result.error || ""
     };
-    const ready = result.ok && result.readiness?.phase === "worker-ready-full" && result.readiness?.loaded === true
-      && result.readiness?.workerLoaded === true && result.readiness?.worker?.workerAlive === true
-      && Number(result.readiness?.percent) >= 100;
+    const readiness = result.readiness;
+    const workerReady = readiness?.phase === "worker-ready-full" && readiness.workerLoaded === true
+      && readiness.worker?.workerAlive === true && Number(readiness.percent) >= 100;
+    const directReady = ["ready-full", "ready-saving-cache"].includes(readiness?.phase)
+      && readiness.engineAvailable === true;
+    const ready = result.ok && readiness?.loaded === true && (workerReady || directReady);
     if (!ready) {
       GDOCS_OFFSCREEN.eagerPreloadStarted = false;
       return { ok: false, language, error: result.error || result.readiness?.error || "El motor no ha confirmat que estigui preparat.", readiness: result.readiness || null };
@@ -1008,13 +1011,13 @@ function detectInitialUiLanguage() {
   let locale = "";
   try { locale = String(chrome.i18n?.getUILanguage?.() || ""); } catch (_) {}
   const primary = locale.trim().replaceAll("_", "-").split("-")[0].toLowerCase();
-  return ["ca", "es", "en", "fr"].includes(primary) ? primary : "en";
+  return ["ca", "es", "en", "fr", "it", "de"].includes(primary) ? primary : "en";
 }
 
 chrome.runtime.onInstalled.addListener(async details => {
   const stored = await chrome.storage.sync.get(null);
   const current = { ...DEFAULT_SETTINGS, ...stored };
-  if (!["ca", "es", "en", "fr"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
+  if (!["ca", "es", "en", "fr", "it", "de"].includes(stored.uiLanguage)) current.uiLanguage = detectInitialUiLanguage();
   await chrome.storage.sync.remove(["debounceMs", "maxTextLength"]);
   if (current.language === "ca") current.language = "ca-ES";
   if (current.language === "es") current.language = "es-ES";
@@ -1379,3 +1382,4 @@ async function resetExtensionToFactoryDefaults() {
     throw error;
   }
 }
+

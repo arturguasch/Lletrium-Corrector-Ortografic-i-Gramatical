@@ -10,7 +10,7 @@
     uiLanguage: "ca",
     uiMessages: globalThis.CorrectorLocalUiLocales?.ca || {},
     theme: "system",
-    personalDictionary: { "ca-ES": [], "ca-ES-valencia": [], "ca-ES-balear": [], "es-ES": [], "en-US": [] },
+    personalDictionary: { "ca-ES": [], "ca-ES-valencia": [], "ca-ES-balear": [], "es-ES": [], "en-US": [], "fr-FR": [], "it-IT": [], "de-DE": [] },
     dismissedIssueKeys: new Set(),
     groupedDismissedIssueKeys: new Set(),
     siteExcluded: false,
@@ -405,7 +405,7 @@
         return false;
       }
       if (message?.type === "CL_UI_PREFERENCES_CHANGED") {
-        const nextUiLanguage = ["ca", "es", "en", "fr"].includes(message.uiLanguage) ? message.uiLanguage : STATE.uiLanguage;
+        const nextUiLanguage = ["ca", "es", "en", "fr", "it", "de"].includes(message.uiLanguage) ? message.uiLanguage : STATE.uiLanguage;
         const nextTheme = ["system", "light", "dark"].includes(message.theme) ? message.theme : STATE.theme;
         STATE.settings = { ...(STATE.settings || {}), uiLanguage: nextUiLanguage, theme: nextTheme };
         if (nextUiLanguage !== STATE.uiLanguage) setContentUiLanguage(nextUiLanguage);
@@ -573,7 +573,7 @@
         // A service-worker read can finish after a newer popup choice and
         // otherwise leave an open page panel using the old presentation.
         if (changes.uiLanguage) {
-          const language = ["ca", "es", "en", "fr"].includes(changes.uiLanguage.newValue) ? changes.uiLanguage.newValue : "ca";
+          const language = ["ca", "es", "en", "fr", "it", "de"].includes(changes.uiLanguage.newValue) ? changes.uiLanguage.newValue : "ca";
           STATE.settings = { ...(STATE.settings || {}), uiLanguage: language };
           if (STATE.uiLanguage !== language) setContentUiLanguage(language);
         }
@@ -1077,12 +1077,16 @@
       ...(Array.isArray(value?.["ca-ES-balear"]) ? value["ca-ES-balear"] : [])
     ];
     const frenchWords = ["fr", "fr-FR", "fr-CA", "fr-CH", "fr-BE"].flatMap(profile => Array.isArray(value?.[profile]) ? value[profile] : []);
-    const normalized = Object.fromEntries([["ca-ES", "ca"], ["ca-ES-valencia", "ca"], ["ca-ES-balear", "ca"], ["es-ES", "es"], ["en-US", "en"], ["fr-FR", "fr"]].map(([profile, legacy]) => {
+    const italianWords = ["it", "it-IT"].flatMap(profile => Array.isArray(value?.[profile]) ? value[profile] : []);
+    const germanWords = ["de", "de-DE", "de-AT", "de-CH"].flatMap(profile => Array.isArray(value?.[profile]) ? value[profile] : []);
+    const normalized = Object.fromEntries([["ca-ES", "ca"], ["ca-ES-valencia", "ca"], ["ca-ES-balear", "ca"], ["es-ES", "es"], ["en-US", "en"], ["fr-FR", "fr"], ["it-IT", "it"], ["de-DE", "de"]].map(([profile, legacy]) => {
       let words = profile.startsWith("ca-") ? sharedCatalan : (Array.isArray(value?.[profile]) ? value[profile] : []);
       if (profile === "fr-FR") words = frenchWords;
+      if (profile === "it-IT") words = italianWords;
+      if (profile === "de-DE") words = germanWords;
       if (profile.startsWith("ca-") && !words.length) words = legacyCatalan;
       else if (!words.length && Array.isArray(value?.[legacy])) words = value[legacy];
-      const language = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile === "fr-FR" ? "fr" : "ca";
+      const language = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile === "fr-FR" ? "fr" : profile === "it-IT" ? "it" : profile === "de-DE" ? "de" : "ca";
       const unique = new Map();
       for (const word of words.map(value => String(value || "").trim()).filter(word => word && word.length <= 80)) {
         unique.set(word.toLocaleLowerCase(language), word);
@@ -1095,7 +1099,8 @@
   function currentDictionaryProfile() {
     const language = STATE.settings?.language || "ca-ES";
     if (["fr-FR", "fr-CA", "fr-CH", "fr-BE"].includes(language)) return "fr-FR";
-    return ["ca-ES", "ca-ES-valencia", "ca-ES-balear", "es-ES", "en-US"].includes(language) ? language : "ca-ES";
+    if (["de-DE", "de-AT", "de-CH"].includes(language)) return "de-DE";
+    return ["ca-ES", "ca-ES-valencia", "ca-ES-balear", "es-ES", "en-US", "it-IT", "de-DE"].includes(language) ? language : "ca-ES";
   }
 
   function getPersonalDictionary() {
@@ -1346,7 +1351,7 @@
   }
 
   function setContentUiLanguage(language) {
-    STATE.uiLanguage = ["ca", "es", "en", "fr"].includes(language) ? language : "ca";
+    STATE.uiLanguage = ["ca", "es", "en", "fr", "it", "de"].includes(language) ? language : "ca";
     STATE.uiMessages = globalThis.CorrectorLocalUiLocales?.[STATE.uiLanguage] || globalThis.CorrectorLocalUiLocales?.ca || {};
     document.documentElement.dataset.correctorLocalUiLanguage = STATE.uiLanguage;
     for (const mark of STATE.marks || []) {
@@ -1630,13 +1635,29 @@
     return button;
   }
 
+  function languagePackIdForProfile(profile) {
+    const value = String(profile || "");
+    // The Google Docs loader runs in the page context without the popup's
+    // generated pack-descriptor script. Supported profiles use their base
+    // language code as the pack ID (it-IT -> it, fr-CA -> fr, ca-ES -> ca).
+    return value.split("-")[0].toLowerCase();
+  }
+
   function reviewProofingProfiles() {
-    return [
+    const rows = [
       ["ca-ES", "central"], ["ca-ES-valencia", "valencian"], ["ca-ES-balear", "balearic"],
       ["es-ES", "spanish"], ["en-US", "english"],
-      ["fr-FR", "frenchFrance"], ["fr-CA", "frenchCanada"], ["fr-CH", "frenchSwitzerland"], ["fr-BE", "frenchBelgium"]
-    ].filter(([value]) => STATE.installedLanguagePackIds.has(String(value).startsWith("ca-") ? "ca" : value.startsWith("fr-") ? "fr" : value === "es-ES" ? "es" : "en"))
-      .filter(([value]) => { const id=value.startsWith("ca-")?"ca":value.startsWith("fr-")?"fr":value==="es-ES"?"es":"en"; const profiles=STATE.settings?.enabledLanguageProfiles?.[id]; const known=id==="ca"?["ca-ES","ca-ES-valencia","ca-ES-balear"]:id==="fr"?["fr-FR","fr-CA","fr-CH","fr-BE"]:[value]; const valid=Array.isArray(profiles)?profiles.filter(profile=>known.includes(profile)):[]; return !valid.length||valid.includes(value); })
+      ["fr-FR", "frenchFrance"], ["fr-CA", "frenchCanada"], ["fr-CH", "frenchSwitzerland"], ["fr-BE", "frenchBelgium"],
+      ["it-IT", "italian"], ["de-DE", "germanGermany"], ["de-AT", "germanAustria"], ["de-CH", "germanSwitzerland"]
+    ];
+    return rows.filter(([value]) => {
+        const packId = languagePackIdForProfile(value);
+        if (!STATE.installedLanguagePackIds.has(packId)) return false;
+        const declaredProfiles = rows.filter(([candidate]) => languagePackIdForProfile(candidate) === packId).map(([candidate]) => candidate);
+        const enabledProfiles = STATE.settings?.enabledLanguageProfiles?.[packId];
+        const selected = Array.isArray(enabledProfiles) ? enabledProfiles.filter(profile => declaredProfiles.includes(profile)) : [];
+        return !selected.length || selected.includes(value);
+      })
       .map(([value, key]) => ({ value, label: ui(key) }))
       .sort((a, b) => a.label.localeCompare(b.label, STATE.uiLanguage, { sensitivity: "base" }));
   }
@@ -1650,7 +1671,7 @@
       STATE.installedLanguagePackIds = next;
       updateReviewPanelLanguage();
       const profile = STATE.settings?.language || "ca-ES";
-      const packId = String(profile).startsWith("ca-") ? "ca" : String(profile).startsWith("fr-") ? "fr" : profile === "es-ES" ? "es" : "en";
+      const packId = languagePackIdForProfile(profile);
       if (reloadActiveEngine && next.has(packId) !== previous.has(packId)) {
         try { window.CorrectorLocalEngine?.clearCache?.(); } catch (_) {}
         window.__CL_DICTIONARY_READY = false;
@@ -5138,7 +5159,7 @@
   }
 
   function normalizeDictionaryEntryForProfile(value, profile) {
-    const locale = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile.startsWith("fr-") ? "fr" : "ca";
+    const locale = profile === "es-ES" ? "es" : profile === "en-US" ? "en-US" : profile.startsWith("fr-") ? "fr" : profile.startsWith("de-") ? "de" : profile === "it-IT" ? "it" : "ca";
     return String(value || "").trim().toLocaleLowerCase(locale).replace(/\s+/gu, " ");
   }
 
@@ -21637,5 +21658,7 @@
     });
   }
 })();
+
+
 
 

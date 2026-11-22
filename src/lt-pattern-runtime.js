@@ -45,7 +45,19 @@
         return '';
       });
       pattern = pattern.replace(/\\Q([\s\S]*?)\\E/gu, (_, literal) => literal.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&'));
-      if (/\\[QEGZ]|\+\+|\*\+|\?\+|\[\^?[^\]]*&&/u.test(pattern)) throw Error(`Unsupported Java regexp: ${pattern}`);
+      let inCharacterClass = false, escaped = false, unsupported = false;
+      for (let i = 0; i < pattern.length; i++) {
+        const character = pattern[i];
+        if (escaped) {
+          if (!inCharacterClass && 'QEGZ'.includes(character)) unsupported = true;
+          escaped = false; continue;
+        }
+        if (character === '\\') { escaped = true; continue; }
+        if (character === '[') { inCharacterClass = true; continue; }
+        if (character === ']') { inCharacterClass = false; continue; }
+        if (!inCharacterClass && /[+*?]\+/u.test(pattern.slice(i, i + 2))) unsupported = true;
+      }
+      if (unsupported || /\[\^?[^\]]*&&/u.test(pattern)) throw Error(`Unsupported Java regexp: ${pattern}`);
       // Java flags without ':' affect the remainder of their enclosing group.
       // ECMAScript modifier groups express that same scope without global flags.
       let converted='', depth=0, classDepth=0; const closers=new Map();
@@ -57,7 +69,7 @@
           // ECMAScript rejects under the Unicode flag (for example \# and \…).
           // Remove only identity escapes for literal punctuation/separators;
           // keep regex metacharacters and class-sensitive escapes intact.
-          const identityPunctuation=/[\p{P}\p{S}\p{Z}]/u.test(next)
+          const identityPunctuation=(/[\p{P}\p{S}\p{Z}]/u.test(next) || /[^\x00-\x7f]/u.test(next))
             && !/[\\^$.*+?()[\]{}|]/u.test(next)
             && !(classDepth && /[-\[\]]/u.test(next));
           converted += identityPunctuation || next==='-'&&!classDepth ? next : '\\'+next; continue;
@@ -250,10 +262,11 @@
           SynthesizeWithAnyDeterminerFilter:['lemmaSelect','synthAllForms'],
           LocalCatalanRewriteFilter:[], TextToNumberFilter:['ignore'], OblidarseSugestionsFilter:[]
         };
-        const allowed = schemas[rule.filter.name];
+        const patternFilter = this.services?.patternFilters?.schemas?.[rule.filter.name];
+        const allowed = schemas[rule.filter.name] || patternFilter?.args;
         if (!allowed) throw Error('Unsupported filter: ' + rule.filter.name);
         keys(rule.filter.args,allowed);
-        const required = rule.filter.name === 'AdvancedSynthesizerFilter' ? allowed.slice(0,4) : rule.filter.name === 'DiacriticsCheckFilter' ? allowed.slice(0,2) : rule.filter.name === 'DateCheckFilter' ? ['weekDay'] : rule.filter.name === 'FrenchSuppressMisspelledSuggestionsFilter' ? ['suppressMatch'] : rule.filter.name === 'FindSuggestionsFilter' ? ['wordFrom','desiredPostag'] : ['AddCommasFilter','AdaptSuggestionsFilter','ConvertToSentenceCaseFilter','MakeContractionsFilter'].includes(rule.filter.name) ? [] : allowed;
+        const required = patternFilter?.required || (rule.filter.name === 'AdvancedSynthesizerFilter' ? allowed.slice(0,4) : rule.filter.name === 'DiacriticsCheckFilter' ? allowed.slice(0,2) : rule.filter.name === 'DateCheckFilter' ? ['weekDay'] : rule.filter.name === 'FrenchSuppressMisspelledSuggestionsFilter' ? ['suppressMatch'] : rule.filter.name === 'FindSuggestionsFilter' ? ['wordFrom','desiredPostag'] : ['AddCommasFilter','AdaptSuggestionsFilter','ConvertToSentenceCaseFilter','MakeContractionsFilter'].includes(rule.filter.name) ? [] : allowed);
         const optionalAware=rule.filter.name in (globalThis.CorrectorLtCatalanFilters?.schemas||{})?(globalThis.CorrectorLtCatalanFilters.required[rule.filter.name]||[]):rule.filter.name==='SynthesizeWithDAFilter'?['lemmaFrom','lemmaSelect']:rule.filter.name==='SynthesizeWithAnyDeterminerFilter'?['lemmaSelect']:rule.filter.name==='TextToNumberFilter'?[]:required;
         if (optionalAware.some(k => rule.filter.args[k] == null)) throw Error('Missing filter argument');
       }
@@ -520,6 +533,8 @@
       const marker = match.marker || {start:0,end:match.captures.length};
       const marked = match.captures.slice(marker.start,marker.end).flat();
       const from = marked[0].row.start, to = marked.at(-1).row.end, original = text.slice(from,to);
+      const patternFilters = this.services?.patternFilters;
+      if (patternFilters?.schemas?.[filter.name]) return patternFilters.apply.call(this,filter.name,{args,rawArgs:filter.args,match,suggestions,resolve,marked,from,to,original,text});
       // LanguageTool uses the same Java filter class name for French, but
       // French semantics rely on the French speller/tagger/synthesizer rather
       // than the project's Catalan implementation. Route it before the
@@ -581,7 +596,7 @@
         const message=accent(replacement)&&!accent(args.form)?match.message:match.message.replace("s'escriu amb accent","s'escriu d'una altra manera");
         return {suggestions:suggestions.map(s=>s.replaceAll('{suggestion}',replacement).replaceAll('{Suggestion}',upperFirst(replacement,this.locale)).replaceAll('{SUGGESTION}',replacement.toLocaleUpperCase(this.locale))),message};
       }
-      if(filter.name==='NewYearDateFilter'||filter.name==='DateCheckFilter')return this.dateFilter(filter.name,args,match,resolve,suggestions);
+      if(filter.name==='NewYearDateFilter'||filter.name==='DateCheckFilter')return this.dateFilter(filter.name,args,match,resolve,suggestions,filter.args);
       if (filter.name === 'FrenchSuppressMisspelledSuggestionsFilter') {
         const speller=this.filterResources.speller, tokenizer=this.filterResources.tokenizer;
         if (!speller?.isMisspelled || !tokenizer?.tokenizeRows) throw Error('French spelling filter resources unavailable');
@@ -911,11 +926,17 @@
       if(original&&original===original.toLocaleUpperCase(this.locale)&&/\p{L}/u.test(original))return value.toLocaleUpperCase(this.locale);
       return /^\p{Lu}/u.test(original)&&!/[\p{Lu}\p{Lt}]/u.test(original.slice(1))?upperFirst(value.toLocaleLowerCase(this.locale),this.locale):value;
     }
-    dateFilter(name,args,match,resolve,suggestions) {
-      // Date filters use logical capture references, corrected for optional tokens and skips.
-      if(name==='DateCheckFilter')resolve=value=>{const slot=this.captureByReference(match,Number(value))?.[0];if(!slot)throw Error('Missing date capture '+value);return slot;};
-      const months=this.locale==='fr'?['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc']:['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
-      const monthNumber=s=>/^\d+$/u.test(s)?Number(s):months.findIndex(prefix=>s.toLocaleLowerCase(this.locale).startsWith(prefix))+1;
+    dateFilter(name,args,match,resolve,suggestions,rawArgs={}) {
+      // Filter args are already expanded to captured text by filter(). Keep the raw
+      // \N references as well so positional date fields resolve to their real spans.
+      const resolveDateArg=key=>{
+        const reference=String(rawArgs[key]??'').match(/^\\(\d+)$/u);
+        if(!reference)return null;
+        const slot=this.captureByReference(match,Number(reference[1]))?.[0];
+        return slot?.row?slot:null;
+      };
+      const monthPrefixes=this.locale.startsWith('fr')?['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc']:this.locale.startsWith('it')?['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic']:['gen','febr','març','abr','maig','juny','jul','ag','set','oct','nov','des'];
+      const monthNumber=s=>/^\d+$/u.test(s)?Number(s):monthPrefixes.findIndex(prefix=>s.toLocaleLowerCase(this.locale).startsWith(prefix))+1;
       const valid=(year,month,day)=>{const d=new Date(0);d.setUTCFullYear(year,month-1,day);d.setUTCHours(0,0,0,0);return d.getUTCFullYear()===year&&d.getUTCMonth()===month-1&&d.getUTCDate()===day?d:null;};
       const current=this.now(),currentYear=current.getFullYear();
       if(name==='NewYearDateFilter'){
@@ -923,12 +944,13 @@
         if(!valid(year,month,day)||current.getMonth()!==0||month===12||year+1!==currentYear)return [];
         return {suggestions,message:match.message.replaceAll('{year}',String(year)).replaceAll('{realYear}',String(currentYear)),allowNoSuggestions:true};
       }
-      const weekdays=this.locale==='fr'?['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi']:['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'],short=this.locale==='fr'?['dim','lun','mar','mer','jeu','ven','sam']:['dg','dl','dt','dc','dj','dv','ds'];
-      const week=resolve(args.weekDay),weekText=week.row.token.replaceAll('\u00ad','').toLocaleLowerCase(this.locale);
+      const weekdays=this.locale.startsWith('fr')?['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi']:this.locale.startsWith('it')?['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato']:['diumenge','dilluns','dimarts','dimecres','dijous','divendres','dissabte'],short=this.locale.startsWith('fr')?['dim','lun','mar','mer','jeu','ven','sam']:this.locale.startsWith('it')?['do','lu','ma','me','gi','ve','sa']:['dg','dl','dt','dc','dj','dv','ds'];
+      const week=resolveDateArg('weekDay'),weekText=week?.row.token.replaceAll('\u00ad','').toLocaleLowerCase(this.locale);
+      if(!week)return [];
       const expected=weekdays.includes(weekText)?weekdays.indexOf(weekText):short.indexOf(weekText);if(expected<0)return [];
       let daySlot,monthText,yearText,dayText,yearSlot;
-      if(args.date&&Number(args.date)>-1){daySlot=resolve(args.date);[yearText,monthText,dayText]=daySlot.row.token.split('-');yearSlot=daySlot;}
-      else{daySlot=resolve(args.day);dayText=daySlot.row.token;monthText=resolve(args.month).row.token;yearSlot=args.year&&Number(args.year)>-1?resolve(args.year):null;yearText=yearSlot?.row.token;}
+      if(resolveDateArg('date')){daySlot=resolveDateArg('date');[yearText,monthText,dayText]=daySlot.row.token.split('-');yearSlot=daySlot;}
+      else{daySlot=resolveDateArg('day');const monthSlot=resolveDateArg('month');yearSlot=resolveDateArg('year');if(!daySlot||!monthSlot)return [];dayText=daySlot.row.token;monthText=monthSlot.row.token;yearText=yearSlot?.row.token;}
       const day=Number(dayText.match(/^\d+/u)?.[0]||0),month=monthNumber(monthText),year=yearText==null?currentYear:Number(yearText);
       const date=valid(year,month,day);if(!date||date.getUTCDay()===expected)return [];
       if(yearSlot&&valid(currentYear,month,day)?.getUTCDay()===expected){return {start:yearSlot.row.start,end:yearSlot.row.end,suggestions:[args.date?currentYear+'-'+monthText+'-'+dayText:String(currentYear)],message:this.locale==='fr'?'Cette date est incorrecte. Faites-vous référence à l\'année "'+currentYear+'" ?':'Aquesta data no és correcta. ¿Us referiu a l\'any "'+currentYear+'"?'};}
@@ -1095,9 +1117,24 @@
           if(!lexical.length)lexical.push(...this.productiveReadings(row.token));
           if(lexical.length)value.ltReadings=lexical.filter((reading,j,list)=>list.findIndex(r=>r.tag===reading.tag&&r.lemma===reading.lemma)===j);
         }
-        if(!boundaries&&/^[.!?]$/u.test(row.token))sentence++;
+        if(!boundaries&&/^[.!?]$/u.test(row.token)){
+          const next=expanded[i+1];
+          // Do not split on every punctuation token: consecutive marks ("!!",
+          // "....") and dotted abbreviations ("S.p.a.") belong to one token
+          // sequence. A fallback sentence ends only after the final mark in
+          // a run and when the source text reaches whitespace/end afterwards.
+          const nextIsAdjacentMark=next&&next.start===row.end&&/^[.!?]$/u.test(next.token);
+          const tail=text.slice(row.end);
+          if(!nextIsAdjacentMark&&(!next||/^\s/u.test(tail)))sentence++;
+        }
       });
-      if(boundaries)rows.forEach((row,i)=>{if(!row.sentenceStart&&(!rows[i+1]||rows[i+1].sentence!==row.sentence)){row.ltReadings=[...this.readings(row),{tag:'SENT_END',lemma:null}];if(!rows[i+1]||/\r?\n\s*\r?\n/u.test(text.slice(row.end,rows[i+1].start)))row.ltReadings.push({tag:'PARA_END',lemma:null});}});
+      rows.forEach((row,i)=>{
+        if(row.sentenceStart||rows[i+1]?.sentence===row.sentence)return;
+        const readings=this.readings(row);
+        if(!readings.some(reading=>reading.tag==='SENT_END'))readings.push({tag:'SENT_END',lemma:null});
+        if(!readings.some(reading=>reading.tag==='PARA_END')&&(!rows[i+1]||/\r?\n\s*\r?\n/u.test(text.slice(row.end,rows[i+1].start))))readings.push({tag:'PARA_END',lemma:null});
+        row.ltReadings=readings;
+      });
       if(this.filterResources.verbEndings)this.annotateIncorrectVerbs(rows);
       if(this.filterResources.multiwordTags)this.annotateMultiwords(rows);
       if(this.filterResources.frenchChunker)this.annotateFrenchChunkers(rows);
@@ -1169,7 +1206,11 @@
             }
             const original = text.slice(start, end);
             suggestions = unique(suggestions).filter(s => typeof s==='string' && s !== original && !/\{(?:suggestion|Suggestion|SUGGESTION)\}/u.test(s));
-            if (!suggestions.length&&!allowNoSuggestions) continue;
+            // Some LanguageTool grammar rules intentionally report a match
+            // without proposing a replacement. Preserve those diagnostics;
+            // only suppress a match when the source rule did provide
+            // suggestions but none survived rendering/filtering.
+            if (!suggestions.length&&!allowNoSuggestions&&(rule.filter||(rule.suggestions||[]).length)) continue;
             const style=rule.qualityCategory==='style'||['TYPOGRAPHY_OPTIONS','PREFERABLE_EXPRESSIONS','STYLE_OPTIONAL'].includes(rule.category)||rule.filter?.name==='LocalCatalanRewriteFilter';
             pending.push({ ruleId: (rule.ruleIdPrefix||'CA_LT_XML_') + rule.id, start, end, text: original, suggestions, message, category: rule.category, meta: { engine: 'lt-xml-v1', sourceRule: rule.id, ruleGroupId: rule.ruleGroupId || null, qualityCategory: rule.qualityCategory||(style?'style':'grammar'), qualityRisk: style?'review':'safe' } });
           }

@@ -15,8 +15,36 @@
   const BIT_LAST_ARC = 0x40;
   const BIT_FINAL_ARC = 0x20;
   const LABEL_MASK = 0x1f;
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder("utf-8", { fatal: true });
+  const utf8Encoder = new TextEncoder();
+
+  function createCodec(encoding) {
+    const name = String(encoding || "utf-8").toLowerCase().replaceAll("_", "-");
+    if (name === "utf-8" || name === "utf8") {
+      const decoder = new TextDecoder("utf-8", { fatal: true });
+      return { name: "utf-8", encode: value => utf8Encoder.encode(value), decode: bytes => decoder.decode(bytes), singleByte: false };
+    }
+    if (["iso-8859-15", "iso8859-15", "latin-9", "latin9"].includes(name)) {
+      const decoder = new TextDecoder("iso-8859-15", { fatal: true });
+      const reverse = new Map();
+      for (let byte = 0; byte < 256; byte++) {
+        const value = decoder.decode(Uint8Array.of(byte));
+        if ([...value].length === 1 && !reverse.has(value)) reverse.set(value, byte);
+      }
+      return {
+        name: "iso-8859-15", singleByte: true, decode: bytes => decoder.decode(bytes),
+        encode(value) {
+          const output = [];
+          for (const character of String(value)) {
+            const byte = reverse.get(character);
+            if (byte === undefined) fail(`caràcter no representable a ${name}.`);
+            output.push(byte);
+          }
+          return Uint8Array.from(output);
+        }
+      };
+    }
+    fail(`codificació no admesa (${encoding}).`);
+  }
 
   function fail(message) {
     throw new Error(`CFSA2: ${message}`);
@@ -35,9 +63,10 @@
       if (bytes.length < 9) fail("fitxer massa curt.");
       for (let i = 0; i < MAGIC.length; i++) if (bytes[i] !== MAGIC[i]) fail("signatura incorrecta.");
       if (bytes[4] !== VERSION_CFSA2) fail(`versió no compatible (0x${bytes[4].toString(16)}).`);
-      if (encoding.toLowerCase() !== "utf-8" || encoderType !== "SUFFIX") fail("només s'admeten UTF-8 i SUFFIX.");
-      const separatorBytes = encoder.encode(separator);
-      if (separatorBytes.length !== 1) fail("el separador ha de ser un byte UTF-8.");
+      if (encoderType !== "SUFFIX") fail("només s'admet SUFFIX.");
+      this.codec = createCodec(encoding);
+      const separatorBytes = this.codec.encode(separator);
+      if (separatorBytes.length !== 1) fail("el separador ha de ser un byte en la codificació del diccionari.");
 
       this.bytes = bytes;
       this.flags = (bytes[5] << 8) | bytes[6];
@@ -166,12 +195,12 @@
         lemma.set(keyBytes.subarray(0, keyBytes.length - trim), 0);
         lemma.set(encoded.subarray(1, delimiter), keyBytes.length - trim);
         const tag = hasTag ? encoded.subarray(delimiter + 1) : new Uint8Array(0);
-        yield { lemma: decoder.decode(lemma), tag: decoder.decode(tag) };
+        yield { lemma: this.codec.decode(lemma), tag: this.codec.decode(tag) };
       }
     }
 
     lookup(value) {
-      const key = encoder.encode(String(value));
+      const key = this.codec.encode(String(value));
       return Array.from(this.lookupBytes(key), reading => ({ form: String(value), ...reading }));
     }
 
@@ -194,7 +223,7 @@
         const lemmaBytes = new Uint8Array(formBytes.length - trim + delimiter - 1);
         lemmaBytes.set(formBytes.subarray(0, formBytes.length - trim), 0);
         lemmaBytes.set(outputBytes.subarray(1, delimiter), formBytes.length - trim);
-        yield { form: decoder.decode(formBytes), lemma: decoder.decode(lemmaBytes), tag: hasTag ? decoder.decode(outputBytes.subarray(delimiter + 1)) : "" };
+        yield { form: this.codec.decode(formBytes), lemma: this.codec.decode(lemmaBytes), tag: hasTag ? this.codec.decode(outputBytes.subarray(delimiter + 1)) : "" };
       }
     }
 
@@ -2260,35 +2289,35 @@
   const encoder = new TextEncoder(), decoder = new TextDecoder("utf-8", { fatal: true });
   const codepointLength = first => first < 0x80 ? 1 : first >= 0xc2 && first < 0xe0 ? 2 : first < 0xf0 ? 3 : 4;
 
-  function isMorfologikMixedCase(value, locale) {
-    const chars = [...value], letters = chars.filter(char => /\p{L}/u.test(char));
-    const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(locale));
-    const notAllLower = letters.some(char => char !== char.toLocaleLowerCase(locale));
-    const capitalized = /\p{Lu}/u.test(chars[0] || "")
-      && chars.slice(1).every(char => !/\p{L}/u.test(char) || char === char.toLocaleLowerCase(locale));
-    return !allUpper && !capitalized && notAllLower;
-  }
-
   class EnglishSpeller {
     constructor(buffer, manifest) {
       if (!(buffer instanceof ArrayBuffer) || manifest?.schema !== 1 || !["CFAS1", "CFSA2"].includes(manifest?.format)
-          || !["en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6", "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7"].includes(manifest?.profile)
-          || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not belong to the pinned English dictionaries.");
+          || ![
+            "en-US LanguageTool 6.9-SNAPSHOT / english-pos-dict 0.6",
+            "LanguageTool 6.9-SNAPSHOT / french-pos-dict 0.7",
+            "LanguageTool 6.9-SNAPSHOT / Italian Hunspell it_IT",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_DE",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_AT",
+            "LanguageTool 6.9-SNAPSHOT / German Hunspell de_CH"
+          ].includes(manifest?.profile)
+          || !Number.isInteger(manifest.separator)) throw new Error("The spelling graph does not match a supported dictionary profile.");
       this.cfsa2 = null;
       if (manifest.format === "CFSA2") {
-        if (manifest.encoding !== "utf-8" || manifest.sequenceEncoder !== "SUFFIX"
+        if (!new Set(["utf-8", "UTF-8", "ISO-8859-15", "iso-8859-15"]).has(manifest.encoding) || manifest.sequenceEncoder !== "SUFFIX"
             || !globalThis.CorrectorCatalanCfsa2Dictionary) throw new Error("The English CFSA2 spelling reader is unavailable or incompatible.");
         this.cfsa2 = new globalThis.CorrectorCatalanCfsa2Dictionary(buffer, {
           separator: String.fromCodePoint(manifest.separator), encoding: manifest.encoding, encoderType: manifest.sequenceEncoder
         });
+        this.codec = this.cfsa2.codec;
         this.root = this.cfsa2.root;
       } else {
+        this.codec = { encode: value => encoder.encode(value), decode: bytes => decoder.decode(bytes), singleByte: false };
         const view = new DataView(buffer);
         if (decoder.decode(new Uint8Array(buffer, 0, 4)) !== "CFAS" || view.getUint32(4, true) !== manifest.nodes || view.getUint32(8, true) !== manifest.arcs || buffer.byteLength !== 12 + (manifest.nodes + 1) * 4 + manifest.arcs * 12) throw new Error("The en-US spelling FSA header or dimensions are invalid.");
         this.graph = { offsets: new Uint32Array(buffer, 12, manifest.nodes + 1), arcs: new Uint32Array(buffer, 12 + (manifest.nodes + 1) * 4, manifest.arcs * 3) };
         this.root = 0;
       }
-      this.manifest = manifest; this.locale = manifest.locale === "en_US" ? "en" : manifest.locale || "en"; this.cache = new Map(); this.characterCache = new Map(); this.frequencyCache = new Map();
+      this.manifest = manifest; this.cache = new Map(); this.characterCache = new Map(); this.frequencyCache = new Map();
       this.one = new Map(); this.two = new Map(); this.rest = new Map();
       for (const [source, targets] of Object.entries(manifest.replacementPairs || {})) for (const target of targets) {
         if (target.length <= 2) {
@@ -2313,7 +2342,12 @@
     final(arc) { return this.cfsa2 ? this.cfsa2.isFinal(arc) : Boolean(this.graph.arcs[arc * 3 + 1] & 1); }
 
     exact(word) {
-      let node = this.root; const bytes = encoder.encode(String(word));
+      const value = String(word);
+      if (this.cfsa2) {
+        const matched = this.cfsa2.match(this.codec.encode(value));
+        return Boolean(matched && (this.cfsa2.isFinal(matched.lastArc) || this.cfsa2.isTerminal(matched.lastArc)));
+      }
+      let node = this.root; const bytes = this.codec.encode(value);
       let lastArc = -1;
       for (let index = 0; index < bytes.length; index++) {
         const arc = this.getArc(node, bytes[index]);
@@ -2335,19 +2369,19 @@
 
     isMisspelled(word, { personalWords = null } = {}) {
       const value = String(word ?? "").normalize("NFC"), flags = this.manifest.spellerFlags;
-      if (!value || personalWords?.has(value.toLocaleLowerCase(this.locale))) return false;
+      if (!value || personalWords?.has(value.toLocaleLowerCase("en"))) return false;
       const letters = [...value].filter(char => /[\p{L}\p{Nl}]/u.test(char));
       const alphabetic = [...value].length !== 1 || letters.length > 0;
       if (flags.ignorePunctuation && !alphabetic) return false;
       if (flags.ignoreNumbers && /\p{Nd}/u.test(value)) return false;
-      const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(this.locale));
-      const mixed = this.locale === "en" ? globalThis.CorrectorEnglishTagger.isMixedCase(value) : isMorfologikMixedCase(value, this.locale);
+      const allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase("en"));
+      const mixed = globalThis.CorrectorEnglishTagger.isMixedCase(value);
       if (flags.ignoreAllUppercase && alphabetic && allUpper) return false;
       if (this.exact(value)) return false;
       if (!flags.convertCase || mixed) return true;
-      if (this.exact(value.toLocaleLowerCase(this.locale))) return false;
+      if (this.exact(value.toLocaleLowerCase("en"))) return false;
       const chars = [...value];
-      if (allUpper && this.exact(chars[0] + chars.slice(1).join("").toLocaleLowerCase(this.locale))) return false;
+      if (allUpper && this.exact(chars[0] + chars.slice(1).join("").toLocaleLowerCase("en"))) return false;
       return true;
     }
 
@@ -2375,17 +2409,17 @@
         for (const arc of this.outgoing(node)) {
           const label = this.label(arc);
           if (!bytes.length && label === this.manifest.separator) continue;
-          const sequence = [...bytes, label], length = codepointLength(sequence[0]);
+          const sequence = [...bytes, label], length = this.codec.singleByte ? 1 : codepointLength(sequence[0]);
           if (sequence.length < length) {
             if (!this.terminal(arc)) walk(this.next(arc), sequence, firstArc < 0 ? arc : firstArc);
             continue;
           }
           if (sequence.length !== length) continue;
           try {
-            const char = decoder.decode(new Uint8Array(sequence));
+            const char = this.codec.decode(new Uint8Array(sequence));
             const target = this.terminal(arc) ? -1 : this.next(arc);
             transitions.push({ char, target, terminal: this.terminal(arc), final: this.cfsa2
-              ? target >= 0 && this.getArc(target, this.manifest.separator) >= 0
+              ? this.terminal(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0
               : this.final(arc) || target >= 0 && this.getArc(target, this.manifest.separator) >= 0,
               frequency: target >= 0 ? this.frequency(target) : 0 });
           } catch { /* invalid UTF-8 arc sequences cannot be dictionary characters */ }
@@ -2425,9 +2459,8 @@
       let processed = "", candidate = [], distance = max;
       const equivalent = (left, right) => {
         if (left === right || this.manifest.equivalentChars?.[left]?.includes(right)) return true;
-        if (this.locale !== "en" && this.manifest.spellerFlags?.ignoreDiacritics === false) return false;
         const a = left.normalize("NFD")[0], b = right.normalize("NFD")[0];
-        return a === b || /\p{L}/u.test(a) && a.toLocaleLowerCase(this.locale) === b.toLocaleLowerCase(this.locale);
+        return a === b || /\p{L}/u.test(a) && a.toLocaleLowerCase("en") === b.toLocaleLowerCase("en");
       };
       const edit = (i, j, wi, ci) => {
         let value;
@@ -2472,9 +2505,9 @@
       const queries = this.rest.size && word.length > 1 ? this.replaceVariants(word) : [word];
       if (word.length > 0 && word.length < 120) {
         if (this.rest.size && word.length > 1) for (const query of queries) {
-          const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase(this.locale), query.toLocaleUpperCase(this.locale), query.length > 1 ? query[0].toLocaleUpperCase(this.locale) + query.slice(1).toLocaleLowerCase(this.locale) : ""];
+          const forms = this.exact(query) ? [query] : [query.toLocaleLowerCase("en"), query.toLocaleUpperCase("en"), query.length > 1 ? query[0].toLocaleUpperCase("en") + query.slice(1).toLocaleLowerCase("en") : ""];
           for (const form of forms) if (form && this.exact(form)) {
-            let state = this.root; for (const byte of encoder.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
+            let state = this.root; for (const byte of this.codec.encode(form)) { const arc = this.getArc(state, byte); if (arc < 0 || this.terminal(arc)) { state = -1; break; } state = this.next(arc); }
             if (state >= 0) results.push({word: form, distance: 0, score: 25 - this.frequency(state)});
           }
         }
@@ -2483,18 +2516,18 @@
       }
       if (this.manifest.spellerFlags.supportRunOnWords && (!word || !this.exact(word))) for (let split = 1; split < word.length; split++) {
         const prefix = word.slice(0, split), suffix = word.slice(split);
-        const prefixTitle = /^\p{Lu}/u.test(prefix) && this.exact(prefix.toLocaleLowerCase(this.locale));
-        const suffixTitle = /^\p{Lu}/u.test(suffix) && this.exact(suffix.toLocaleLowerCase(this.locale));
+        const prefixTitle = /^\p{Lu}/u.test(prefix) && this.exact(prefix.toLocaleLowerCase("en"));
+        const suffixTitle = /^\p{Lu}/u.test(suffix) && this.exact(suffix.toLocaleLowerCase("en"));
         if ((this.exact(suffix) || suffixTitle) && (this.exact(prefix) || prefixTitle)) results.push({word: `${prefix} ${suffix}`, distance: 1, score: 51});
       }
       results.sort((a, b) => a.score - b.score);
       const seen = new Set(), output = [];
       for (const item of results) {
         let form = item.word;
-        const letters = [...word].filter(char => /\p{L}/u.test(char)), allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase(this.locale));
-        const mixed = this.locale === "en" ? globalThis.CorrectorEnglishTagger.isMixedCase(form) : isMorfologikMixedCase(form, this.locale);
-        if (this.manifest.spellerFlags.convertCase && allUpper && !mixed) form = form.toLocaleUpperCase(this.locale);
-        else if (this.manifest.spellerFlags.convertCase && /^\p{Lu}/u.test(word) && !mixed) form = form[0].toLocaleUpperCase(this.locale) + form.slice(1);
+        const letters = [...word].filter(char => /\p{L}/u.test(char)), allUpper = letters.length > 0 && letters.every(char => char === char.toLocaleUpperCase("en"));
+        const mixed = globalThis.CorrectorEnglishTagger.isMixedCase(form);
+        if (this.manifest.spellerFlags.convertCase && allUpper && !mixed) form = form.toLocaleUpperCase("en");
+        else if (this.manifest.spellerFlags.convertCase && /^\p{Lu}/u.test(word) && !mixed) form = form[0].toLocaleUpperCase("en") + form.slice(1);
         if (form !== word && !seen.has(form)) { seen.add(form); output.push({word: form, distance: item.distance, weight: item.score}); }
       }
       this.cache.set(cacheKey, output);
@@ -7687,7 +7720,7 @@
   globalThis.CorrectorSpanishSynthesizer = SpanishSynthesizer;
 })();
 
-/* Source: analysis/spanish-reduction/modules/es-synthesis-cfsa2.js */
+/* Source: engine-src/modules/es-synthesis-cfsa2.js */
 /* Experimental es-ES synthesis adapter over the same lossless Morfologik CFSA2 reader. */
 (() => {
   "use strict";
@@ -13579,6 +13612,11 @@
   globalThis.CorrectorCatalanSynthesisCfsa2 = Object.freeze({ load, lookup, synthesize, targetPosTag, getPossibleTags: () => tags });
 })();
 
+/* Source: engine-src/modules/ca-compact-runtime.js */
+// Keep the public runtime names used by the Catalan matchers and rule filters.
+globalThis.CorrectorCatalanMorphology = globalThis.CorrectorCatalanMorphologyCfsa2;
+globalThis.CorrectorCatalanSynthesis = globalThis.CorrectorCatalanSynthesisCfsa2;
+
 /* Source: engine-src/modules/ca-morfologik-speller.js */
 /* Local port of Morfologik 2.2.0 Speller/HMatrix, using the original FSA arc order.
  * Upstream sources are preserved in analysis/reference-oracle/src/Speller.java.
@@ -18988,14 +19026,8 @@
   globalThis.CorrectorCatalanSpellingLexicon = Object.freeze({ load, isAccepted, isOverlayAccepted, inspect, clear });
 })();
 
-/* Source: analysis/bilingual-reduction/generated/cfsa2-runtime-aliases.js */
-/* Experimental bilingual reduction bridge; never used by the production build. */
-(() => {
-  globalThis.CorrectorCatalanMorphology = globalThis.CorrectorCatalanMorphologyCfsa2;
-  globalThis.CorrectorCatalanSynthesis = globalThis.CorrectorCatalanSynthesisCfsa2;
-})();
-
 /* Source: engine-src/language-engine.js */
+
 /* Public facade for the local Catalan correction engine. */
 (() => {
   "use strict";
@@ -19008,10 +19040,13 @@
   const PARITY_SCOPE = "finite-regression-benchmark; not a claim of universal equivalence";
   const SPANISH_LANGUAGE = "es-ES";
   const ENGLISH_LANGUAGE = "en-US";
+  // Italian is available in extension 1.0.2 when its matching external pack is installed.
+  const ITALIAN_LANGUAGE = "it-IT";
   // Proof-only French profiles share a base pipeline and apply the precise
   // disabled-rule overrides documented by LanguageTool's variant classes.
   const FRENCH_LANGUAGES = new Set(["fr-FR", "fr-CA", "fr-CH", "fr-BE"]);
-  const SUPPORTED_LANGUAGE_CODES = new Set([PRODUCT_LANGUAGE, REFERENCE_LANGUAGE, "ca-ES-valencia", "ca-ES-balear", SPANISH_LANGUAGE, ENGLISH_LANGUAGE, ...FRENCH_LANGUAGES]);
+  const GERMAN_LANGUAGES = new Set(["de-DE", "de-AT", "de-CH"]);
+  const SUPPORTED_LANGUAGE_CODES = new Set([PRODUCT_LANGUAGE, REFERENCE_LANGUAGE, "ca-ES-valencia", "ca-ES-balear", SPANISH_LANGUAGE, ENGLISH_LANGUAGE, ITALIAN_LANGUAGE, ...FRENCH_LANGUAGES, ...GERMAN_LANGUAGES]);
 
   class EngineError extends Error {
     constructor(code, message, details = {}) {
@@ -19092,6 +19127,12 @@
     }
     if (requestedLanguage === ENGLISH_LANGUAGE) {
       return Object.freeze({ ...options, language: ENGLISH_LANGUAGE, referenceLanguage: ENGLISH_LANGUAGE, checkLevel });
+    }
+    if (requestedLanguage === ITALIAN_LANGUAGE) {
+      return Object.freeze({ ...options, language: ITALIAN_LANGUAGE, referenceLanguage: ITALIAN_LANGUAGE, checkLevel });
+    }
+    if (GERMAN_LANGUAGES.has(requestedLanguage)) {
+      return Object.freeze({ ...options, language: requestedLanguage, referenceLanguage: requestedLanguage, checkLevel });
     }
     if (FRENCH_LANGUAGES.has(requestedLanguage)) {
       return Object.freeze({ ...options, language: requestedLanguage, referenceLanguage: requestedLanguage, checkLevel });
@@ -19175,6 +19216,11 @@
   let englishLastError = null;
   let frenchPipeline = null;
   let frenchResourcePromise = null;
+  let italianPipeline = null;
+  let italianResourcePromise = null;
+  let germanPipeline = null;
+  let germanResourcePromise = null;
+  let germanResourceProfile = null;
   const frenchRequestedProfiles = new Set();
   let sentenceTokenizer = null;
   let completedChecks = 0;
@@ -19190,7 +19236,7 @@
   function cloneStatus() {
     return {
       ...status,
-      requestedLanguages: [...new Set([...status.requestedLanguages, ...(englishResourcePromise || englishPipeline ? [ENGLISH_LANGUAGE] : [])])],
+      requestedLanguages: [...new Set([...status.requestedLanguages, ...(englishResourcePromise || englishPipeline ? [ENGLISH_LANGUAGE] : []), ...(germanResourcePromise || germanPipeline ? [germanResourceProfile || germanPipeline?.profile].filter(Boolean) : [])])],
       loadedLanguages: status.loadedLanguages.slice(),
       activeStages: status.activeStages.slice(),
       missingStages: status.missingStages.slice(),
@@ -19203,14 +19249,16 @@
     const spanishReady = !!spanishPipeline;
     const englishReady = !!englishPipeline;
     const frenchReady = !!frenchPipeline;
-    const anyReady = catalan.ready || spanishReady || englishReady || frenchReady;
+    const italianReady = !!italianPipeline;
+    const germanReady = !!germanPipeline;
+    const anyReady = catalan.ready || spanishReady || englishReady || frenchReady || italianReady || germanReady;
     return {
       ...catalan,
       ready: anyReady,
-      implemented: catalan.implemented || spanishReady || englishReady,
+      implemented: catalan.implemented || spanishReady || englishReady || italianReady || germanReady,
       phase: anyReady ? "ready" : catalan.phase,
-      loadedLanguages: [...new Set([...catalan.loadedLanguages, ...(spanishPipeline ? [SPANISH_LANGUAGE] : []), ...(englishPipeline ? [ENGLISH_LANGUAGE] : []), ...frenchRequestedProfiles])],
-      activeStages: [...new Set([...catalan.activeStages, ...(spanishPipeline?.stages || []), ...(englishPipeline?.stages || []), ...(frenchPipeline ? ["french-SRX-sentence-segmentation", "french-tokenization", "french-local-spelling", `languagetool-french-pattern-rules:${frenchPipeline.rules.length}`] : [])])],
+      loadedLanguages: [...new Set([...catalan.loadedLanguages, ...(spanishPipeline ? [SPANISH_LANGUAGE] : []), ...(englishPipeline ? [ENGLISH_LANGUAGE] : []), ...frenchRequestedProfiles, ...(italianPipeline ? [ITALIAN_LANGUAGE] : []), ...(germanPipeline ? [germanPipeline.profile] : [])])],
+      activeStages: [...new Set([...catalan.activeStages, ...(spanishPipeline?.stages || []), ...(englishPipeline?.stages || []), ...(frenchPipeline ? ["french-SRX-sentence-segmentation", "french-tokenization", "french-local-spelling", `languagetool-french-pattern-rules:${frenchPipeline.rules.length}`] : []), ...(italianPipeline ? ["italian-proof-tokenization", "italian-CFSA2-POS", `languagetool-italian-pattern-rules:${italianPipeline.rules.length}`, `languagetool-italian-disambiguation:${italianPipeline.disambiguation.rules.length}`] : []), ...(germanPipeline ? ["german-SRX-sentence-segmentation", "german-tokenization", "german-CFSA2-POS", `languagetool-german-disambiguation:${germanPipeline.disambiguation?.rules.length || 0}`, `languagetool-german-pattern-rules:${germanPipeline.rules.length}`, `languagetool-german-regex-rules:${germanPipeline.regexRules.rules.length}`, "german-Morfologik-spelling"] : [])])],
       profiles: {
         "ca-ES": { ready: catalan.ready, phase: catalan.phase, lastError: catalan.lastError },
         "es-ES": { ready: !!spanishPipeline, phase: spanishPipeline ? "ready" : spanishResourcePromise ? "loading-resources" : "cold" },
@@ -19218,7 +19266,11 @@
         "fr-FR": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
         "fr-CA": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
         "fr-CH": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
-        "fr-BE": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" }
+        "fr-BE": { ready: frenchReady, phase: frenchReady ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
+        "it-IT": { ready: italianReady, phase: italianReady ? "ready" : italianResourcePromise ? "loading-resources" : "cold", diagnostics: italianPipeline?.getDiagnostics() || null },
+        "de-DE": { ready: germanPipeline?.profile === "de-DE", phase: germanPipeline?.profile === "de-DE" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-DE" ? "loading-resources" : "cold" },
+        "de-AT": { ready: germanPipeline?.profile === "de-AT", phase: germanPipeline?.profile === "de-AT" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-AT" ? "loading-resources" : "cold" },
+        "de-CH": { ready: germanPipeline?.profile === "de-CH", phase: germanPipeline?.profile === "de-CH" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-CH" ? "loading-resources" : "cold" }
       }
     };
   }
@@ -19243,6 +19295,41 @@
         }
         await englishResourcePromise;
       }
+    }
+    if (normalized.includes(ITALIAN_LANGUAGE)) {
+      if (!globalThis.CorrectorItalianPatternPipeline?.ItalianPatternPipeline) throw new EngineError("ITALIAN_PIPELINE_UNAVAILABLE", "The Italian pipeline is not included in this bundle.", { stage: "language-profile", language: ITALIAN_LANGUAGE });
+      if (!italianPipeline) {
+        if (!italianResourcePromise) {
+          italianResourcePromise = globalThis.CorrectorItalianPatternPipeline.ItalianPatternPipeline.load().then(pipeline => {
+            italianPipeline = pipeline;
+            return pipeline;
+          }).catch(error => {
+            italianResourcePromise = null;
+            throw new EngineError("ITALIAN_RESOURCE_LOAD_FAILED", `Could not load Italian language-pack resources: ${error?.message || error}`, { stage: "resource-load", language: ITALIAN_LANGUAGE, retryable: true });
+          });
+        }
+        await italianResourcePromise;
+      }
+    }
+    const requestedGermanProfiles = normalized.filter(language => GERMAN_LANGUAGES.has(language));
+    if (requestedGermanProfiles.length > 1 && new Set(requestedGermanProfiles).size > 1) {
+      throw new EngineError("GERMAN_PROFILE_CONFLICT", "Carrega un únic perfil alemany cada vegada per mantenir un sol diccionari regional en memòria.", { stage: "language-profile", language: requestedGermanProfiles[0] });
+    }
+    const requestedGermanProfile = requestedGermanProfiles[0] || null;
+    if (requestedGermanProfile && germanPipeline?.profile !== requestedGermanProfile) {
+      if (!globalThis.CorrectorGermanPatternPipeline?.GermanPatternPipeline) throw new EngineError("GERMAN_PIPELINE_UNAVAILABLE", "The German pipeline is not included in this bundle.", { stage: "language-profile", language: requestedGermanProfile });
+      if (!germanResourcePromise || germanResourceProfile !== requestedGermanProfile) {
+        germanResourceProfile = requestedGermanProfile;
+        germanPipeline = null;
+        germanResourcePromise = globalThis.CorrectorGermanPatternPipeline.GermanPatternPipeline.load(requestedGermanProfile).then(pipeline => {
+          germanPipeline = pipeline;
+          return pipeline;
+        }).catch(error => {
+          germanResourcePromise = null;
+          throw new EngineError("GERMAN_RESOURCE_LOAD_FAILED", `Could not load German language-pack resources for ${requestedGermanProfile}: ${error?.message || error}`, { stage: "resource-load", language: requestedGermanProfile, retryable: true });
+        });
+      }
+      await germanResourcePromise;
     }
     if (normalized.includes(SPANISH_LANGUAGE)) {
       if (!globalThis.CorrectorSpanishPipeline) throw new EngineError("SPANISH_PIPELINE_UNAVAILABLE", "El pipeline local es-ES no està inclòs al bundle.", { stage: "language-profile", language: SPANISH_LANGUAGE });
@@ -19276,12 +19363,12 @@
       }
       for (const profile of requestedFrenchProfiles) frenchRequestedProfiles.add(profile);
     }
-    const catalanRequested = normalized.filter(language => language !== SPANISH_LANGUAGE && language !== ENGLISH_LANGUAGE && !FRENCH_LANGUAGES.has(language));
+    const catalanRequested = normalized.filter(language => language !== SPANISH_LANGUAGE && language !== ENGLISH_LANGUAGE && language !== ITALIAN_LANGUAGE && !FRENCH_LANGUAGES.has(language) && !GERMAN_LANGUAGES.has(language));
     if (!catalanRequested.length) {
-      const language = requestedFrenchProfiles[0] || (normalized.includes(ENGLISH_LANGUAGE) ? ENGLISH_LANGUAGE : SPANISH_LANGUAGE);
-      const pipeline = FRENCH_LANGUAGES.has(language) ? frenchPipeline : language === ENGLISH_LANGUAGE ? englishPipeline : spanishPipeline;
+      const language = requestedGermanProfile || (normalized.includes(ITALIAN_LANGUAGE) ? ITALIAN_LANGUAGE : requestedFrenchProfiles[0] || (normalized.includes(ENGLISH_LANGUAGE) ? ENGLISH_LANGUAGE : SPANISH_LANGUAGE));
+      const pipeline = GERMAN_LANGUAGES.has(language) ? germanPipeline : language === ITALIAN_LANGUAGE ? italianPipeline : FRENCH_LANGUAGES.has(language) ? frenchPipeline : language === ENGLISH_LANGUAGE ? englishPipeline : spanishPipeline;
       return { ok: true, language, ready: true, implemented: true, profile: language,
-        proofOnly: FRENCH_LANGUAGES.has(language), status: getPublicLoadStatus(), diagnostics: pipeline.getDiagnostics(),
+        proofOnly: FRENCH_LANGUAGES.has(language) || GERMAN_LANGUAGES.has(language), incomplete: GERMAN_LANGUAGES.has(language), status: getPublicLoadStatus(), diagnostics: pipeline.getDiagnostics(),
         morphology: pipeline.morphology?.getStats?.() || pipeline.lexicalData?.getStats?.() || null };
     }
     status.phase = "loading-resources";
@@ -19364,6 +19451,18 @@
       completedChecks++;
       return issues;
     }
+    if (normalized.language === ITALIAN_LANGUAGE) {
+      if (!italianPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['it-IT']) before requesting analysis.", { stage: "resource-load", language: ITALIAN_LANGUAGE, retryable: true });
+      const issues = italianPipeline.analyzeText(text, normalized).issues;
+      completedChecks++;
+      return issues;
+    }
+    if (GERMAN_LANGUAGES.has(normalized.language)) {
+      if (germanPipeline?.profile !== normalized.language) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${normalized.language}']) before requesting analysis.`, { stage: "resource-load", language: normalized.language, retryable: true });
+      const issues = germanPipeline.analyzeText(text, normalized).issues.map(issue => ({ ...issue, language: normalized.language }));
+      completedChecks++;
+      return issues;
+    }
     if (!morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
     const started = monotonicNow();
     const skipSpelling = normalized.skipSpelling === true;
@@ -19404,7 +19503,7 @@
     if (!Array.isArray(items)) {
       throw new EngineError("INVALID_BATCH", "El lote debe ser una lista de textos con identificador.", { stage: "request-model", language: normalized.language });
     }
-    if (normalized.language !== SPANISH_LANGUAGE && normalized.language !== ENGLISH_LANGUAGE && !FRENCH_LANGUAGES.has(normalized.language) && !morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
+    if (normalized.language !== SPANISH_LANGUAGE && normalized.language !== ENGLISH_LANGUAGE && normalized.language !== ITALIAN_LANGUAGE && !FRENCH_LANGUAGES.has(normalized.language) && !GERMAN_LANGUAGES.has(normalized.language) && !morphology) throw new EngineError("ENGINE_NOT_PRELOADED", "Cal executar preload(['ca']) abans de demanar anàlisi.", { stage: "resource-load", language: normalized.language, retryable: true });
     items.forEach((item, index) => {
       if (item == null || typeof item !== "object" || Array.isArray(item) || typeof item.text !== "string") {
         throw new EngineError("INVALID_BATCH_ITEM", `El elemento ${index} debe contener un texto y, opcionalmente, un identificador.`, { stage: "request-model", language: normalized.language });
@@ -19416,6 +19515,14 @@
   }
 
   function tokenize(text, language = PRODUCT_LANGUAGE) {
+    if (GERMAN_LANGUAGES.has(language)) {
+      if (germanPipeline?.profile !== language) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before tokenizing.`, { stage: "resource-load", language, retryable: true });
+      return germanPipeline.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
+    }
+    if (language === ITALIAN_LANGUAGE) {
+      if (!italianPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['it-IT']) before tokenizing.", { stage: "resource-load", language, retryable: true });
+      return italianPipeline.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
+    }
     if (FRENCH_LANGUAGES.has(language)) {
       if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before tokenizing.`, { stage: "resource-load", language, retryable: true });
       return frenchPipeline.tokenizer.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
@@ -19429,6 +19536,16 @@
   }
 
   function segmentSentences(text, language = PRODUCT_LANGUAGE) {
+    if (GERMAN_LANGUAGES.has(language)) {
+      if (germanPipeline?.profile !== language) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before segmenting sentences.`, { stage: "resource-load", language, retryable: true });
+      return germanPipeline.sentenceTokenizer.segment(text);
+    }
+    if (language === ITALIAN_LANGUAGE) {
+      if (!italianPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['it-IT']) before segmenting sentences.", { stage: "resource-load", language, retryable: true });
+      // Sentence-boundary rules are not included in the compact proof pack;
+      // a whole-text segment preserves context rather than inventing splits.
+      return [{ text: String(text), start: 0, end: String(text).length }];
+    }
     if (FRENCH_LANGUAGES.has(language)) {
       if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${language}']) before segmenting sentences.`, { stage: "resource-load", language, retryable: true });
       return frenchPipeline.sentenceTokenizer.segment(text);
@@ -19459,6 +19576,14 @@
     return copy;
   }
   function tagText(text, localeProfile = "inclusive") {
+    if (GERMAN_LANGUAGES.has(localeProfile)) {
+      if (germanPipeline?.profile !== localeProfile) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${localeProfile}']) before tagging.`, { stage: "resource-load", language: localeProfile, retryable: true });
+      return germanPipeline.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
+    }
+    if (localeProfile === ITALIAN_LANGUAGE) {
+      if (!italianPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['it-IT']) before tagging.", { stage: "resource-load", language: localeProfile, retryable: true });
+      return italianPipeline.tokenizeRows(text).map(row => ({ text: row.token, start: row.start, end: row.end, kind: /[\p{L}\d]/u.test(row.token) ? "word" : "punctuation", readings: row.ltReadings }));
+    }
     if (FRENCH_LANGUAGES.has(localeProfile)) {
       if (!frenchPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", `Call preload(['${localeProfile}']) before tagging.`, { stage: "resource-load", language: localeProfile, retryable: true });
       return frenchPipeline.tokenizer.tokenizeRows(text).map(row => ({
@@ -19488,6 +19613,8 @@
   }
 
   function tagTextUncached(text, localeProfile = "inclusive") {
+    if (GERMAN_LANGUAGES.has(localeProfile)) return tagText(text, localeProfile);
+    if (localeProfile === ITALIAN_LANGUAGE) return tagText(text, localeProfile);
     if (localeProfile === ENGLISH_LANGUAGE) {
       if (!englishPipeline) throw new EngineError("ENGINE_NOT_PRELOADED", "Call preload(['en-US']) before tagging.", { stage: "resource-load", language: ENGLISH_LANGUAGE, retryable: true });
       return englishPipeline.sentenceTokenizer.segment(text).flatMap(sentence => {
@@ -19827,6 +19954,11 @@
     frenchPipeline = null;
     frenchResourcePromise = null;
     frenchRequestedProfiles.clear();
+    italianPipeline = null;
+    italianResourcePromise = null;
+    germanPipeline = null;
+    germanResourcePromise = null;
+    germanResourceProfile = null;
     globalThis.CorrectorCatalanChunker.clear();
     globalThis.CorrectorCatalanXmlDisambiguator.clear();
     globalThis.CorrectorCatalanMultitokenDisambiguator.clear();
@@ -19836,7 +19968,7 @@
 
   const engine = Object.freeze({
     apiVersion: API_VERSION,
-    languages: Object.freeze({ product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: Object.freeze([...FRENCH_LANGUAGES]) }),
+    languages: Object.freeze({ product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: Object.freeze([...FRENCH_LANGUAGES]), italian: ITALIAN_LANGUAGE, german: Object.freeze([...GERMAN_LANGUAGES]) }),
     EngineError,
     createIssue,
     normalizeOptions,
@@ -19860,7 +19992,7 @@
       implemented: getPublicLoadStatus().implemented,
       parityComplete: status.ready && status.missingStages.length === 0,
       parityScope: PARITY_SCOPE,
-      languages: { product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: [...FRENCH_LANGUAGES] },
+      languages: { product: PRODUCT_LANGUAGE, reference: REFERENCE_LANGUAGE, spanish: SPANISH_LANGUAGE, english: ENGLISH_LANGUAGE, french: [...FRENCH_LANGUAGES], italian: ITALIAN_LANGUAGE, german: [...GERMAN_LANGUAGES] },
       localeProfiles: { default: "central", available: ["central", "valencian", "balearic", "inclusive"] },
       checkLevels: { supported: [...SUPPORTED_CHECK_LEVELS], default: DEFAULT_CHECK_LEVEL },
       activeStages: status.activeStages.slice(),
@@ -19870,7 +20002,11 @@
         "es-ES": { ready: !!spanishPipeline, phase: spanishPipeline ? "ready" : spanishResourcePromise ? "loading-resources" : "cold" },
         "en-US": { ready: !!englishPipeline, phase: englishPipeline ? "ready" : englishResourcePromise ? "loading-resources" : englishLastError ? "error" : "cold",
           diagnostics: englishPipeline?.getDiagnostics() || null, lastError: englishLastError ? { ...englishLastError } : null },
-        "fr-FR": { ready: !!frenchPipeline, phase: frenchPipeline ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" }
+        "fr-FR": { ready: !!frenchPipeline, phase: frenchPipeline ? "ready-proof-only" : frenchResourcePromise ? "loading-resources" : "cold" },
+        "it-IT": { ready: !!italianPipeline, phase: italianPipeline ? "ready" : italianResourcePromise ? "loading-resources" : "cold", diagnostics: italianPipeline?.getDiagnostics() || null },
+        "de-DE": { ready: germanPipeline?.profile === "de-DE", phase: germanPipeline?.profile === "de-DE" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-DE" ? "loading-resources" : "cold", diagnostics: germanPipeline?.profile === "de-DE" ? germanPipeline.getDiagnostics() : null },
+        "de-AT": { ready: germanPipeline?.profile === "de-AT", phase: germanPipeline?.profile === "de-AT" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-AT" ? "loading-resources" : "cold", diagnostics: germanPipeline?.profile === "de-AT" ? germanPipeline.getDiagnostics() : null },
+        "de-CH": { ready: germanPipeline?.profile === "de-CH", phase: germanPipeline?.profile === "de-CH" ? "ready-proof" : germanResourcePromise && germanResourceProfile === "de-CH" ? "loading-resources" : "cold", diagnostics: germanPipeline?.profile === "de-CH" ? germanPipeline.getDiagnostics() : null }
       },
       error: status.lastError ? { ...status.lastError } : null
     }),
