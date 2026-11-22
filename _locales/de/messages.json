@@ -1,6 +1,14 @@
 {
-  "extName": { "message": "Lletrium! Rechtschreib- und Grammatikprüfung" },
-  "shortName": { "message": "Lletrium!" },
-  "extDescription": { "message": "Lokale Rechtschreib- und Grammatikprüfung für Katalanisch, Spanisch, amerikanisches Englisch, Französisch, Italienisch und Deutsch." },
-  "actionTitle": { "message": "Lletrium!" }
+  "extName": {
+    "message": "Lletrium! Rechtschreib- und Grammatikprüfung"
+  },
+  "shortName": {
+    "message": "Lletrium!"
+  },
+  "extDescription": {
+    "message": "Lokale Rechtschreib- und Grammatikprüfung für Katalanisch, Spanisch, US-Englisch, Französisch, Italienisch und Deutsch."
+  },
+  "actionTitle": {
+    "message": "Lletrium!"
+  }
 }
